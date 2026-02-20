@@ -1,1 +1,1 @@
-# amplify-guitar
+# Amplify Guitar - Gamified Guitar Learning Dashboard
