@@ -36,20 +36,22 @@ public class User {
     @Size(max = 20, message = "Display name cannot exceed 20 characters")
     private String displayName;
 
-    @NotBlank
-    private Integer currentLevel;
+    private String currentTitle;
 
-    @NotBlank
-    private Integer totalXp;
+    @Column(nullable = false)
+    private Integer currentLevel = 1;
 
-    @NotBlank
-    private Integer currentXp;
+    @Column(nullable = false)
+    private Integer totalXp = 0;
 
-    @NotBlank
-    private Integer currentStreak;
+    @Column(nullable = false)
+    private Integer currentXp = 0;
 
-    @NotBlank
-    private Integer longestStreak;
+    @Column(nullable = false)
+    private Integer currentStreak = 0;
+
+    @Column(nullable = false)
+    private Integer longestStreak = 0;
 
     private LocalDateTime lastPracticeDate;
 
@@ -57,8 +59,13 @@ public class User {
 
     private LocalDateTime createdAt;
 
-    public User(Integer currentLevel, Integer currentStreak, Integer currentXp, String displayName, String email, String firstName, String lastName, LocalDateTime lastPracticeDate, Integer longestStreak, String passwordHash, Integer totalXp) {
+    public User() {
+
+    }
+
+    public User(Integer currentLevel, String currentTitle, Integer currentStreak, Integer currentXp, String displayName, String email, String firstName, String lastName, LocalDateTime lastPracticeDate, Integer longestStreak, String passwordHash, Integer totalXp) {
         this.currentLevel = currentLevel;
+        this.currentTitle = currentTitle;
         this.currentStreak = currentStreak;
         this.currentXp = currentXp;
         this.displayName = displayName;
@@ -69,6 +76,14 @@ public class User {
         this.longestStreak = longestStreak;
         this.passwordHash = passwordHash;
         this.totalXp = totalXp;
+    }
+
+    public String getCurrentTitle() {
+        return currentTitle;
+    }
+
+    public void setCurrentTitle(String currentTitle) {
+        this.currentTitle = currentTitle;
     }
 
     public LocalDateTime getCreatedAt() {
