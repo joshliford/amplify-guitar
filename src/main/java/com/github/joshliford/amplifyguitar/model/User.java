@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -55,12 +57,24 @@ public class User {
 
     private LocalDateTime lastPracticeDate;
 
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     public User() {
 
+    }
+
+    // custom constructor for user registration
+    public User(String email, String passwordHash, String firstName, String lastName, String displayName) {
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.displayName = displayName;
     }
 
     public User(Integer currentLevel, String currentTitle, Integer currentStreak, Integer currentXp, String displayName, String email, String firstName, String lastName, LocalDateTime lastPracticeDate, Integer longestStreak, String passwordHash, Integer totalXp) {

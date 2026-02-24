@@ -140,6 +140,10 @@ public class UserService {
             throw new IllegalArgumentException("Invalid email format");
         }
 
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("Email already in use");
+        }
+
         user.setEmail(email);
     }
 //
