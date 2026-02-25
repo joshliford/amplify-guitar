@@ -18,7 +18,6 @@ public class User {
     private Integer id;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters")
     private String passwordHash;
 
     @Column(unique = true)
@@ -55,6 +54,8 @@ public class User {
     @Column(nullable = false)
     private Integer longestStreak = 0;
 
+    private Integer lessonsCompleted = 0;
+
     private LocalDateTime lastPracticeDate;
 
     @UpdateTimestamp
@@ -77,7 +78,8 @@ public class User {
         this.displayName = displayName;
     }
 
-    public User(Integer currentLevel, String currentTitle, Integer currentStreak, Integer currentXp, String displayName, String email, String firstName, String lastName, LocalDateTime lastPracticeDate, Integer longestStreak, String passwordHash, Integer totalXp) {
+    public User(Integer lessonsCompleted, Integer currentLevel, String currentTitle, Integer currentStreak, Integer currentXp, String displayName, String email, String firstName, String lastName, LocalDateTime lastPracticeDate, Integer longestStreak, String passwordHash, Integer totalXp) {
+        this.lessonsCompleted = lessonsCompleted;
         this.currentLevel = currentLevel;
         this.currentTitle = currentTitle;
         this.currentStreak = currentStreak;
@@ -90,6 +92,14 @@ public class User {
         this.longestStreak = longestStreak;
         this.passwordHash = passwordHash;
         this.totalXp = totalXp;
+    }
+
+    public Integer getLessonsCompleted() {
+        return lessonsCompleted;
+    }
+
+    public void setLessonsCompleted(Integer lessonsCompleted) {
+        this.lessonsCompleted = lessonsCompleted;
     }
 
     public String getCurrentTitle() {

@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /*
-2 endpoints:
+3 endpoints:
 POST /api/auth/register
 POST /api/auth/login
+POST /api/auth/logout
 */
 
 @RestController
@@ -38,6 +39,11 @@ public class AuthController {
     public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
         AuthResponseDTO response = authService.login(loginRequestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        return ResponseEntity.noContent().build();
     }
 
 }
