@@ -33,35 +33,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String email = null;
         String jwt;
 
-        // check if header exists with Bearer token format
-        if (authorizationHeader.startsWith("Bearer ")) {
-            // extract token
-            jwt = authorizationHeader.substring(7);
+        // check if header exists with Bearer token
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-            try {
-                email = jwtUtil.extractEmail(jwt);
-            } catch (Exception exception) {
+        // extract token from header
+        jwt = authorizationHeader.substring(7);
 
-            }
+        try {
+            email = jwtUtil.extractEmail(jwt);
+        } catch (Exception exception) {
+            // if token is not correct, the email cannot be extracted
+        }
 
-            // validate token and set authentication if:
-                // - Email was extracted successfully
-                // - User is not already authenticated
-            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(email);
-                if (jwtUtil.isTokenValid(jwt, email)) {
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                            userDetails, // who is authenticated
-                            null, // credentials not needed after authentication succeeds
-                            userDetails.getAuthorities() // empty list since we are not using RBAC
-                    );
-                    // store authentication in SecurityContext (tells Spring Security "user is authenticated")
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    // pass the request to the next filter/controller (required to intercept every HTTP request)
-                    filterChain.doFilter(request, response);
-                }
+        // validate token and set authentication if:
+        //   - Email was extracted successfully
+        //   - User is not already authenticated
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(email);
+            if (jwtUtil.isTokenValid(jwt, email)) {
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,               // who is authenticated
+                        null,                      // credentials not needed after authentication succeeds
+                        userDetails.getAuthorities() // empty list since we are not using RBAC
+                );
+                // store authentication in SecurityContext (tells Spring Security "user is authenticated")
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
+
+        filterChain.doFilter(request, response);
     }
 
 }

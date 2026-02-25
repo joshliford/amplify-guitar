@@ -4,12 +4,13 @@ import com.github.joshliford.amplifyguitar.dto.request.LoginRequestDTO;
 import com.github.joshliford.amplifyguitar.dto.request.RegisterRequestDTO;
 import com.github.joshliford.amplifyguitar.dto.response.AuthResponseDTO;
 import com.github.joshliford.amplifyguitar.exception.EmailAlreadyExistsException;
+import com.github.joshliford.amplifyguitar.exception.ResourceNotFoundException;
 import com.github.joshliford.amplifyguitar.model.User;
 import com.github.joshliford.amplifyguitar.repository.UserRepository;
 import com.github.joshliford.amplifyguitar.security.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,9 @@ public class AuthService {
             throw new EmailAlreadyExistsException("Email already in use. Please try a different email.");
         }
 
+        if (registerRequestDTO.getPassword().length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters");
+        }
         String hashedPassword = passwordEncoder.encode(registerRequestDTO.getPassword());
 
         User newUser = new User(
@@ -53,15 +57,20 @@ public class AuthService {
     }
 
     public AuthResponseDTO login(LoginRequestDTO loginRequestDTO) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequestDTO.getEmail(),
-                        loginRequestDTO.getPassword()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequestDTO.getEmail(),
+                            loginRequestDTO.getPassword()
+                    )
+            );
+            // if credentials are invalid, Spring security throws below exception and returns 404
+        } catch (BadCredentialsException exception) {
+            throw new ResourceNotFoundException("Invalid credentials");
+        }
 
         User authenticatedUser = userRepository.findByEmail(loginRequestDTO.getEmail())
-                .orElseThrow(() -> new IllegalStateException("User not found after authentication."));
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid credentials"));
 
         String token = jwtUtil.generateToken(authenticatedUser.getEmail());
 
