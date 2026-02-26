@@ -18,12 +18,14 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final ProgressService progressService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthService(UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public AuthService(UserRepository userRepository, ProgressService progressService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
+        this.progressService = progressService;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
@@ -73,6 +75,9 @@ public class AuthService {
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid credentials"));
 
         String token = jwtUtil.generateToken(authenticatedUser.getEmail());
+
+        // update user streak upon login
+        progressService.updateStreak(authenticatedUser);
 
         return new AuthResponseDTO(authenticatedUser.getEmail(), token);
     }

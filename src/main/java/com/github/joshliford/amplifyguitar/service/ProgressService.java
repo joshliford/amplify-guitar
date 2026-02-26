@@ -51,9 +51,7 @@ public class ProgressService {
         return userRepository.save(existingUser);
     }
 
-    public User updateStreak(Integer id) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
+    public User updateStreak(User existingUser) {
 
         LocalDate today = LocalDate.now();
         LocalDate lastLoginDate = existingUser.getLastLoginDate();
@@ -77,7 +75,7 @@ public class ProgressService {
         } else if (daysSinceLastLogin >= 2) {
             existingUser.setCurrentStreak(1);
             existingUser.setLastLoginDate(today);
-        } // daysSinceLastLogin == 0 (today so now change in streak)
+        } // daysSinceLastLogin == 0 (today so no change in streak)
 
         // set longest streak (if current streak > longest streak)
         if (existingUser.getCurrentStreak() > existingUser.getLongestStreak()) {
