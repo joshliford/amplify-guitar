@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -56,7 +57,7 @@ public class User {
 
     private Integer lessonsCompleted = 0;
 
-    private LocalDateTime lastPracticeDate;
+    private LocalDate lastLoginDate;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
@@ -78,7 +79,7 @@ public class User {
         this.displayName = displayName;
     }
 
-    public User(Integer lessonsCompleted, Integer currentLevel, String currentTitle, Integer currentStreak, Integer currentXp, String displayName, String email, String firstName, String lastName, LocalDateTime lastPracticeDate, Integer longestStreak, String passwordHash, Integer totalXp) {
+    public User(Integer lessonsCompleted, Integer currentLevel, String currentTitle, Integer currentStreak, Integer currentXp, String displayName, String email, String firstName, String lastName, LocalDate lastLoginDate, Integer longestStreak, String passwordHash, Integer totalXp) {
         this.lessonsCompleted = lessonsCompleted;
         this.currentLevel = currentLevel;
         this.currentTitle = currentTitle;
@@ -88,7 +89,7 @@ public class User {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.lastPracticeDate = lastPracticeDate;
+        this.lastLoginDate = lastLoginDate;
         this.longestStreak = longestStreak;
         this.passwordHash = passwordHash;
         this.totalXp = totalXp;
@@ -178,12 +179,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public LocalDateTime getLastPracticeDate() {
-        return lastPracticeDate;
+    public LocalDate getLastLoginDate() {
+        return lastLoginDate;
     }
 
-    public void setLastPracticeDate(LocalDateTime lastPracticeDate) {
-        this.lastPracticeDate = lastPracticeDate;
+    public void setLastLoginDate(LocalDate lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
     }
 
     public Integer getLongestStreak() {

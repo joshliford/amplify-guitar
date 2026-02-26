@@ -17,10 +17,6 @@ deleteUser(Integer id)
 Profile Management:
 updateUserProfile(Integer id, displayName, email)
 updatePassword(Integer id, currentPassword, newPassword)
-
-Gamification:
-addXp(Integer Id, amount)
-incrementStreak(Integer Id)
 */
 
 @Service
@@ -70,55 +66,6 @@ public class UserService {
 //
 //    }
 
-    public User addXp(Integer id, Integer xpAmount) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
-
-        if (xpAmount <= 0) {
-            throw new IllegalArgumentException("XP amount must be positive");
-        }
-
-        // get current values
-        Integer currentXp = existingUser.getCurrentXp() != null ? existingUser.getCurrentXp() : 0;
-        Integer currentTotalXp = existingUser.getTotalXp() != null ? existingUser.getTotalXp() : 0;
-        Integer currentLevel = existingUser.getCurrentLevel() != null ? existingUser.getCurrentLevel() : 1;
-
-        // add xp amount to both totals
-        existingUser.setTotalXp(currentTotalXp + xpAmount);
-        Integer newCurrentXp = currentXp + xpAmount;
-
-        // check for user level up
-        Integer xpNeededForNextLevel = calculateXpNeededForLevel(currentLevel + 1);
-
-        while (newCurrentXp >= xpNeededForNextLevel ) {
-            currentLevel++;
-            newCurrentXp -= xpNeededForNextLevel;
-            xpNeededForNextLevel = calculateXpNeededForLevel(currentLevel + 1);
-        }
-
-        existingUser.setCurrentXp(newCurrentXp);
-        existingUser.setCurrentLevel(currentLevel);
-        existingUser.setUpdatedAt(LocalDateTime.now());
-
-        return userRepository.save(existingUser);
-    }
-
-    public User incrementStreak(Integer id) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
-
-        Integer currentStreak = existingUser.getCurrentStreak() != null ? existingUser.getCurrentStreak() : 0;
-
-        if (currentStreak > existingUser.getLongestStreak()) {
-            existingUser.setLongestStreak(currentStreak);
-        }
-
-        existingUser.setCurrentStreak(currentStreak + 1);
-        existingUser.setUpdatedAt(LocalDateTime.now());
-
-        return userRepository.save(existingUser);
-    }
-
     // helper/validation  methods
 
     public void validateAndSetDisplayName(User user, String displayName) {
@@ -162,11 +109,6 @@ public class UserService {
     // use commons-validator dependency to validate email format
     private boolean isValidEmail(String email) {
         return EmailValidator.getInstance().isValid(email);
-    }
-
-    private Integer calculateXpNeededForLevel(Integer level) {
-        // use simple increment for xp (i.e. level 1 = 50XP, level 2 = 100XP, level 3 = 150XP, etc.)
-        return 50 + (level * 50);
     }
 
 }
