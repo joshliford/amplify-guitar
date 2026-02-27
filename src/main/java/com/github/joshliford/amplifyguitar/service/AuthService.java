@@ -6,7 +6,6 @@ import com.github.joshliford.amplifyguitar.dto.response.AuthResponseDTO;
 import com.github.joshliford.amplifyguitar.exception.EmailAlreadyExistsException;
 import com.github.joshliford.amplifyguitar.exception.ResourceNotFoundException;
 import com.github.joshliford.amplifyguitar.model.User;
-import com.github.joshliford.amplifyguitar.repository.UserRepository;
 import com.github.joshliford.amplifyguitar.security.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,14 +22,14 @@ login(LoginRequestDTO loginRequestDTO)
 @Service
 public class AuthService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ProgressService progressService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthService(UserRepository userRepository, ProgressService progressService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
+    public AuthService(UserService userService, ProgressService progressService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+        this.userService = userService;
         this.progressService = progressService;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
@@ -40,7 +39,7 @@ public class AuthService {
     public AuthResponseDTO register(RegisterRequestDTO registerRequestDTO) {
         String email = registerRequestDTO.getEmail();
 
-        if (userRepository.existsByEmail(email)) {
+        if (userService.existsByEmail(email)) {
             throw new EmailAlreadyExistsException("Email already in use. Please try a different email.");
         }
 
@@ -58,7 +57,7 @@ public class AuthService {
                 registerRequestDTO.getDisplayName()
         );
 
-        User savedUser = userRepository.save(newUser);
+        User savedUser = userService.createUser(newUser);
 
         String token = jwtUtil.generateToken(savedUser.getEmail());
 
@@ -78,8 +77,7 @@ public class AuthService {
             throw new ResourceNotFoundException("Invalid credentials");
         }
 
-        User authenticatedUser = userRepository.findByEmail(loginRequestDTO.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid credentials"));
+        User authenticatedUser = userService.findByEmail(loginRequestDTO.getEmail());
 
         String token = jwtUtil.generateToken(authenticatedUser.getEmail());
 

@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 /*
-5 core methods:
+7 core methods:
 getUserById(Integer id)
 createUser(User user)
 deleteUser(Integer id)
+findByEmail(String email)
+existsByEmail(String email)
 updateUserProfile(Integer id, displayName, email)
 updatePassword(Integer id, currentPassword, newPassword)
 */
@@ -43,6 +45,15 @@ public class UserService {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
         userRepository.deleteById(id);
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     public User updateUserProfile(Integer id, String displayName, String email) {
