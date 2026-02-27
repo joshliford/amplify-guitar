@@ -14,6 +14,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/*
+2 methods:
+register(RegisterRequestDTO registerRequestDTO)
+login(LoginRequestDTO loginRequestDTO)
+*/
+
 @Service
 public class AuthService {
 
@@ -41,6 +47,7 @@ public class AuthService {
         if (registerRequestDTO.getPassword().length() < 8) {
             throw new IllegalArgumentException("Password must be at least 8 characters");
         }
+
         String hashedPassword = passwordEncoder.encode(registerRequestDTO.getPassword());
 
         User newUser = new User(

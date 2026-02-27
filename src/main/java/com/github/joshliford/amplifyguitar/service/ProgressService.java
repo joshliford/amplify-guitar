@@ -9,6 +9,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+/*
+2 methods:
+addXp(Integer id, Integer xpAmount)
+updateStreak(User user)
+*/
+
 @Service
 public class ProgressService {
 
@@ -19,7 +25,7 @@ public class ProgressService {
     }
 
     public User addXp(Integer id, Integer xpAmount) {
-        User existingUser = userRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
 
         if (xpAmount <= 0) {
@@ -27,12 +33,12 @@ public class ProgressService {
         }
 
         // get current values
-        Integer currentXp = existingUser.getCurrentXp() != null ? existingUser.getCurrentXp() : 0;
-        Integer currentTotalXp = existingUser.getTotalXp() != null ? existingUser.getTotalXp() : 0;
-        Integer currentLevel = existingUser.getCurrentLevel() != null ? existingUser.getCurrentLevel() : 1;
+        Integer currentXp = user.getCurrentXp() != null ? user.getCurrentXp() : 0;
+        Integer currentTotalXp = user.getTotalXp() != null ? user.getTotalXp() : 0;
+        Integer currentLevel = user.getCurrentLevel() != null ? user.getCurrentLevel() : 1;
 
         // add xp amount to both totals
-        existingUser.setTotalXp(currentTotalXp + xpAmount);
+        user.setTotalXp(currentTotalXp + xpAmount);
         Integer newCurrentXp = currentXp + xpAmount;
 
         // check for user level up
@@ -44,47 +50,53 @@ public class ProgressService {
             xpNeededForNextLevel = calculateXpNeededForLevel(currentLevel + 1);
         }
 
-        existingUser.setCurrentXp(newCurrentXp);
-        existingUser.setCurrentLevel(currentLevel);
-        existingUser.setUpdatedAt(LocalDateTime.now());
+        user.setCurrentXp(newCurrentXp);
+        user.setCurrentLevel(currentLevel);
+        user.setUpdatedAt(LocalDateTime.now());
 
-        return userRepository.save(existingUser);
+        return userRepository.save(user);
     }
 
-    public User updateStreak(User existingUser) {
+    public User updateStreak(User user) {
 
         LocalDate today = LocalDate.now();
-        LocalDate lastLoginDate = existingUser.getLastLoginDate();
-        Integer currentStreak = existingUser.getCurrentStreak() != null ? existingUser.getCurrentStreak() : 0;
+        LocalDate lastLoginDate = user.getLastLoginDate();
+        Integer currentStreak = user.getCurrentStreak() != null ? user.getCurrentStreak() : 0;
 
         // user first login
         if (lastLoginDate == null) {
-            existingUser.setLastLoginDate(today);
-            existingUser.setCurrentStreak(1);
-            existingUser.setLongestStreak(1);
-            existingUser.setUpdatedAt(LocalDateTime.now());
-            return userRepository.save(existingUser);
+            user.setLastLoginDate(today);
+            user.setCurrentStreak(1);
+            user.setLongestStreak(1);
+            user.setUpdatedAt(LocalDateTime.now());
+            return userRepository.save(user);
         }
+
+        // streak logic:
+        // null: first login = set to 1
+        // 0 days: same day = no change
+        // 1 day: consecutive login = increment
+        // 2+ days: streak broken = reset to 1
 
         // calculate days between last login and today to determine streak
         long daysSinceLastLogin = ChronoUnit.DAYS.between(lastLoginDate, today);
 
         if (daysSinceLastLogin == 1) {
-            existingUser.setCurrentStreak(currentStreak + 1);
-            existingUser.setLastLoginDate(today);
+            user.setCurrentStreak(currentStreak + 1);
+            user.setLastLoginDate(today);
         } else if (daysSinceLastLogin >= 2) {
-            existingUser.setCurrentStreak(1);
-            existingUser.setLastLoginDate(today);
+            user.setCurrentStreak(1);
+            user.setLastLoginDate(today);
         } // daysSinceLastLogin == 0 (today so no change in streak)
 
         // set longest streak (if current streak > longest streak)
-        if (existingUser.getCurrentStreak() > existingUser.getLongestStreak()) {
-            existingUser.setLongestStreak(existingUser.getCurrentStreak());
+        if (user.getCurrentStreak() > user.getLongestStreak()) {
+            user.setLongestStreak(user.getCurrentStreak());
         }
 
-        existingUser.setUpdatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
 
-        return userRepository.save(existingUser);
+        return userRepository.save(user);
     }
 
     private Integer calculateXpNeededForLevel(Integer level) {

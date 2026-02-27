@@ -4,17 +4,16 @@ import com.github.joshliford.amplifyguitar.exception.ResourceNotFoundException;
 import com.github.joshliford.amplifyguitar.model.User;
 import com.github.joshliford.amplifyguitar.repository.UserRepository;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 /*
-Core operations:
+5 core methods:
 getUserById(Integer id)
 createUser(User user)
 deleteUser(Integer id)
-
-Profile Management:
 updateUserProfile(Integer id, displayName, email)
 updatePassword(Integer id, currentPassword, newPassword)
 */
@@ -23,9 +22,11 @@ updatePassword(Integer id, currentPassword, newPassword)
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User getUserById(Integer id) {
@@ -60,11 +61,20 @@ public class UserService {
         return userRepository.save(existingUser);
     }
 
-//    public User updatePassword(Integer id, String currentPassword, String newPassword) {
-//        User existingUser = userRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
-//
-//    }
+    public User updatePassword(Integer id, String currentPassword, String newPassword) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
+
+        if (!passwordEncoder.matches(currentPassword, existingUser.getPasswordHash())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+
+        validatePassword(newPassword);
+
+        existingUser.setPasswordHash(passwordEncoder.encode(newPassword));
+        existingUser.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(existingUser);
+    }
 
     // helper/validation  methods
 
@@ -93,18 +103,16 @@ public class UserService {
 
         user.setEmail(email);
     }
-//
-//    public void validatePassword(String password) {
-//        if (password == null || password.trim().isEmpty()) {
-//            throw new IllegalArgumentException("Password cannot be empty");
-//        }
-//
-//        if (password.length() < 8) {
-//            throw new IllegalArgumentException("Password must be at least 8 characters");
-//        }
-//
-//
-//    }
+
+    public void validatePassword(String password) {
+        if (password == null || password.trim().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
+
+        if (password.length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters");
+        }
+    }
 
     // use commons-validator dependency to validate email format
     private boolean isValidEmail(String email) {
