@@ -32,6 +32,10 @@ build/
 ### VS Code ###
 .vscode/
 
+### Node ###
+node_modules/
+react-front-end-app/node_modules/
+
 ### Environment Files ###
 .env
 application-local.properties
