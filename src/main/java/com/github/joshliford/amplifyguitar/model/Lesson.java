@@ -31,6 +31,7 @@ public class Lesson {
     @NotNull
     private Integer requiredLevel;
 
+    @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
 
     @NotNull

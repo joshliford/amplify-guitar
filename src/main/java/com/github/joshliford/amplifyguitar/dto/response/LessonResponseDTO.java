@@ -1,6 +1,8 @@
 package com.github.joshliford.amplifyguitar.dto.response;
 
 import com.github.joshliford.amplifyguitar.model.Difficulty;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 public class LessonResponseDTO {
 
@@ -14,6 +16,7 @@ public class LessonResponseDTO {
 
     private Integer requiredLevel;
 
+    @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
 
     private String content;

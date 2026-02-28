@@ -54,8 +54,10 @@ public class PracticeSessionController {
     }
 
     @PatchMapping("/{sessionId}")
-    public ResponseEntity<PracticeSession> endPracticeSession(@PathVariable Integer sessionId) {
-        PracticeSession response = practiceSessionService.endPracticeSession(sessionId);
+    public ResponseEntity<PracticeSession> endPracticeSession(@AuthenticationPrincipal UserDetails user, @PathVariable Integer sessionId) {
+        String email = user.getUsername();
+        User currentUser = userService.findByEmail(email);
+        PracticeSession response = practiceSessionService.endPracticeSession(currentUser, sessionId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

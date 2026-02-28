@@ -1,6 +1,7 @@
 package com.github.joshliford.amplifyguitar.service;
 
 import com.github.joshliford.amplifyguitar.exception.ResourceNotFoundException;
+import com.github.joshliford.amplifyguitar.exception.UnauthorizedAccessException;
 import com.github.joshliford.amplifyguitar.model.PracticeGoal;
 import com.github.joshliford.amplifyguitar.model.PracticeSession;
 import com.github.joshliford.amplifyguitar.model.User;
@@ -51,9 +52,14 @@ public class PracticeSessionService {
         return practiceSessionRepository.save(newPracticeSession);
     }
 
-    public PracticeSession endPracticeSession(Integer sessionId) {
+    public PracticeSession endPracticeSession(User user, Integer sessionId) {
         PracticeSession session = practiceSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Practice session not found with id: " + sessionId));
+
+
+        if (!session.getUser().getId().equals(user.getId())) {
+            throw new UnauthorizedAccessException("You do not have access to modify this record");
+        }
 
         session.setEndedAt(LocalDateTime.now());
 
