@@ -17,7 +17,7 @@ export default function Login() {
     setIsLoading(true);
     try {
       // send login request to backend and wait for response
-      const response = await requestLogin(email, password);
+      const response = await requestLogin({ email, password });
       sessionStorage.setItem('token', response.data.token);
       navigate("/dashboard");
     } catch (error) {

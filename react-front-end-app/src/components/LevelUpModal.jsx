@@ -11,7 +11,6 @@ export default function LevelUpModal({ isModalOpen, handleCloseModal, level }) {
       <Modal
         isModalOpen={isModalOpen}
         handleCloseModal={handleCloseModal}
-        level={level}
       >
         <div className="flex flex-col items-center p-12 font-['Nunito_Sans']">
           <div className="flex items-center gap-3 mb-6">
@@ -37,7 +36,7 @@ export default function LevelUpModal({ isModalOpen, handleCloseModal, level }) {
               <p className="mb-6">
                 New Title:{" "}
                 <strong className="text-[#1F5D3D] dark:text-[#EBD5B3] font-['Lora']">
-                  "{reward.title}"
+                  {/*"{reward.title}"*/}
                 </strong>
               </p>
             </div>

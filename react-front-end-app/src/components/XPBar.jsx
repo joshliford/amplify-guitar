@@ -1,4 +1,4 @@
-export default function XPBar({ xp, xpToNextLevel }) {
+export default function XPBar({ xp, xpToNextLevel  }) {
     
   // calculates percentage of progress
   const fillPercentage = (xp, xpToNextLevel) => {
