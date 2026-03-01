@@ -9,6 +9,7 @@ import com.github.joshliford.amplifyguitar.model.User;
 import com.github.joshliford.amplifyguitar.model.UserLesson;
 import com.github.joshliford.amplifyguitar.repository.LessonRepository;
 import com.github.joshliford.amplifyguitar.repository.UserLessonRepository;
+import com.github.joshliford.amplifyguitar.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,11 +30,13 @@ public class LessonService {
     private final LessonRepository lessonRepository;
     private final UserLessonRepository userLessonRepository;
     private final ProgressService progressService;
+    private final UserRepository userRepository;
 
-    public LessonService(LessonRepository lessonRepository, UserLessonRepository userLessonRepository, ProgressService progressService) {
+    public LessonService(LessonRepository lessonRepository, UserLessonRepository userLessonRepository, ProgressService progressService, UserRepository userRepository) {
         this.lessonRepository = lessonRepository;
         this.userLessonRepository = userLessonRepository;
         this.progressService = progressService;
+        this.userRepository = userRepository;
     }
 
     public List<LessonResponseDTO> getLessons(User user) {
@@ -75,7 +78,10 @@ public class LessonService {
         lessonComplete.setXpEarned(lesson.getXpReward());
         lessonComplete.setLesson(lesson);
 
-        // award XP to user
+        // award XP to user & increment completedLessons by 1
+        Integer userCompletedLessons = user.getLessonsCompleted();
+        user.setLessonsCompleted(userCompletedLessons + 1);
+        userRepository.save(user);
         progressService.addXp(user.getId(), lesson.getXpReward());
 
         return userLessonRepository.save(lessonComplete);
