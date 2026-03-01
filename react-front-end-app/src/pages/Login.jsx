@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { requestLogin } from "@/services/authService";
 import backgroundImage from "../assets/images/guitarbackground.jpg";
 
 export default function Login() {
@@ -10,22 +11,19 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  const validEmail = email === "fretboardwizard@email.com";
-  const validPassword = password === "p@ssword";
-  const isLoginValid = validEmail && validPassword;
-
   const handleSignIn = async (e) => {
     e.preventDefault();
-    if (!isLoginValid) {
-      setLoginError("Invalid email or password.");
-      return;
-    }
     setIsLoading(true);
-    setLoginError("");
-    await delay(1500);
-    navigate("/dashboard");
+    try {
+      // send login request to backend and wait for response
+      const response = await requestLogin(email, password);
+      sessionStorage.setItem('token', response.data.token);
+      navigate("/dashboard");
+    } catch (error) {
+      setLoginError("Invalid credentials.")
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -71,13 +69,6 @@ export default function Login() {
           <p className="text-[#718096] font-['Nunito_Sans'] mb-8">
             Sign in to your account
           </p>
-
-          {/* Dev hint */}
-          <div className="bg-[#415a77]/10 border border-[#415a77]/20 rounded-lg p-3 mb-6 text-sm font-['Nunito_Sans']">
-            <p className="font-semibold mb-1">Mock user credentials</p>
-            <p>Email: fretboardwizard@email.com</p>
-            <p>Password: p@ssword</p>
-          </div>
 
           <form onSubmit={handleSignIn} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
