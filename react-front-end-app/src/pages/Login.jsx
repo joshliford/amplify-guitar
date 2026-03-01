@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { requestLogin } from "@/services/authService";
 import backgroundImage from "../assets/images/guitarbackground.jpg";
+import { Button } from "@headlessui/react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -102,13 +103,13 @@ export default function Login() {
               </p>
             )}
 
-            <button
+            <Button
               type="submit"
               disabled={isLoading}
               className="bg-[#415a77] hover:bg-[#31455a] text-white font-semibold font-['Nunito_Sans'] py-2.5 rounded-lg transition-colors disabled:opacity-60 mt-2 cursor-pointer"
             >
               {isLoading ? "Signing in..." : "Sign in"}
-            </button>
+            </Button>
           </form>
 
           <p className="text-center text-sm text-[#718096] font-['Nunito_Sans'] mt-6">
