@@ -18,11 +18,11 @@ export default function Card({ title, description, category, children }) {
       style={{ backgroundImage: `url(${background()})` }}
     >
       <div>
-        <h3 className="text-3xl mb-4 font-['Lora'] font-semibold text-center">
+        <h3 className="text-3xl mb-4 font-semibold text-center">
           {title}
         </h3>
       </div>
-      <div className="flex flex-col grow font-['Nunito_Sans'] text-center">
+      <div className="flex flex-col grow text-center">
         <p>{description}</p>
         <span className="mt-auto">{children}</span>
       </div>

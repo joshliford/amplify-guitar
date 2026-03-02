@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react";
 
 export default function ChordModal({ selectedItem, handleCloseModal }) {
   return (
-    <div className="font-['Nunito_Sans'] text-lg">
+    <div className="text-lg">
       <div className="w-full max-w-[95%] mx-auto">
         <Description className="text-center mt-2 mb-4">
           {selectedItem.details}

@@ -2,6 +2,7 @@ import { Field, Input, Button, Label } from "@headlessui/react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { requestRegistration } from "@/services/authService";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Register() {
   const [firstName, setFirstName] = useState("");
@@ -21,6 +22,7 @@ export default function Register() {
 });
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const validateRegistrationForm = () => {
     const newErrors = {};
@@ -58,7 +60,8 @@ export default function Register() {
     setIsLoading(true);
     try {
       const response = await requestRegistration({ email, password, firstName, lastName, displayName });
-      sessionStorage.setItem('token', response.data.token);
+      // use login function via AuthContext
+      login(response.data.token);
       navigate("/dashboard");
     } catch (error) {
       if (error.response?.status === 409) {
@@ -76,13 +79,13 @@ export default function Register() {
   return (
     <div className="relative min-h-screen flex items-center justify-center py-[10vh] bg-[#0a1628]">
       <div className="relative z-10 w-full max-w-md rounded-3xl border border-white/10 px-11 py-10 bg-white/6 shadow-2xl shadow-[#149eca]/50 transition-all hover:-translate-y-1">
-        <h1 className="text-[32px] text-[#149eca] font-['Lora'] tracking-wide">
+        <h1 className="text-[32px] text-[#149eca] tracking-wide">
           Amplify
         </h1>
-        <h2 className="text-[28px] font-bold font-['Lora'] text-stone-200 tracking-tight mb-1">
+        <h2 className="text-[28px] font-bold text-stone-200 tracking-tight mb-1">
           Create an account
         </h2>
-        <p className="text-sm text-gray-400 mb-8 font-['Nunito_Sans']">
+        <p className="text-sm text-gray-400 mb-8">
           Already have an account?{" "}
           <Link
             to="/login"
@@ -92,7 +95,7 @@ export default function Register() {
           </Link>
         </p>
         <form onSubmit={handleRegistration}>
-          <Field className="flex flex-col gap-4 font-['Nunito_Sans']">
+          <Field className="flex flex-col gap-4">
             <div className="flex flex-row gap-3">
             <div className="flex flex-col gap-1 flex-1">
               <Label className="text-xs font-semibold uppercase tracking-wide text-white/50">
@@ -109,7 +112,7 @@ export default function Register() {
                 required
               />
               {errors.firstName && (
-                <p className="text-red-400 text-xs mt-1 font-['Nunito_Sans']">{errors.firstName}</p>
+                <p className="text-red-400 text-xs mt-1">{errors.firstName}</p>
               )}
             </div>
             <div className="flex flex-col gap-1 flex-1">
@@ -127,7 +130,7 @@ export default function Register() {
                 required
               />
               {errors.lastName && (
-                <p className="text-red-400 text-xs mt-1 font-['Nunito_Sans']">{errors.lastName}</p>
+                <p className="text-red-400 text-xs mt-1">{errors.lastName}</p>
               )}
             </div>
             </div>
@@ -146,7 +149,7 @@ export default function Register() {
                 required
               />
               {errors.displayName && (
-                <p className="text-red-400 text-xs mt-1 font-['Nunito_Sans']">{errors.displayName}</p>
+                <p className="text-red-400 text-xs mt-1">{errors.displayName}</p>
               )}
             </div>
             <div className="flex flex-col gap-1">
@@ -164,7 +167,7 @@ export default function Register() {
                 required
               />
               {errors.email && (
-                <p className="text-red-400 text-xs mt-1 font-['Nunito_Sans']">{errors.email}</p>
+                <p className="text-red-400 text-xs mt-1">{errors.email}</p>
               )}
             </div>
             <div className="flex flex-col gap-1">
@@ -182,7 +185,7 @@ export default function Register() {
                 required
               />
               {errors.password && (
-                <p className="text-red-400 text-xs mt-1 font-['Nunito_Sans']">{errors.password}</p>
+                <p className="text-red-400 text-xs mt-1">{errors.password}</p>
               )}
             </div>
             <div className="flex flex-col gap-1">
@@ -200,13 +203,13 @@ export default function Register() {
                 required
               />
               {errors.confirmPassword && (
-                <p className="text-red-400 text-xs mt-1 font-['Nunito_Sans']">{errors.confirmPassword}</p>
+                <p className="text-red-400 text-xs mt-1">{errors.confirmPassword}</p>
               )}
             </div>
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full shadow-lg shadow-[#415a77] py-3 rounded-xl text-white font-semibold font-['Nunito_Sans'] cursor-pointer transition-colors disabled:opacity-60 mt-1 bg-[#149eca] hover:bg-[#0e7ea3] hover:shadow-lg"
+              className="w-full shadow-lg shadow-[#415a77] py-3 rounded-xl text-white font-semibold cursor-pointer transition-colors disabled:opacity-60 mt-1 bg-[#149eca] hover:bg-[#0e7ea3] hover:shadow-lg"
             >
               {isLoading ? "Loading..." : "Create Account"}
             </Button>

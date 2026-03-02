@@ -11,13 +11,13 @@ export default function Header() {
       <header className="max-w-screen px-6 py-4">
         <div className="flex justify-between items-center">
           <Link to={"/dashboard"}>
-            <h1 className="text-4xl text-[#0d1117] dark:text-white font-['Lora'] hover:text-[#415a77] dark:hover:text-[#149eca] transition-colors mb-1">
+            <h1 className="text-4xl text-[#0d1117] dark:text-white hover:text-[#415a77] dark:hover:text-[#149eca] transition-colors mb-1">
               Amplify
             </h1>
           </Link>
         </div>
         <div className="flex flex-row justify-between">
-          <h2 className="text-stone-400 dark:text-[#dcdcdc] font-['Lora'] text-xl">
+          <h2 className="text-stone-400 dark:text-[#dcdcdc] text-xl">
             Gamified Guitar Learning Dashboard
           </h2>
         </div>

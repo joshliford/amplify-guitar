@@ -27,7 +27,7 @@ export default function Shed({ addXP }) {
   const canClickButton = isGoalMet && !sessionComplete;
 
   return (
-    <main className="mt-8 bg-[#FFFEF7] dark:bg-black font-['Nunito_Sans'] px-4">
+    <main className="mt-8 bg-[#FFFEF7] dark:bg-black px-4">
       <SectionCard
         title={"The Shed | Practice Room"}
         icon={<CassetteTape size={35} className="text-[#FFFEF7] dark:text-black m-2"/>}
@@ -37,7 +37,7 @@ export default function Shed({ addXP }) {
             Begin your practice session and start shredding
           </p>
           <Field>
-            <Label className="font-semibold font-['Lora'] text-xl">
+            <Label className="font-semibold text-xl">
               Set a Practice Goal
             </Label>
             <div className="">
@@ -61,7 +61,7 @@ export default function Shed({ addXP }) {
           </Field>
         </div>
 
-        <div className="flex flex-col justify-center items-center font-['Nunito_Sans']">
+        <div className="flex flex-col justify-center items-center">
           <PracticeTimer runTime={runTime} setRunTime={setRunTime} />
           {selectedGoal && (
             <button

@@ -42,7 +42,7 @@ export default function PracticeTimer({ runTime, setRunTime }) {
 
   return (
     <div className="flex flex-col items-center mx-auto bg-[#1F5D3D]/20 dark:bg-slate-700 rounded-xl shadow-lg hover:shadow-xl p-12 space-y-4 m-8 w-full max-w-2xl">
-      <h2 className="font-semibold font-['Lora'] text-2xl">Practice Timer</h2>
+      <h2 className="font-semibold text-2xl">Practice Timer</h2>
       <p className="text-sm">Track your practice progress</p>
       <div>
         <p className="text-5xl font-mono">{formatTime(runTime)}</p>

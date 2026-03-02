@@ -38,7 +38,7 @@ export default function JamRoom({ addXP, completedLessons, markLessonComplete })
   };
 
   return (
-    <main className="bg-[#FFFEF7] dark:bg-black font-['Nunito_Sans']">
+    <main className="bg-[#FFFEF7] dark:bg-black">
 
       {/* burger menu visible only below sm breakpoint for mobile view */}
       <div className="sm:hidden mb-6">

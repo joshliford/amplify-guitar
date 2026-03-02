@@ -32,8 +32,8 @@ export default function Modal({ isModalOpen, handleCloseModal, category, title, 
               <h2
                 className={
                   category === "lesson"
-                    ? `text-center text-3xl font-bold text-black font-['Lora']`
-                    : `text-center text-3xl font-bold text-[#FFFEF7] font-['Lora']`
+                    ? `text-center text-3xl font-bold text-black`
+                    : `text-center text-3xl font-bold text-[#FFFEF7]`
                 }
               >
                 {title}

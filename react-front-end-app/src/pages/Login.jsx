@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { requestLogin } from "@/services/authService";
 import backgroundImage from "../assets/images/guitarbackground.jpg";
 import { Button } from "@headlessui/react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -18,7 +20,8 @@ export default function Login() {
     try {
       // send login request to backend and wait for response
       const response = await requestLogin({ email, password });
-      sessionStorage.setItem('token', response.data.token);
+      // use login function via useAuth (in AuthContext) to store token in session storage
+      login(response.data.token);
       navigate("/dashboard");
     } catch (error) {
       setLoginError("Invalid credentials.")
@@ -35,17 +38,17 @@ export default function Login() {
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <div>
-          <h1 className="text-4xl font-['Lora'] text-white">
+          <h1 className="text-4xl text-white">
             Amplify
           </h1>
         </div>
         <div>
-          <h2 className="text-4xl font-['Lora'] text-white leading-snug">
+          <h2 className="text-4xl text-white leading-snug">
             Guitar practice,
             <br />
             <em>Amplified.</em>
           </h2>
-          <p className="text-white/70 mt-3 font-['Nunito_Sans'] text-lg">
+          <p className="text-white/70 mt-3 text-lg">
             Gamified Guitar Learning Dashboard
           </p>
         </div>
@@ -56,24 +59,24 @@ export default function Login() {
         <div className="w-full max-w-sm">
           {/* Mobile */}
           <div className="mb-4 lg:hidden">
-          <h1 className="text-5xl font-['Lora'] mb-2">
+          <h1 className="text-5xl mb-2">
             Amplify
           </h1>
-          <h2 className="font-['Nunito_Sans']">
+          <h2>
             Gamified Guitar Learning Dashboard
           </h2>
           </div>
 
-          <h2 className="text-3xl font-['Lora'] mb-2">
+          <h2 className="text-3xl mb-2">
             Welcome back!
           </h2>
-          <p className="text-[#718096] font-['Nunito_Sans'] mb-8">
+          <p className="text-[#718096] mb-8">
             Sign in to your account
           </p>
 
           <form onSubmit={handleSignIn} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-semibold font-['Nunito_Sans']">
+              <label className="text-sm font-semibold">
                 Email
               </label>
               <input
@@ -81,11 +84,11 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="border border-stone-300 rounded-lg px-4 py-2.5 text-sm font-['Nunito_Sans'] focus:outline-none focus:ring-2 focus:ring-[#415a77] bg-white"
+                className="border border-stone-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#415a77] bg-white"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-semibold font-['Nunito_Sans']">
+              <label className="text-sm font-semibold">
                 Password
               </label>
               <input
@@ -93,12 +96,12 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="border border-stone-300 rounded-lg px-4 py-2.5 text-sm font-['Nunito_Sans'] focus:outline-none focus:ring-2 focus:ring-[#415a77] bg-white"
+                className="border border-stone-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#415a77] bg-white"
               />
             </div>
 
             {loginError && (
-              <p className="text-red-500 text-sm font-['Nunito_Sans']">
+              <p className="text-red-500 text-sm">
                 {loginError}
               </p>
             )}
@@ -106,13 +109,13 @@ export default function Login() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-[#415a77] hover:bg-[#31455a] text-white font-semibold font-['Nunito_Sans'] py-2.5 rounded-lg transition-colors disabled:opacity-60 mt-2 cursor-pointer"
+              className="bg-[#415a77] hover:bg-[#31455a] text-white font-semibold py-2.5 rounded-lg transition-colors disabled:opacity-60 mt-2 cursor-pointer"
             >
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
 
-          <p className="text-center text-sm text-[#718096] font-['Nunito_Sans'] mt-6">
+          <p className="text-center text-sm text-[#718096] mt-6">
             Don&apos;t have an account?{" "}
             <Link
               to="/register"

@@ -21,7 +21,7 @@ export default function LoadingSpinner() {
           r="40"
         />
       </svg>
-      <p className="text-gray-400 font-['Nunito_Sans'] text-sm">Loading Dashboard...</p>
+      <p className="text-gray-400 text-sm">Loading Dashboard...</p>
     </div>
   );
 }

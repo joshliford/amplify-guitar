@@ -2,11 +2,11 @@ import LessonFooter from "./LessonFooter";
 
 export default function LessonModal({ selectedItem, handleCloseModal, addXP, completedLessons, markLessonComplete }) {
   return (
-    <div className="font-['Nunito_Sans'] text-lg">
+    <div className="text-lg">
       <div>
         {selectedItem.sections.map((section, index) => (
           <div key={index}>
-            <h2 className="mt-8 mb-2 w-full max-w-full font-semibold text-2xl font-['Lora']">
+            <h2 className="mt-8 mb-2 w-full max-w-full font-semibold text-2xl">
               {section.heading}
             </h2>
             {section.text && <p>{section.text}</p>}

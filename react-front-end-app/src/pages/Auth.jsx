@@ -75,8 +75,8 @@ export default function Auth() {
         </ul>
       </div>
       <div className="flex flex-col justify-center items-center mb-4 bg-[#1F5D3D]/80 p-4 rounded-xl text-white">
-        <h1 className="text-4xl font-['Lora']">Amplify</h1>
-        <p className="font-['Lora'] text-lg">
+        <h1 className="text-4xl">Amplify</h1>
+        <p className="text-lg">
           Gamified Guitar Learning Dashboard
         </p>
       </div>
@@ -94,8 +94,8 @@ export default function Auth() {
             className={`
                     ${
                       isActive === "Login"
-                        ? `border-2 border-black rounded-xl p-2 hover:cursor-pointer text-white bg-[#1F5D3D] font-['Nunito_Sans'] text-lg`
-                        : `border-2 border-black rounded-xl p-2 hover:cursor-pointer hover:bg-[#FFF8EE] font-['Nunito_Sans'] text-lg transition-colors`
+                        ? `border-2 border-black rounded-xl p-2 hover:cursor-pointer text-white bg-[#1F5D3D] text-lg`
+                        : `border-2 border-black rounded-xl p-2 hover:cursor-pointer hover:bg-[#FFF8EE] text-lg transition-colors`
                     }`}
           >
             Login
@@ -112,8 +112,8 @@ export default function Auth() {
             className={`
                     ${
                       isActive === "Register"
-                        ? `border-2 border-black rounded-xl p-2 hover:cursor-pointer text-white bg-[#1F5D3D] font-['Nunito_Sans'] text-lg`
-                        : `border-2 border-black rounded-xl p-2 hover:cursor-pointer hover:bg-[#FFF8EE] font-['Nunito_Sans'] text-lg transition-colors`
+                        ? `border-2 border-black rounded-xl p-2 hover:cursor-pointer text-white bg-[#1F5D3D] text-lg`
+                        : `border-2 border-black rounded-xl p-2 hover:cursor-pointer hover:bg-[#FFF8EE] text-lg transition-colors`
                     }`}
           >
             Register
@@ -125,13 +125,13 @@ export default function Auth() {
           <TabPanel>
             <form className="p-4">
               <div className="flex flex-col items-center mt-2 mb-6">
-                <h1 className="text-xl font-semibold font-['Lora'] mb-4">
+                <h1 className="text-xl font-semibold mb-4">
                   Have an Account?
                 </h1>
-                <p className="text-lg font-['Nunito_Sans']">Sign In</p>
+                <p className="text-lg">Sign In</p>
               </div>
               <div>
-                <Field className="flex flex-col space-y-4 font-['Nunito-Sans']">
+                <Field className="flex flex-col space-y-4">
                   <div className="relative">
                     <Mail size={20} className="absolute left-2 top-3" />
                     <Input
@@ -141,7 +141,7 @@ export default function Auth() {
                       name="email"
                       type="email"
                       placeholder="Email"
-                      className="border-2 p-2 pl-8 rounded-3xl bg-white/80 border-black font-['Nunito_Sans']"
+                      className="border-2 p-2 pl-8 rounded-3xl bg-white/80 border-black"
                       required
                     />
                   </div>
@@ -154,13 +154,13 @@ export default function Auth() {
                       name="password"
                       type="password"
                       placeholder="Password"
-                      className="border-2 p-2 pl-8 rounded-3xl bg-white/80 border-black font-['Nunito_Sans']"
+                      className="border-2 p-2 pl-8 rounded-3xl bg-white/80 border-black"
                       required
                     />
                   </div>
                 </Field>
                 {loginError && (
-                  <p className="text-red-500 font-semibold text-center mb-2 font-['Nunito_Sans']">
+                  <p className="text-red-500 font-semibold text-center mb-2">
                     {loginError}
                   </p>
                 )}
@@ -168,7 +168,7 @@ export default function Auth() {
                   type="submit"
                   onClick={handleSignIn}
                   disabled={isLoading}
-                  className={isLoading ? `disabled cursor-not-allowed border-2 border-black rounded-3xl p-2 max-w-3xl w-full text-lg bg-gray-300 font-['Nunito_Sans']` : `border-2 border-black rounded-3xl p-2 max-w-3xl w-full text-lg text-white bg-[#1F5D3D] hover:bg-[#1F5D3D]/90 cursor-pointer font-['Nunito_Sans']`}
+                  className={isLoading ? `disabled cursor-not-allowed border-2 border-black rounded-3xl p-2 max-w-3xl w-full text-lg bg-gray-300` : `border-2 border-black rounded-3xl p-2 max-w-3xl w-full text-lg text-white bg-[#1F5D3D] hover:bg-[#1F5D3D]/90 cursor-pointer`}
                 >
                   {isLoading ? "Signing in..." : "Sign In"}
                 </Button>
@@ -180,12 +180,12 @@ export default function Auth() {
           <TabPanel>
             <form className="p-6">
               <div className="flex flex-col items-center mt-2 mb-2">
-                <h2 className="text-xl font-semibold mb-4 font-['Lora']">
+                <h2 className="text-xl font-semibold mb-4">
                   Create an Account
                 </h2>
               </div>
               <div>
-                <Field className="flex flex-col space-y-4 font-['Nunito-Sans']">
+                <Field className="flex flex-col space-y-4">
                   <div className="relative">
                     <Mail size={20} className="absolute left-2 top-3" />
                     <Input
@@ -195,7 +195,7 @@ export default function Auth() {
                       name="email"
                       type="email"
                       placeholder="Enter Email"
-                      className="border-2 p-2 pl-8 rounded-3xl bg-white/80 border-black font-['Nunito_Sans']"
+                      className="border-2 p-2 pl-8 rounded-3xl bg-white/80 border-black"
                       required
                     />
                   </div>
@@ -208,7 +208,7 @@ export default function Auth() {
                       name="password"
                       type="password"
                       placeholder="Enter Password"
-                      className="border-2 p-2 pl-8 rounded-3xl bg-white/80 border-black font-['Nunito_Sans']"
+                      className="border-2 p-2 pl-8 rounded-3xl bg-white/80 border-black"
                       required
                     />
                   </div>
@@ -221,12 +221,12 @@ export default function Auth() {
                       name="confirmPassword"
                       type="password"
                       placeholder="Confirm Password"
-                      className="border-2 p-2 pl-8 rounded-3xl bg-white/80 border-black font-['Nunito_Sans']"
+                      className="border-2 p-2 pl-8 rounded-3xl bg-white/80 border-black"
                       required
                     />
                   </div>
                   {registrationError && (
-                    <p className="text-red-500 font-semibold text-center mb-2 font-['Nunito_Sans']">
+                    <p className="text-red-500 font-semibold text-center mb-2">
                       {registrationError}
                     </p>
                   )}
