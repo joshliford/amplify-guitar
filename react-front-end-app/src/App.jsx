@@ -1,4 +1,10 @@
-import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from "react-router";
 import { useEffect, useState } from "react";
 import "./index.css";
 import Header from "./components/Header";
@@ -10,9 +16,10 @@ import Shed from "./pages/Shed";
 import Login from "./pages/Login";
 import SideNavBar from "./components/SideNavBar";
 import Register from "./pages/Register";
+import { AuthContextProvider } from "./context/AuthContext";
+import ProtectedRoutes from "./components/ProtectedRoutes";
 
 function App() {
-  
   const [isDark, setIsDark] = useState(false);
 
   const toggleDarkMode = () => {
@@ -42,20 +49,33 @@ function App() {
   };
 
   return (
-    <div className={isAuthPage ? "w-full min-h-screen" : "flex flex-col min-h-screen"}>
+    <div
+      className={
+        isAuthPage ? "w-full min-h-screen" : "flex flex-col min-h-screen"
+      }
+    >
       {!isAuthPage && <Header />}
       <main className={isAuthPage ? "w-full" : "flex flex-1 ml-[175px]"}>
-        {!isAuthPage && <SideNavBar handleLogout={handleLogout} toggleDarkMode={toggleDarkMode}/>}
+        {!isAuthPage && (
+          <SideNavBar
+            handleLogout={handleLogout}
+            toggleDarkMode={toggleDarkMode}
+          />
+        )}
         <div className={isAuthPage ? "w-full" : "flex-1"}>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/jamroom" element={<JamRoom />} />
-          <Route path="/shed" element={<Shed />} />
-        </Routes>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            {/* Protected Routes */}
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/jamroom" element={<JamRoom />} />
+              <Route path="/shed" element={<Shed />} />
+            </Route>
+          </Routes>
         </div>
       </main>
       {!isAuthPage && <Footer />}

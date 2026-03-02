@@ -8,5 +8,5 @@ export function xpNeededToLevelUp(currentXp, currentLevel) {
 
 // simple leveling logic to match backend
 export function xpForNextLevel(level) {
-  return 50 + (level * 50);
+  return 50 + ((level + 1) * 50);
 }
