@@ -1,187 +1,116 @@
-import { useState } from "react";
-import ChordCard from "../components/Chords/ChordCard";
-import ScaleCard from "../components/Scales/ScaleCard";
-import LessonCard from "../components/Lessons/LessonCard";
-import { chords } from "../components/Chords/chordData";
-import { scales } from "../components/Scales/scaleData";
-import { lessons } from "../components/Lessons/lessonData";
-import FilterButton from "../components/FilterButton";
-import Modal from "../components/Modal";
-import ChordModal from "../components/Chords/ChordModal";
-import ScaleModal from "../components/Scales/ScaleModal";
-import LessonModal from "../components/Lessons/LessonModal";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { SquareMenu } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getAllChords } from "@/services/chordService";
+import { getAllLessons } from "@/services/lessonService";
+import { getAllScales } from "@/services/scaleService";
+import { ArrowDown } from "lucide-react";
+import { useEffect, useState } from "react";
 
-export default function JamRoom({ addXP, completedLessons, markLessonComplete }) {
-
-  // entire object (chord, scale, or lesson) currently being viewed
+export default function JamRoom() {
+  const [activeTab, setActiveTab] = useState("Lessons");
   const [selectedItem, setSelectedItem] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filter, setFilter] = useState("all");
-  const [isActive, setIsActive] = useState("all");
+  const [chords, setChords] = useState([]);
+  const [scales, setScales] = useState([]);
+  const [lessons, setLessons] = useState([]);
+  const [difficultyFilter, setDifficultyFilter] = useState("All");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // recieves an 'item' (i.e. chord/scale/lesson object) from Card
-  // stores the 'item' in selectedItem (tells the modal what to display)
-  // sets isModalOpen to be 'true' so the modal is opened/can be viewed/seen
-  const handleViewItem = (item) => {
-    setSelectedItem(item);
-    setIsModalOpen(true);
-  };
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        // fetch all 3 datasets in parellel
+        const [chordsData, scalesData, lessonsData] = await Promise.all([
+          getAllChords(),
+          getAllScales(),
+          getAllLessons(),
+        ]);
+        // extract data from axios response above
+        setChords(chordsData.data);
+        setScales(scalesData.data);
+        setLessons(lessonsData.data);
+      } catch (error) {
+        setError("Failed to load JamRoom data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    // invoke on component mount
+    fetchAllData();
+  }, []);
 
-  const handleCloseModal = () => setIsModalOpen(false);
+  const getFilteredItems = () => {
+    let items =
+      activeTab === "Lessons"
+        ? lessons
+        : activeTab === "Chords"
+          ? chords
+          : scales;
 
-  const filterOptions = (value) => {
-    // updates filter state to be whatever was clicked (i.e. chords, scales, etc.)
-    setFilter(value);
-    setIsActive(value);
+    if (difficultyFilter !== "All") {
+      items = items.filter((item) => item.difficulty === difficultyFilter);
+    }
+
+    return items;
   };
 
   return (
-    <main className="bg-[#FFFEF7] dark:bg-black">
-
-      {/* burger menu visible only below sm breakpoint for mobile view */}
-      <div className="sm:hidden mb-6">
-        <Menu as="div" className="flex justify-center mt-8">
-          <MenuButton className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1F5D3D] dark:bg-[#e5c391] dark:hover:bg-[#D4A574] dark:text-black text-white hover:cursor-pointer">
-            <SquareMenu size={18} />
-          </MenuButton>
-
-          <MenuItems className="absolute mt-10 w-40 left-1/2 -translate-x-1/2 rounded-lg bg-white dark:bg-slate-700 shadow-lg">
-            <MenuItem>
-              <button
-                onClick={() => filterOptions("all")}
-                className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800 hover:cursor-pointer"
-              >
-                All
-              </button>
-            </MenuItem>
-            <MenuItem>
-              <button
-                onClick={() => filterOptions("chords")}
-                className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800 hover:cursor-pointer"
-              >
-                Chords
-              </button>
-            </MenuItem>
-            <MenuItem>
-              <button
-                onClick={() => filterOptions("lessons")}
-                className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800 hover:cursor-pointer"
-              >
-                Lessons
-              </button>
-            </MenuItem>
-            <MenuItem>
-              <button
-                onClick={() => filterOptions("scales")}
-                className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800 hover:cursor-pointer"
-              >
-                Scales
-              </button>
-            </MenuItem>
-          </MenuItems>
-        </Menu>
+    <main className="flex flex-row px-8 py-10 gap-8">
+      {/* Left pannel */}
+      <div className="w-5/12 flex flex-col rounded-xl bg-blue-400">
+        <div className="p-4 flex flex-row items-center">
+          <p className="mr-4 text-lg">Jam Room</p>
+          <Tabs className="p-4">
+            <TabsList>
+              <TabsTrigger value="lessons">Lessons</TabsTrigger>
+              <TabsTrigger value="chords">Chords</TabsTrigger>
+              <TabsTrigger value="scales">Scales</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+             <Button variant="outline" className="w-20">Difficulty</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-40" align="end">
+              <DropdownMenuGroup>
+                <DropdownMenuItem>Beginner</DropdownMenuItem>
+                <DropdownMenuItem>Intermediate</DropdownMenuItem>
+                <DropdownMenuItem>Advanced</DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="px-4 flex flex-row justify-between">
+          <p className="uppercase text-sm tracking-wide">Browse</p>
+          {/* placeholder for "x/10 lessons complete" */}
+          <p>lessons complete</p>
+        </div>
+        <div className="px-6 py-6 min-h-screen flex flex-col gap-4 border border-black">
+          <p className="border p-8">Test Lesson/Chord/Scale</p>
+          <p className="border p-8">Test Lesson/Chord/Scale</p>
+          <p className="border p-8">Test Lesson/Chord/Scale</p>
+        </div>
       </div>
-
-      <div className="max-sm:hidden sm:flex flex-row text-lg justify-center gap-3 mb-8 mt-8">
-        <FilterButton
-          label={"All"}
-          value={"all"}
-          filterOptions={filterOptions}
-          isActive={isActive}
-        />
-        <FilterButton
-          label={"Chords"}
-          value={"chords"}
-          filterOptions={filterOptions}
-          isActive={isActive}
-        />
-        <FilterButton
-          label={"Lessons"}
-          value={"lessons"}
-          filterOptions={filterOptions}
-          isActive={isActive}
-        />
-        <FilterButton
-          label={"Scales"}
-          value={"scales"}
-          filterOptions={filterOptions}
-          isActive={isActive}
-        />
+      {/* Right pannel */}
+      <div className="flex flex-col gap-6 w-2/3 px-8 py-8 rounded-xl bg-orange-500">
+        <div className="px-6 flex flex-row justify-between border-b">
+          <p>Selected lesson</p>
+          <p className="mr-10">Difficulty: </p>
+        </div>
+        <div className="flex flex-col gap-3">
+          <p>Lesson Name</p>
+          <p>Lesson Description</p>
+        </div>
+        <div className="p-10 border">
+          <p>Lesson Preview</p>
+        </div>
+        <div className="mt-12 border-b flex flex-row justify-between">
+          <p>XP reward</p>
+          <p>XP amount</p>
+        </div>
+        <Button>Start Lesson</Button>
       </div>
-
-      {/* filter === 'all' indicates that it will be shown on screen by default unless a different choice is clicked */}
-      <div className="text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6">
-        {(filter === "all" || filter === "chords") &&
-          chords.map((chord) => {
-            // chord={chord} - passes the entire 'chord' object (i.e. id, title, etc) from the .map() callback into ChordCard as a prop named 'chord'
-            // 'chord' is then available via deconstruction in ChordCard
-            return (
-              <ChordCard
-                key={chord.id}
-                chord={chord}
-                handleViewItem={handleViewItem}
-              />
-            );
-          })}
-        {(filter === "all" || filter === "scales") &&
-          scales.map((scale) => {
-            return (
-              <ScaleCard
-                key={scale.id}
-                scale={scale}
-                handleViewItem={handleViewItem}
-              />
-            );
-          })}
-        {(filter === "all" || filter === "lessons") &&
-          lessons.map((lesson) => {
-            return (
-              <LessonCard
-                key={lesson.id}
-                lesson={lesson}
-                handleViewItem={handleViewItem}
-                completedLessons={completedLessons}
-              />
-            );
-          })}
-      </div>
-
-        {/* 
-        - used optional chaining (?.) to prevent browser crashes (i.e. if selectedItem is 'null' return undefined rather than crashing the app)
-        - helps render the conditional woodgrain header for each modal in Jamroom
-        */}
-      <Modal
-        isModalOpen={isModalOpen}
-        handleCloseModal={handleCloseModal}
-        category={selectedItem?.category}
-        title={selectedItem?.title}
-      >
-        {selectedItem && selectedItem.category === "chord" && (
-          <ChordModal
-            selectedItem={selectedItem}
-            handleCloseModal={handleCloseModal}
-          />
-        )}
-        {selectedItem && selectedItem.category === "scale" && (
-          <ScaleModal
-            selectedItem={selectedItem}
-            handleCloseModal={handleCloseModal}
-          />
-        )}
-
-        {/* lessons carry the bulk of XP gain/content so they need to take in additional props to properly update state and XP dynamically */}
-        {selectedItem && selectedItem.category === "lesson" && (
-          <LessonModal
-            selectedItem={selectedItem}
-            handleCloseModal={handleCloseModal}
-            addXP={addXP}
-            completedLessons={completedLessons}
-            markLessonComplete={markLessonComplete}
-          />
-        )}
-      </Modal>
     </main>
-  );
+  )
 }
