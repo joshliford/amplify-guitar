@@ -50,15 +50,13 @@ public class Lesson {
 
     }
 
-    public Lesson(String content, Difficulty difficulty, LocalDateTime createdAt, String description, Integer lessonNumber, Integer requiredLevel, String title, LocalDateTime updatedAt, String videoUrl, Integer xpReward) {
+    public Lesson(String content, Difficulty difficulty, String description, Integer lessonNumber, Integer requiredLevel, String title, String videoUrl, Integer xpReward) {
         this.content = content;
         this.difficulty = difficulty;
-        this.createdAt = createdAt;
         this.description = description;
         this.lessonNumber = lessonNumber;
         this.requiredLevel = requiredLevel;
         this.title = title;
-        this.updatedAt = updatedAt;
         this.videoUrl = videoUrl;
         this.xpReward = xpReward;
     }
