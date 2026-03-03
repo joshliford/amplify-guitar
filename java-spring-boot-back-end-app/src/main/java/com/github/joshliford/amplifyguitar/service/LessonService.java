@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 Core methods:
 getLessons(User user) - return list of lessons with custom LessonResponseDTO
 completeLessons(User user, Integer lessonId) - creates a UserLesson record and awards XP
+getLessonById(Integer id) - get lesson by ID for jam room detail view
 buildLessonResponse(Lesson lesson, Set<Integer> completedLessonIds, User user) - helper method to build a single LessonResponseDTO from a lesson and user context
 */
 
@@ -85,6 +86,11 @@ public class LessonService {
         progressService.addXp(user.getId(), lesson.getXpReward());
 
         return userLessonRepository.save(lessonComplete);
+    }
+
+    public Lesson getLessonById(Integer id) {
+        return lessonRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Lesson not found with id: " + id));
     }
 
     // helper method to build a single LessonResponseDTO from a lesson and user context
