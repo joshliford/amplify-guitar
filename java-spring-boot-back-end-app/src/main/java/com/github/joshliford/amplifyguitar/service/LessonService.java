@@ -99,6 +99,7 @@ public class LessonService {
         boolean locked = lesson.getRequiredLevel() > user.getCurrentLevel();
 
         return new LessonResponseDTO(
+                lesson.getId(),
                 completed,
                 lesson.getDifficulty(),
                 lesson.getContent(),

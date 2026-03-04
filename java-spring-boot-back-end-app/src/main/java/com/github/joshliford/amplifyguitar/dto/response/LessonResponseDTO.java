@@ -6,6 +6,8 @@ import jakarta.persistence.Enumerated;
 
 public class LessonResponseDTO {
 
+    private Integer id;
+
     private String title;
 
     private String description;
@@ -27,7 +29,8 @@ public class LessonResponseDTO {
 
     private boolean locked;
 
-    public LessonResponseDTO(boolean completed, Difficulty difficulty, String content, String description, Integer lessonNumber, boolean locked, Integer requiredLevel, String title, String videoUrl, Integer xpReward) {
+    public LessonResponseDTO(Integer id, boolean completed, Difficulty difficulty, String content, String description, Integer lessonNumber, boolean locked, Integer requiredLevel, String title, String videoUrl, Integer xpReward) {
+        this.id = id;
         this.completed = completed;
         this.difficulty = difficulty;
         this.content = content;
@@ -38,6 +41,10 @@ public class LessonResponseDTO {
         this.title = title;
         this.videoUrl = videoUrl;
         this.xpReward = xpReward;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public boolean isCompleted() {

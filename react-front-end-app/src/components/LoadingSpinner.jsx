@@ -1,4 +1,4 @@
-export default function LoadingSpinner() {
+export default function LoadingSpinner({ page }) {
   return (
     <div className="flex items-center justify-center min-h-screen gap-3">
       <svg className="h-10 w-10 animate-spin" viewBox="0 0 100 100">
@@ -21,7 +21,7 @@ export default function LoadingSpinner() {
           r="40"
         />
       </svg>
-      <p className="text-gray-400 text-sm">Loading Dashboard...</p>
+      <p className="text-gray-400 text-sm">Loading {page} Data...</p>
     </div>
   );
 }
