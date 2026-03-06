@@ -13,7 +13,7 @@ export default function SideNavBar({ handleLogout, isDark, toggleDarkMode }) {
   return (
     <div className="flex flex-col fixed top-0 left-0 min-h-screen w-[175px] bg-[#f9fafb] dark:bg-[#1a2536] border-r-2 border-stone-200 dark:border-[#778da9]/20">
       <nav>
-        <ul className="flex flex-col gap-4 text-xl p-3 mt-4">
+        <ul className="flex flex-col gap-4 text-md p-3 mt-4">
           <div
             className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
               location.pathname === "/dashboard"
@@ -117,13 +117,13 @@ export default function SideNavBar({ handleLogout, isDark, toggleDarkMode }) {
           <div className="group flex absolute bottom-4 gap-2 items-center rounded-lg px-2 py-2 hover:bg-stone-200 text-stone-500 dark:text-[#e0e0e0] dark:hover:bg-[#778da9]/20 transition-colors">
             <Settings className="group-hover:text-[#415a77] dark:group-hover:text-[#778da9]" />
             <Menu>
-              <MenuButton className="inline-flex items-center gap-2 group-hover:text-[#415a77] dark:group-hover:text-[#778da9] hover:cursor-pointer text-xl">
+              <MenuButton className="inline-flex items-center gap-2 group-hover:text-[#415a77] dark:group-hover:text-[#778da9] hover:cursor-pointer text-md">
                 Profile
                 <ChevronDown className="size-4" />
               </MenuButton>
-              <MenuItems anchor="top" className="rounded-xl bg-white dark:bg-gray-800 border border-stone-200 dark:border-[#778da9]/20 shadow-md">
+              <MenuItems anchor="top" className="rounded-xl bg-[#415a77] dark:bg-gray-800 border border-stone-200 dark:border-[#778da9]/20 shadow-md">
                 <MenuItem as="div" className="flex justify-center items-center px-2 py-4 gap-2">
-                  <span className="text-[#0d1117] dark:text-white text-lg font-semibold">
+                  <span className=" text-white dark:text-white text-sm font-semibold">
                     Dark Mode
                   </span>
                   <DarkModeToggle isDark={isDark} toggleDarkMode={toggleDarkMode} />
@@ -131,7 +131,7 @@ export default function SideNavBar({ handleLogout, isDark, toggleDarkMode }) {
                 <MenuItem as="div" className="flex justify-center">
                   <button
                     onClick={handleLogout}
-                    className="text-stone-500 dark:text-[#e0e0e0] hover:text-red-500 dark:hover:text-red-400 font-semibold text-xl hover:cursor-pointer transition mb-2"
+                    className="text-white dark:text-[#e0e0e0] hover:text-red-400 dark:hover:text-red-400 font-semibold text-xl hover:cursor-pointer transition mb-2"
                   >
                     Logout
                   </button>
