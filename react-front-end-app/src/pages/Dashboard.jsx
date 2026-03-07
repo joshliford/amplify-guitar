@@ -45,7 +45,7 @@ export default function Dashboard() {
 
   if (user) {
     return (
-      <main className="grid grid-cols-3 grid-rows-2 min-h-screen gap-4 bg-[#f0f4f8] dark:bg-[#1a2536] py-12 px-16">
+      <main className="grid grid-cols-3 grid-rows-2 min-h-screen gap-4 bg-[#eff2f1] dark:bg-[#1a2536] py-12 px-16">
         {/* Left user card */}
         <SectionCard
           title={`Welcome back, ${user.displayName}!`}

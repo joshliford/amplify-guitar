@@ -11,7 +11,7 @@ export default function SideNavBar({ handleLogout, isDark, toggleDarkMode }) {
   if (location.pathname === "/login" || location.pathname === "/register") return null;
 
   return (
-    <div className="flex flex-col fixed top-0 left-0 min-h-screen w-[175px] bg-[#f9fafb] dark:bg-[#1a2536] border-r-2 border-stone-200 dark:border-[#778da9]/20">
+    <div className="flex flex-col fixed top-0 left-0 min-h-screen w-[175px] bg-[#e5e5e5] dark:bg-[#1a2536] border-r-2 border-[#415a77] dark:border-[#778da9]/20">
       <nav>
         <ul className="flex flex-col gap-4 text-md p-3 mt-4">
           <div

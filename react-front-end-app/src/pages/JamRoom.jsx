@@ -4,7 +4,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getAllChords } from "@/services/chordService";
 import { getAllLessons } from "@/services/lessonService";
 import { getAllScales } from "@/services/scaleService";
-import { Lock } from "lucide-react";
+import { AudioLines, GraduationCap, Lock, Music } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function JamRoom() {
@@ -45,7 +45,7 @@ export default function JamRoom() {
 
     if (activeTab === "Chords") {
       return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           {selectedItem.imageUrl && (
             <img
               src={selectedItem.imageUrl}
@@ -65,8 +65,8 @@ export default function JamRoom() {
             </p>
             <p className="text-sm leading-relaxed">{selectedItem.tips}</p>
           </div>
-          <div className="flex flex-col gap-4">
-            <p className="text-xs uppercase tracking-wide font-semibold text-gray-600">
+          <div className="flex flex-col border-t border-gray-200 gap-4">
+            <p className="mt-6 text-xs uppercase tracking-wide font-semibold text-gray-600">
               Finger Positions:
             </p>
             <p className="text-sm">{selectedItem.fingerPositions}</p>
@@ -77,9 +77,7 @@ export default function JamRoom() {
 
     if (activeTab === "Scales") {
       return (
-        <div className="flex flex-col">
-          <p>{selectedItem.details}</p>
-          <p>{selectedItem.tips}</p>
+        <div className="flex flex-col gap-4">
           {selectedItem.imageUrl && (
             <img
               src={selectedItem.imageUrl}
@@ -87,8 +85,24 @@ export default function JamRoom() {
               className="mx-auto max-w-[400px]"
             />
           )}
-          <p>{selectedItem.tabUrl}</p>
-          <p>{selectedItem.position}</p>
+          <div className="flex flex-col gap-4 border-t border-gray-200">
+            <p className="mt-6 text-xs uppercase tracking-wide font-semibold text-gray-600">
+              Scale Details:
+            </p>
+            <p className="text-sm leading-relaxed">{selectedItem.details}</p>
+          </div>
+          <div className="flex flex-col gap-4 border-t border-gray-200">
+            <p className="mt-6 text-xs uppercase tracking-wide font-semibold text-gray-600">
+              Scale Tips:
+            </p>
+            <p className="text-sm leading-relaxed">{selectedItem.tips}</p>
+          </div>
+          <div className="flex flex-col border-t border-gray-200 gap-4">
+            <p className="mt-6 text-xs uppercase tracking-wide font-semibold text-gray-600">
+              Position:
+            </p>
+            <p className="text-sm">{selectedItem.position}</p>
+          </div>
         </div>
       );
     }
@@ -190,7 +204,7 @@ export default function JamRoom() {
   }
 
   return (
-    <main className="grid grid-cols-[500px_1fr] px-8 py-10 gap-8 bg-[#f9fafb]">
+    <main className="grid grid-cols-[500px_1fr] px-8 py-10 gap-8 bg-[#eff2f1]">
       {/* Header */}
       <div className="col-span-2 flex flex-row gap-16 items-center">
         <p className="text-2xl font-semibold">Jam Room</p>
@@ -292,7 +306,7 @@ export default function JamRoom() {
                     </div>
                     <div>
                       <span
-                        className={`text-xs font-medium rounded-full py-0.5 px-3 mb-2 w-fit inline-block ${item.difficulty === "BEGINNER" ? "bg-[#f0faf5] text-[#2e7d5a]" : item.difficulty === "INTERMEDIATE" ? "bg-[#fff8ed] text-[#b37a2a]" : "bg-[#fdf0f0] text-[#9b3a3a]"}`}
+                        className={`text-xs font-medium rounded-full py-0.5 px-2 ml-1 mb-2 w-fit inline-block ${item.difficulty === "BEGINNER" ? "bg-[#f0faf5] text-[#2e7d5a]" : item.difficulty === "INTERMEDIATE" ? "bg-[#fff8ed] text-[#b37a2a]" : "bg-[#fdf0f0] text-[#9b3a3a]"}`}
                       >
                         {item.difficulty.charAt(0) +
                           item.difficulty.slice(1).toLowerCase()}
@@ -311,15 +325,41 @@ export default function JamRoom() {
         style={{ borderColor: currentTab.color }}
       >
         <div className="flex flex-col gap-6 px-8 py-8 max-h-[calc(100vh-150px)] overflow-y-auto">
-          <div className="flex flex-row justify-between border-b text-sm text-gray-500">
-            {activeTab === "Lessons" && <p>Selected lesson</p>}
+          <div className="flex flex-row justify-between text-sm text-gray-500">
+            {activeTab === "Lessons" ? (
+              <div className="flex flex-row gap-2" style={{color: currentTab.color}}>
+                <GraduationCap size={20} />
+                <p className="text-sm">Lessons</p>
+              </div>
+            ) : activeTab === "Chords" ? (
+              <div className="flex flex-row gap-2" style={{color: currentTab.color}}>
+                <Music size={20} />
+                <p className="text-sm">Chords</p>
+              </div>
+            ) : (
+              <div className="flex flex-row gap-2" style={{color: currentTab.color}}>
+                <AudioLines size={20} />
+                <p className="text-sm">Scales</p>
+              </div>
+            )}
           </div>
           <div className="flex flex-col gap-3">
-            <p className="text-4xl font-semibold tracking-wide">
-              {selectedItem?.title}
-            </p>
+            <div className="flex flex-row justify-between items-center">
+              <p className="text-3xl font-semibold tracking-wide">
+                {selectedItem?.title}
+              </p>
+              {activeTab !== "Lessons" && (
+                <p className="text-xs text-gray-500">
+                  Tip: Notes indicated with the
+                  <span className="text-[#2a9d8f] ml-1 font-semibold">
+                    teal circle
+                  </span>{" "}
+                  are "root" notes.
+                </p>
+              )}
+            </div>
             <span
-              className={`text-xs font-medium rounded-full py-0.5 px-3 w-fit inline-block" ${selectedItem?.difficulty === "BEGINNER" ? "bg-[#f0faf5] text-[#2e7d5a]" : selectedItem?.difficulty === "INTERMEDIATE" ? "bg-[#fff8ed] text-[#b37a2a]" : "bg-[#fdf0f0] text-[#9b3a3a]"}`}
+              className={`text-xs font-medium rounded-full py-0.5 px-2 w-fit inline-block" ${selectedItem?.difficulty === "BEGINNER" ? "bg-[#f0faf5] text-[#2e7d5a]" : selectedItem?.difficulty === "INTERMEDIATE" ? "bg-[#fff8ed] text-[#b37a2a]" : "bg-[#fdf0f0] text-[#9b3a3a]"}`}
             >
               {selectedItem?.difficulty.charAt(0) +
                 selectedItem?.difficulty.slice(1).toLowerCase()}
