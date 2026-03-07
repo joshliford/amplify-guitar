@@ -13,3 +13,7 @@ export function getChordsByDifficulty(difficulty) {
 export function getChordById(id) {
     return apiClient.get(`/chords/${id}`);
 }
+
+export function getTotalChords() {
+    return apiClient.get('/chords/count');
+}

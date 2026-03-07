@@ -1,38 +1,64 @@
-import { Link } from "react-router-dom";
-import XPBar from "../components/XPBar";
 import SectionCard from "../components/SectionCard";
-import { dailyChallenges } from "../components/Data/dailyChallenges";
-import { rewards } from "../components/Data/rewards";
-import { Flame, AlarmClock, BookOpen, Zap } from "lucide-react";
+import {
+  BookOpen,
+  Zap,
+  Trophy,
+  Link2,
+  Clock,
+  Music2,
+  Flame,
+  ZapIcon,
+  Layers,
+  Guitar,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { getUser } from "@/services/userService";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { xpForNextLevel, xpNeededToLevelUp } from "@/components/utils/xpUtils";
+import { getAllChords, getTotalChords } from "@/services/chordService";
+import { getAllScales, getTotalScales } from "@/services/scaleService";
+
+const StatRow = ({ icon, value, label, color }) => {
+  return (
+    <div className="flex justify-between border-b">
+      <div className="flex flex-row gap-2 items-center mb-2">
+        <span style={{ color }}>{icon}</span>
+        <p>{label}</p>
+      </div>
+      <span>{value}</span>
+    </div>
+  );
+};
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
+  const [chordCount, setChordCount] = useState(0);
+  const [scaleCount, setScaleCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchAllData = async () => {
       try {
-        const response = await getUser();
-        setUser(response.data);
+        const [userData, chordsData, scalesData] = await Promise.all([
+          getUser(),
+          getTotalChords(),
+          getTotalScales(),
+        ]);
+        setUser(userData.data);
+        setChordCount(chordsData.data);
+        setScaleCount(scalesData.data);
       } catch (error) {
-        setError("Failed to load user details.");
+        setError("Failed to load dashboard details.");
       } finally {
         setIsLoading(false);
       }
     };
-    fetchUser();
+    fetchAllData();
     // empty dependency array so fetchUser runs once on mount
   }, []);
 
-  // const reward = rewards.find((r) => r.level === level);
-
   if (isLoading) {
-    return <LoadingSpinner page={"Dashboard"}/>;
+    return <LoadingSpinner page={"Dashboard"} />;
   }
 
   if (error) {
@@ -45,68 +71,109 @@ export default function Dashboard() {
 
   if (user) {
     return (
-      <main className="grid grid-cols-3 grid-rows-2 min-h-screen gap-4 bg-[#eff2f1] dark:bg-[#1a2536] py-12 px-16">
+      <main className="grid grid-cols-3 grid-rows-2 min-h-screen items-start auto-rows-auto gap-4 bg-[#eff2f1] dark:bg-[#1a2536] py-12 px-16">
         {/* Left user card */}
         <SectionCard
           title={`Welcome back, ${user.displayName}!`}
           icon={<Zap size={20} />}
-          className="col-span-2 row-span-2"
+          className="col-span-2"
         >
-          <div className="flex gap-3 items-center mb-6 pb-4">
-            <div className="p-2 bg-[#1F5D3D] dark:bg-[#EBD5B3] rounded-full"></div>
-            <div>
-              <span className="font-bold text-2xl text-[#1F5D3D] dark:text-[#EBD5B3] block"></span>
-              <p className="text-sm italic dark:text-gray-300 mt-1"></p>
-            </div>
-          </div>
-          <div className="flex justify-around items-center py-4 text-lg font-semibold mb-4">
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-4xl font-bold text-[#415a77] dark:text-[#149eca]">
-                {user.currentLevel}
-              </span>
-              <span className="uppercase text-sm font-medium tracking-widest">
-                Level
-              </span>
-            </div>
-            <div className="h-12 w-px bg-gray-300 dark:bg-gray-600" />
-            <div className="flex flex-col items-center gap-1 mt-10">
-              <div className="flex items-center gap-1">
-                <Flame size={20} className="fill-orange-500 animate-pulse" />
-                <span className="text-4xl font-bold text-orange-500">
-                  {user.currentStreak}
-                </span>
-              </div>
-              <span className="uppercase text-sm font-medium tracking-widest">
-                Streak
-              </span>
-            </div>
-            <div className="h-12 w-px bg-gray-300 dark:bg-gray-600" />
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-4xl font-bold text-[#149eca]">
-                {user.currentXp}
-              </span>
-              <span className="text-sm font-medium tracking-widest">XP</span>
-            </div>
-          </div>
-          <div className="flex justify-center my-4">
-            <XPBar
-              xp={user.currentXp}
-              xpToNextLevel={xpForNextLevel(user.currentLevel)}
+          <div className="flex gap-6 h-full">
+          {/* left side */}
+          <div className="flex flex-col flex-1">
+            <StatRow
+              icon={<Music2 size={12} />}
+              value={user.currentLevel}
+              label={"Level"}
+              color={"#415a77"}
+            />
+
+            <StatRow
+              icon={<Flame size={12} />}
+              value={user.currentStreak}
+              label={"Streak"}
+              color={"#415a77"}
+            />
+
+            <StatRow
+              icon={<ZapIcon size={12} />}
+              value={`${user.currentXp} XP`}
+              label={"Current XP"}
+              color={"#415a77"}
+            />
+
+            <StatRow
+              icon={<BookOpen size={12} />}
+              value={user.lessonsCompleted}
+              label={"Lessons Completed"}
+              color={"#415a77"}
+            />
+
+            <StatRow
+              icon={<Guitar size={12} />}
+              value={chordCount}
+              label={"Chords Available"}
+              color={"#415a77"}
+            />
+
+            <StatRow
+              icon={<Layers size={12} />}
+              value={scaleCount}
+              label={"Scales Available"}
+              color={"#415a77"}
             />
           </div>
-          <p className="text-center text-xs text-gray-500 dark:text-gray-300">
-            {xpForNextLevel(user.currentLevel) - user.currentXp} XP left until level {user.currentLevel + 1}
-          </p>
+
+          <div className="w-px bg-gray-100 dark:bg-gray-700/50 self-stretch" />
+
+          {/* right side */}
+          <div className="flex flex-col flex-1">
+            <p>test</p>
+          </div>
+        </div>
         </SectionCard>
 
-        {/* Top right lesson card */}
-        <SectionCard title={"Lesson Suggestions"} icon={<BookOpen size={20} />}>
+        {/* Top right card */}
+        <SectionCard
+          title={"Continue Where You Left Off"}
+          icon={<BookOpen size={20} />}
+          className="col-span-1 self-start"
+        >
           <div className="flex justify-center">
-            <Link to={"/jamroom"}>
-              <button className="bg-[#415a77] hover:bg-[#31455a] dark:bg-[#149eca] dark:hover:bg-[#0e7ea3] text-white font-semibold py-2.5 px-6 hover:cursor-pointer rounded-lg transition-colors">
-                GO TO THE JAM ROOM
-              </button>
-            </Link>
+            <p>Placeholer Text</p>
+          </div>
+        </SectionCard>
+
+        {/* Bottom left card */}
+        <SectionCard
+          title={"Rewards"}
+          icon={<Trophy size={20} />}
+          className="col-span-1 self-start"
+        >
+          <div>
+            <p>Placeholder Text</p>
+          </div>
+        </SectionCard>
+
+        {/* Bottom center card */}
+        <SectionCard
+          title={"Quick Links"}
+          icon={<Link2 size={20} />}
+          className="col-span-1 self-start"
+        >
+          <div>
+            <p>Placeholder Text</p>
+          </div>
+        </SectionCard>
+
+        {/* Bottom right card */}
+        <SectionCard
+          title={"Recent Activity"}
+          icon={<Clock size={20} />}
+          className="col-span-1 self-start"
+        >
+          <div>
+            <p>Placeholder Text</p>
           </div>
         </SectionCard>
       </main>

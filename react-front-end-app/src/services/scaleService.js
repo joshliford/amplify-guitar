@@ -13,3 +13,7 @@ export function getAllScalesByDifficulty(difficulty) {
 export function getScaleById(id) {
     return apiClient.get(`/scales/${id}`);
 }
+
+export function getTotalScales() {
+    return apiClient.get('/scales/count');
+}

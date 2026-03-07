@@ -6,7 +6,7 @@ export default function SectionCard({ title, icon, children, className }) {
         <h4 className="text-lg font-semibold">{title}</h4>
         {icon}
       </div>
-      <div className="p-4">{children}</div>
+      <div className="p-4 flex flex-col flex-1">{children}</div>
     </div>
   );
 }

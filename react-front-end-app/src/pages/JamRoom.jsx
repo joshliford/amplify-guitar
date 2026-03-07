@@ -1,5 +1,4 @@
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getAllChords } from "@/services/chordService";
 import { getAllLessons } from "@/services/lessonService";
