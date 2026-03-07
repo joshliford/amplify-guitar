@@ -32,12 +32,14 @@ public class LessonService {
     private final UserLessonRepository userLessonRepository;
     private final ProgressService progressService;
     private final UserRepository userRepository;
+    private final RewardService rewardService;
 
-    public LessonService(LessonRepository lessonRepository, UserLessonRepository userLessonRepository, ProgressService progressService, UserRepository userRepository) {
+    public LessonService(LessonRepository lessonRepository, UserLessonRepository userLessonRepository, ProgressService progressService, UserRepository userRepository, RewardService rewardService) {
         this.lessonRepository = lessonRepository;
         this.userLessonRepository = userLessonRepository;
         this.progressService = progressService;
         this.userRepository = userRepository;
+        this.rewardService = rewardService;
     }
 
     public List<LessonResponseDTO> getLessons(User user) {
@@ -84,6 +86,9 @@ public class LessonService {
         user.setLessonsCompleted(userCompletedLessons + 1);
         userRepository.save(user);
         progressService.addXp(user.getId(), lesson.getXpReward());
+
+        // check if the user has earned any rewards based on lesson completion
+        rewardService.checkAndAwardRewards(user);
 
         return userLessonRepository.save(lessonComplete);
     }

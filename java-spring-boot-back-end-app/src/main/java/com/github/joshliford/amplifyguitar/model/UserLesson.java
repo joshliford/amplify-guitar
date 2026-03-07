@@ -12,10 +12,12 @@ public class UserLesson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    // Many lessons can be completed by one user; foreign key stored in user_id column
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    // Many user-lesson records can reference the same lesson; foreign key stored in lesson_id column
     @ManyToOne
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
