@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /*
-3 endpoints:
+4 endpoints:
 GET /api/chords (get all chords)
 GET /api/chords/difficulty/{difficulty} (get all filtered by difficulty)
 GET /api/chords/{id} (get chord by ID for jam room detail view)
+GET /api/chords/count (get total count of chords for dashboard)
 */
 
 @RestController
@@ -44,6 +45,12 @@ public class ChordController {
     @GetMapping("/{id}")
     public ResponseEntity<Chord> getChordById(@PathVariable Integer id) {
         Chord response = chordService.getChordById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalChords() {
+        Long response = chordService.getTotalChords();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

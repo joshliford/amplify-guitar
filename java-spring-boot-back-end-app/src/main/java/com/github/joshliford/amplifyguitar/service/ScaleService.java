@@ -30,4 +30,8 @@ public class ScaleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Scale not found with id: " + id));
     }
 
+    public Long getTotalScales() {
+        return scaleRepository.count();
+    }
+
 }

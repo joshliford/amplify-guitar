@@ -30,4 +30,8 @@ public class ChordService {
                 .orElseThrow(() -> new ResourceNotFoundException("Chord not found with id: " + id));
     }
 
+    public Long getTotalChords() {
+        return chordRepository.count();
+    }
+
 }

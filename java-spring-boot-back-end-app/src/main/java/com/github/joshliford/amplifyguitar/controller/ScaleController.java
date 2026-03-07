@@ -1,5 +1,6 @@
 package com.github.joshliford.amplifyguitar.controller;
 
+import com.github.joshliford.amplifyguitar.model.Chord;
 import com.github.joshliford.amplifyguitar.model.Difficulty;
 import com.github.joshliford.amplifyguitar.model.Scale;
 import com.github.joshliford.amplifyguitar.service.ScaleService;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /*
-3 endpoints:
+4 endpoints:
 GET /api/scales (get all scales)
 GET /api/scales/difficulty/{difficulty} (get all filtered by difficulty)
 GET /api/scales/{id} (get scale by ID for jam room detail view)
+GET /api/scales/count (get total count of scales for dashboard)
 */
 
 @RestController
@@ -44,6 +46,12 @@ public class ScaleController {
     @GetMapping("/{id}")
     public ResponseEntity<Scale> getScaleById(@PathVariable Integer id) {
         Scale response = scaleService.getScaleById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalScales() {
+        Long response = scaleService.getTotalScales();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
