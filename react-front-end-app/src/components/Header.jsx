@@ -1,25 +1,32 @@
 import { Link, useLocation } from "react-router-dom";
+import { Sun, Moon } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function Header() {
 
+  const { theme, toggleTheme } = useTheme();
+  
   // hide the header when on the auth page
   const location = useLocation();
   if (location.pathname === "/login" || location.pathname === "/register") return null;
 
   return (
-    <div className="ml-[175px] border-b-2 border-stone-200 dark:border-[#778da9]/30 bg-[#1a2536] dark:bg-[#141d2b] shadow-sm">
+    <div className="ml-[175px] border-b-2 border-border bg-(--bg-surface) shadow-sm">
       <header className="max-w-screen px-6 py-4">
         <div className="flex justify-between items-center">
           <Link to={"/dashboard"}>
-            <h1 className="text-4xl text-[#f9fafb] dark:text-white hover:text-[#415a77] dark:hover:text-[#149eca] transition-colors mb-1">
+            <h1 className="text-4xl text-(--text-high) hover:text-primary transition-colors mb-1">
               Amplify
             </h1>
           </Link>
         </div>
         <div className="flex flex-row justify-between">
-          <h2 className="text-stone-400 dark:text-[#dcdcdc] text-xl">
+          <h2 className="text-(--text-med) text-xl">
             Gamified Guitar Learning Dashboard
           </h2>
+          <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-(--bg-elevated) transition-colors duration-200 hover:cursor-pointer">
+            {theme === "dark" ? <Sun size={24} className="text-primary"/> : <Moon size={24} className="text-black"/>}
+          </button>
         </div>
       </header>
     </div>

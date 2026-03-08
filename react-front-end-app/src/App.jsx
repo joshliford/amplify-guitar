@@ -5,7 +5,6 @@ import {
   useNavigate,
   useLocation,
 } from "react-router";
-import { useEffect, useState } from "react";
 import "./index.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -16,28 +15,9 @@ import Shed from "./pages/Shed";
 import Login from "./pages/Login";
 import SideNavBar from "./components/SideNavBar";
 import Register from "./pages/Register";
-import { AuthContextProvider } from "./context/AuthContext";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 
 function App() {
-  const [isDark, setIsDark] = useState(false);
-
-  const toggleDarkMode = () => {
-    setIsDark(!isDark);
-  };
-
-  useEffect(() => {
-    const root = window.document.documentElement;
-
-    // adds or removes 'dark' class from <html>
-    if (isDark) {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-    // runs everytime isDark changes
-  }, [isDark]);
-
   const navigate = useNavigate();
   const location = useLocation();
   const isAuthPage = ["/login", "/register"].includes(location.pathname);
@@ -45,7 +25,6 @@ function App() {
   const handleLogout = () => {
     sessionStorage.clear();
     navigate("/login");
-    setIsDark(false);
   };
 
   return (
@@ -59,7 +38,6 @@ function App() {
         {!isAuthPage && (
           <SideNavBar
             handleLogout={handleLogout}
-            toggleDarkMode={toggleDarkMode}
           />
         )}
         <div className={isAuthPage ? "w-full" : "flex-1"}>

@@ -77,9 +77,9 @@ export default function Register() {
 
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center py-[10vh] bg-[#0a1628]">
-      <div className="relative z-10 w-full max-w-md rounded-3xl border border-white/10 px-11 py-10 bg-white/6 shadow-2xl shadow-[#149eca]/50 transition-all hover:-translate-y-1">
-        <h1 className="text-[32px] text-[#149eca] tracking-wide">
+    <div className="relative min-h-screen flex items-center justify-center py-[10vh] bg-(--bg-base)">
+      <div className="relative z-10 w-full max-w-md rounded-3xl border border-white/10 px-11 py-10 bg-(--bg-surface)/10 shadow-2xl shadow-(--primary)/50 transition-all hover:-translate-y-1">
+        <h1 className="text-[32px] text-primary tracking-wide">
           Amplify
         </h1>
         <h2 className="text-[28px] font-bold text-stone-200 tracking-tight mb-1">
@@ -89,7 +89,7 @@ export default function Register() {
           Already have an account?{" "}
           <Link
             to="/login"
-            className="font-medium text-[#149eca] hover:underline transition-colors"
+            className="font-medium text-primary hover:underline transition-colors"
           >
             Sign in
           </Link>
@@ -209,7 +209,7 @@ export default function Register() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full shadow-lg shadow-[#415a77] py-3 rounded-xl text-white font-semibold cursor-pointer transition-colors disabled:opacity-60 mt-1 bg-[#149eca] hover:bg-[#0e7ea3] hover:shadow-lg"
+              className="w-full shadow-lg shadow-(--primary) py-3 rounded-xl text-white font-semibold cursor-pointer transition-colors disabled:opacity-60 mt-1 bg-(--primary) hover:bg-(--primary)/90 hover:shadow-lg"
             >
               {isLoading ? "Loading..." : "Create Account"}
             </Button>

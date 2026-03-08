@@ -55,7 +55,7 @@ export default function Login() {
       </div>
 
       {/* Right form panel */}
-      <div className="flex flex-col justify-center items-center bg-[#f9fafb] px-8 py-16">
+      <div className="flex flex-col justify-center items-center bg-(--bg-surface) px-8 py-16">
         <div className="w-full max-w-sm">
           {/* Mobile */}
           <div className="mb-4 lg:hidden">
@@ -70,7 +70,7 @@ export default function Login() {
           <h2 className="text-3xl mb-2">
             Welcome back!
           </h2>
-          <p className="text-[#718096] mb-8">
+          <p className="text-(--text-med) mb-8">
             Sign in to your account
           </p>
 
@@ -84,7 +84,7 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="border border-stone-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#415a77] bg-white"
+                className="border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-(--bg-surface)"
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -96,7 +96,7 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="border border-stone-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#415a77] bg-white"
+                className="border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-(--bg-surface)"
               />
             </div>
 
@@ -109,17 +109,17 @@ export default function Login() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-[#415a77] hover:bg-[#31455a] text-white font-semibold py-2.5 rounded-lg transition-colors disabled:opacity-60 mt-2 cursor-pointer"
+              className="bg-primary hover:bg-(--primary)/90 text-white font-semibold py-2.5 rounded-lg transition-colors disabled:opacity-60 mt-2 cursor-pointer"
             >
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
 
-          <p className="text-center text-sm text-[#718096] mt-6">
+          <p className="text-center text-sm text-(--text-med) mt-6">
             Don&apos;t have an account?{" "}
             <Link
               to="/register"
-              className="text-[#415a77] font-semibold hover:underline"
+              className="text-primary font-semibold hover:underline"
             >
               Register
             </Link>

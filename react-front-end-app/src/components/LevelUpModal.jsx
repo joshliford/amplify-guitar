@@ -22,12 +22,12 @@ export default function LevelUpModal({ isModalOpen, handleCloseModal, level }) {
 
           <p className="text-2xl mb-6">
             You are now{" "}
-            <strong className="text-[#1F5D3D] dark:text-[#EBD5B3]">
+            <strong className="text-primary">
               level {level}!
             </strong>
           </p>
           {/* rewards container */}
-          <div className="flex flex-col justify-center bg-[#1F5D3D]/30 shadow-lg rounded-xl p-10 w-full max-w-md">
+          <div className="flex flex-col justify-center bg-(--primary)/30 shadow-lg rounded-xl p-10 w-full max-w-md">
             <h3 className="font-bold text-2xl border-b-2 text-center inline-block pb-1">
               Rewards Unlocked
             </h3>
@@ -35,7 +35,7 @@ export default function LevelUpModal({ isModalOpen, handleCloseModal, level }) {
               <Trophy size={20} className="text-yellow-700 mt-1" />
               <p className="mb-6">
                 New Title:{" "}
-                <strong className="text-[#1F5D3D] dark:text-[#EBD5B3]">
+              <strong className="text-primary">
                   {/*"{reward.title}"*/}
                 </strong>
               </p>
@@ -46,7 +46,7 @@ export default function LevelUpModal({ isModalOpen, handleCloseModal, level }) {
               <span>
                 <reward.icon size={25} style={{ color: reward.iconColor }} />
               </span>
-              <span className="font-bold text-[#1F5D3D] dark:text-[#EBD5B3]">
+              <span className="font-bold text-primary">
                 {`(${reward.iconDescription})`}
               </span>
             </div>
@@ -55,7 +55,7 @@ export default function LevelUpModal({ isModalOpen, handleCloseModal, level }) {
         <div>
           <button
             onClick={handleCloseModal}
-            className="border-2 border-black rounded-xl px-4 py-2 dark:bg-[#e5c391] dark:hover:bg-[#D4A574] dark:text-black bg-amber-700 hover:bg-amber-800 text-white mt-4 hover:cursor-pointer transition"
+            className="border-2 border-black rounded-xl px-4 py-2 bg-accent hover:bg-(--accent)/90 text-(--on-accent) mt-4 hover:cursor-pointer transition"
           >
             Close
           </button>

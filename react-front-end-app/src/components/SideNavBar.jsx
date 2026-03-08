@@ -2,37 +2,36 @@ import { BoomBox, CassetteTape, Home, Info, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDown } from "lucide-react";
-import DarkModeToggle from "./DarkModeToggle";
 
-export default function SideNavBar({ handleLogout, isDark, toggleDarkMode }) {
+export default function SideNavBar({ handleLogout }) {
   const location = useLocation();
 
   // hide nav bar when on the auth page
   if (location.pathname === "/login" || location.pathname === "/register") return null;
 
   return (
-    <div className="flex flex-col fixed top-0 left-0 min-h-screen w-[175px] bg-[#e5e5e5] dark:bg-[#1a2536] border-r-2 border-[#415a77] dark:border-[#778da9]/20">
+    <div className="flex flex-col fixed top-0 left-0 min-h-screen w-[175px] bg-(--bg-surface) border-r-2 border-border">
       <nav>
         <ul className="flex flex-col gap-4 text-md p-3 mt-4">
           <div
             className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
               location.pathname === "/dashboard"
-                ? "bg-[#415a77] dark:bg-[#778da9]/10 transition-colors"
-                : "hover:bg-stone-200 dark:hover:bg-[#778da9]/20 transition-colors"
+                ? "bg-(--primary)/20 transition-colors"
+                : "hover:bg-(--bg-elevated) transition-colors"
             }`}
           >
             <Home
               className={
                 location.pathname === "/dashboard"
-                  ? "text-white dark:text-[#149eca]"
-                  : "text-stone-400 dark:text-gray-300 group-hover:text-[#415a77] dark:group-hover:text-[#778da9] transition-colors"
+                  ? "text-primary"
+                  : "text-(--text-low) group-hover:text-primary transition-colors"
               }
             />
             <li
               className={
                 location.pathname === "/dashboard"
-                  ? "text-white dark:text-[#149eca]"
-                  : "text-stone-400 dark:text-gray-300 group-hover:text-[#415a77] dark:group-hover:text-[#778da9] transition-colors"
+                  ? "text-primary"
+                  : "text-(--text-low) group-hover:text-primary transition-colors"
               }
             >
               <Link to="/dashboard">Dashboard</Link>
@@ -42,22 +41,22 @@ export default function SideNavBar({ handleLogout, isDark, toggleDarkMode }) {
           <div
             className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
               location.pathname === "/jamroom"
-                ? "bg-[#415a77] dark:bg-[#778da9]/10 transition-colors"
-                : "hover:bg-stone-200 dark:hover:bg-[#778da9]/20 transition-colors"
+                ? "bg-(--primary)/20 transition-colors"
+                : "hover:bg-(--bg-elevated) transition-colors"
             }`}
           >
             <BoomBox
               className={
                 location.pathname === "/jamroom"
-                  ? "text-white dark:text-[#149eca]"
-                  : "text-stone-400 dark:text-gray-300 group-hover:text-[#415a77] dark:group-hover:text-[#778da9] transition-colors"
+                  ? "text-primary"
+                  : "text-(--text-low) group-hover:text-primary transition-colors"
               }
             />
             <li
               className={
                 location.pathname === "/jamroom"
-                  ? "text-white dark:text-[#149eca]"
-                  : "text-stone-400 dark:text-gray-300 group-hover:text-[#415a77] dark:group-hover:text-[#778da9] transition-colors"
+                  ? "text-primary"
+                  : "text-(--text-low) group-hover:text-primary transition-colors"
               }
             >
               <Link to="/jamroom">Jam Room</Link>
@@ -67,22 +66,22 @@ export default function SideNavBar({ handleLogout, isDark, toggleDarkMode }) {
           <div
             className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
               location.pathname === "/shed"
-                ? "bg-[#415a77] dark:bg-[#778da9]/10 transition-colors"
-                : "hover:bg-stone-200 dark:hover:bg-[#778da9]/20 transition-colors"
+                ? "bg-(--primary)/20 transition-colors"
+                : "hover:bg-(--bg-elevated) transition-colors"
             }`}
           >
             <CassetteTape
               className={
                 location.pathname === "/shed"
-                  ? "text-white dark:text-[#149eca]"
-                  : "text-stone-400 dark:text-gray-300 group-hover:text-[#415a77] dark:group-hover:text-[#778da9] transition-colors"
+                  ? "text-primary"
+                  : "text-(--text-low) group-hover:text-primary transition-colors"
               }
             />
             <li
               className={
                 location.pathname === "/shed"
-                  ? "text-white dark:text-[#149eca]"
-                  : "text-stone-400 dark:text-gray-300 group-hover:text-[#415a77] dark:group-hover:text-[#778da9] transition-colors"
+                  ? "text-primary"
+                  : "text-(--text-low) group-hover:text-primary transition-colors"
               }
             >
               <Link to="/shed">The Shed</Link>
@@ -92,46 +91,40 @@ export default function SideNavBar({ handleLogout, isDark, toggleDarkMode }) {
           <div
             className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
               location.pathname === "/about"
-                ? "bg-[#415a77] dark:bg-[#778da9]/10 transition-colors"
-                : "hover:bg-stone-200 dark:hover:bg-[#778da9]/20 transition-colors"
+                ? "bg-(--primary)/20 transition-colors"
+                : "hover:bg-(--bg-elevated) transition-colors"
             }`}
           >
             <Info
               className={
                 location.pathname === "/about"
-                  ? "text-white dark:text-[#149eca]"
-                  : "text-stone-400 dark:text-gray-300 group-hover:text-[#415a77] dark:group-hover:text-[#778da9] transition-colors"
+                  ? "text-primary"
+                  : "text-(--text-low) group-hover:text-primary transition-colors"
               }
             />
             <li
               className={
                 location.pathname === "/about"
-                  ? "text-white dark:text-[#149eca]"
-                  : "text-stone-400 dark:text-gray-300 group-hover:text-[#415a77] dark:group-hover:text-[#778da9] transition-colors"
+                  ? "text-primary"
+                  : "text-(--text-low) group-hover:text-primary transition-colors"
               }
             >
               <Link to="/about">About</Link>
             </li>
           </div>
 
-          <div className="group flex absolute bottom-4 gap-2 items-center rounded-lg px-2 py-2 hover:bg-stone-200 text-stone-500 dark:text-[#e0e0e0] dark:hover:bg-[#778da9]/20 transition-colors">
-            <Settings className="group-hover:text-[#415a77] dark:group-hover:text-[#778da9]" />
+          <div className="group flex absolute bottom-4 gap-2 items-center rounded-lg px-2 py-2 hover:bg-(--bg-elevated) text-(--text-med) transition-colors">
+            <Settings className="group-hover:text-primary" />
             <Menu>
-              <MenuButton className="inline-flex items-center gap-2 group-hover:text-[#415a77] dark:group-hover:text-[#778da9] hover:cursor-pointer text-md">
+              <MenuButton className="inline-flex items-center gap-2 group-hover:text-primary hover:cursor-pointer text-md">
                 Profile
                 <ChevronDown className="size-4" />
               </MenuButton>
-              <MenuItems anchor="top" className="rounded-xl bg-[#415a77] dark:bg-gray-800 border border-stone-200 dark:border-[#778da9]/20 shadow-md">
-                <MenuItem as="div" className="flex justify-center items-center px-2 py-4 gap-2">
-                  <span className=" text-white dark:text-white text-sm font-semibold">
-                    Dark Mode
-                  </span>
-                  <DarkModeToggle isDark={isDark} toggleDarkMode={toggleDarkMode} />
-                </MenuItem>
+              <MenuItems anchor="top" className="rounded-xl bg-(--bg-elevated) border border-border shadow-md">
                 <MenuItem as="div" className="flex justify-center">
                   <button
                     onClick={handleLogout}
-                    className="text-white dark:text-[#e0e0e0] hover:text-red-400 dark:hover:text-red-400 font-semibold text-xl hover:cursor-pointer transition mb-2"
+                    className="text-(--text-high) hover:text-red-400 font-semibold text-xl hover:cursor-pointer transition mb-2"
                   >
                     Logout
                   </button>
