@@ -11,7 +11,7 @@ export default function LessonFooter({ selectedItem, handleCloseModal, addXP, co
   };
 
   return (
-    <div className="flex items-center justify-between mt-8 font-['Nunito_Sans']">
+    <div className="flex items-center justify-between mt-8">
       <div>
         <span className="text-[#1F5D3D] dark:text-[#e5c391] font-bold text-sm sm:text-base md:text-lg">
           XP Reward: +{selectedItem.xpReward}

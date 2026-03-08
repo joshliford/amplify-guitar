@@ -41,8 +41,8 @@ export default function PracticeTimer({ runTime, setRunTime }) {
   };
 
   return (
-    <div className="flex flex-col items-center mx-auto bg-[#1F5D3D]/20 dark:bg-slate-700 rounded-xl shadow-lg hover:shadow-xl p-12 space-y-4 m-8 w-full max-w-2xl">
-      <h2 className="font-semibold font-['Lora'] text-2xl">Practice Timer</h2>
+    <div className="flex flex-col items-center mx-auto bg-(--primary)/20 rounded-xl shadow-lg hover:shadow-xl p-12 space-y-4 m-8 w-full max-w-2xl">
+      <h2 className="font-semibold text-2xl">Practice Timer</h2>
       <p className="text-sm">Track your practice progress</p>
       <div>
         <p className="text-5xl font-mono">{formatTime(runTime)}</p>
@@ -55,14 +55,14 @@ export default function PracticeTimer({ runTime, setRunTime }) {
                     ${
                       isRunning
                         ? "bg-red-800 hover:bg-red-900 text-white hover:cursor-pointer"
-                        : "bg-[#1F5D3D] hover:bg-[#21462f] text-white dark:bg-[#e5c391] dark:hover:bg-[#D4A574] dark:text-black hover:cursor-pointer"
+                        : "bg-(--primary) hover:bg-(--primary)/90 text-(--on-primary) hover:cursor-pointer"
                     }`}
         >
           {isRunning ? "Pause" : "Start"}
         </button>
         <button
           onClick={handleReset}
-          className="px-6 py-2 rounded-xl font-semibold transition dark:bg-black dark:hover:bg-black/50 bg-amber-700 hover:bg-amber-800 text-white hover:cursor-pointer"
+          className="px-6 py-2 rounded-xl font-semibold transition bg-(--accent) hover:bg-(--accent)/90 text-(--on-accent) hover:cursor-pointer"
         >
           Reset
         </button>

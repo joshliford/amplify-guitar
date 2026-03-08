@@ -2,15 +2,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 export default function About() {
   return (
-    <main className="bg-[#FFFEF7] dark:bg-black font-['Nunito_Sans'] text-lg">
+    <main className="bg-(--bg-base) text-lg">
       <section className="space-y-4 py-12 px-12">
         <div className="flex justify-center">
-          <h1 className="text-2xl text-center font-bold font-['Lora'] border-b-2 border-b-[#D4A574] inline-block">
+            <h1 className="text-2xl text-center font-bold border-b-2 border-b-accent inline-block">
             About Amplify
           </h1>
         </div>
         <p>
-          <strong className="text-[#1F5D3D] dark:text-[#EBD5B3] font-['Lora'] text-xl">
+          <strong className="text-primary text-xl">
             Amplify
           </strong>{" "}
           is a gamified guitar-learning dashboard designed to make consistent
@@ -27,12 +27,12 @@ export default function About() {
       </section>
       <section className="space-y-4 py-12 px-12 mt-12">
         <div className="flex justify-center">
-          <h2 className="text-2xl text-center font-bold font-['Lora'] border-b-2 border-b-[#D4A574] inline-block">
+            <h2 className="text-2xl text-center font-bold border-b-2 border-b-accent inline-block">
             Purpose
           </h2>
         </div>
         <p className="mb-4 text-lg">
-          <strong className="text-[#1F5D3D] dark:text-[#EBD5B3] font-['Lora'] text-xl">
+          <strong className="text-primary text-xl">
             Amplify
           </strong>{" "}
           was built to solve a problem I often faced: staying consistent. After
@@ -52,28 +52,28 @@ export default function About() {
       <section className="py-12 px-12 mt-12 flex flex-col items-center mb-6">
         <div className="w-full max-w-8xl">
           <div className="flex justify-center mb-6">
-            <h3 className="text-2xl font-bold font-['Lora'] border-b-2 border-b-[#D4A574] inline-block text-center">
+            <h3 className="text-2xl font-bold border-b-2 border-b-accent inline-block text-center">
               Core Pages
             </h3>
           </div>
-          <div className="w-full max-w-8xl shadow-2xl rounded-xl overflow-hidden border-2 border-[#D4A574] bg-white dark:bg-[#1A1F2A]">
+          <div className="w-full max-w-8xl shadow-2xl rounded-xl overflow-hidden border-2 border-accent bg-(--bg-surface)">
             <Table className="text-lg">
-              <TableHeader className="bg-[#1F5D3D] dark:bg-[#D4A574] font-['Lora'] text-xl border-b-3 border-[#D4A574]">
-                <TableRow className="font-bold font-['Lora'] text-xl">
-                  <TableHead className="pl-4 text-[#FFFEF7] dark:text-black">
+              <TableHeader className="bg-primary text-xl border-b-3 border-accent">
+                <TableRow className="font-bold text-xl">
+                  <TableHead className="pl-4 text-(--on-primary)">
                     Page
                   </TableHead>
-                  <TableHead className="text-[#FFFEF7] dark:text-black">
+                  <TableHead className="text-(--on-primary)">
                     Purpose
                   </TableHead>
-                  <TableHead className="text-[#FFFEF7] dark:text-black">
+                  <TableHead className="text-(--on-primary)">
                     Features
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 <TableRow className="text-lg">
-                  <TableCell className="text-[#1F5D3D] dark:text-[#EBD5B3] font-semibold font-['Lora'] text-xl pl-4">
+                  <TableCell className="text-primary font-semibold text-xl pl-4">
                     The Dashboard
                   </TableCell>
                   <TableCell>Central hub to view your progress</TableCell>
@@ -87,7 +87,7 @@ export default function About() {
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className="text-[#1F5D3D] dark:text-[#EBD5B3] font-semibold font-['Lora'] text-xl  pl-4">
+                  <TableCell className="text-primary font-semibold text-xl  pl-4">
                     The Jam Room
                   </TableCell>
                   <TableCell>
@@ -112,7 +112,7 @@ export default function About() {
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className="text-[#1F5D3D] dark:text-[#EBD5B3] font-semibold font-['Lora'] text-lg  pl-4">
+                  <TableCell className="text-primary font-semibold text-lg  pl-4">
                     The Shed
                   </TableCell>
                   <TableCell>

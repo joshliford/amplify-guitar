@@ -1,6 +1,7 @@
 package com.github.joshliford.amplifyguitar.controller;
 
 import com.github.joshliford.amplifyguitar.dto.response.LessonResponseDTO;
+import com.github.joshliford.amplifyguitar.model.Lesson;
 import com.github.joshliford.amplifyguitar.model.User;
 import com.github.joshliford.amplifyguitar.model.UserLesson;
 import com.github.joshliford.amplifyguitar.service.LessonService;
@@ -14,9 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /*
-2 endpoints:
-GET /api/lessons
-POST /api/lessons/{lessonId}/complete
+3 endpoints:
+GET /api/lessons - get all lessons
+GET /api/lessons/{id} - get lesson by ID
+POST /api/lessons/{lessonId}/complete - complete a lesson
 */
 
 @RestController
@@ -36,6 +38,12 @@ public class LessonController {
         String email = user.getUsername();
         User currentUser = userService.findByEmail(email);
         List<LessonResponseDTO> response = lessonService.getLessons(currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Lesson> getLessonById(Integer id) {
+        Lesson response = lessonService.getLessonById(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

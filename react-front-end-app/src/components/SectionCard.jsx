@@ -1,15 +1,12 @@
-export default function SectionCard({ title, icon, children }) {
+export default function SectionCard({ title, icon, children, className }) {
   return (
-    <div className="flex flex-col m-6 pb-4 border-2 w-full mx-auto max-w-5xl rounded-xl shadow-lg hover:shadow-xl bg-white dark:bg-[#1A1F2A]">
-      <div className="p-2 flex items-center justify-between shadow-lg rounded-t-lg border-b-4 border-[#D4A574] bg-[#1F5D3D] dark:bg-[#D4A574] dark:border-gray-600">
-        <div className="flex justify-between items-center w-full p-2">
-          <h4 className="m-2 text-2xl font-semibold text-[#FFFEF7] dark:text-black font-['Lora']">
-            {title}
-          </h4>
-          {icon}
-        </div>
+    // merges base card styling with any custom class styling passed in (i.e. row-span-2 for user card)
+    <div className={`flex flex-col w-full rounded-xl border border-border hover:border-primary bg-(--bg-surface) shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden ${className || ''}`}>
+      <div className="p-4 flex flex-row items-center justify-between border-b border-border">
+        <h4 className="text-lg font-semibold text-(--text-high)">{title}</h4>
+        <span className="text-primary">{icon}</span>
       </div>
-      <div className="p-4 font-['Nunito_Sans']">{children}</div>
+      <div className="p-4 flex flex-col flex-1">{children}</div>
     </div>
   );
 }

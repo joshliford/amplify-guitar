@@ -9,6 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -58,6 +60,11 @@ public class User {
     private Integer lessonsCompleted = 0;
 
     private LocalDate lastLoginDate;
+
+    // One-to-many relationship with UserReward; all rewards are deleted when user is deleted
+    // mappedBy = UserReward has a field named user that owns the relationship
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserReward> userRewards = new ArrayList<>();
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
@@ -217,5 +224,13 @@ public class User {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<UserReward> getUserRewards() {
+        return userRewards;
+    }
+
+    public void setUserRewards(List<UserReward> userRewards) {
+        this.userRewards = userRewards;
     }
 }

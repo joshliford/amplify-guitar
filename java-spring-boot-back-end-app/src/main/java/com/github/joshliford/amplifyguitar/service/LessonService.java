@@ -9,6 +9,7 @@ import com.github.joshliford.amplifyguitar.model.User;
 import com.github.joshliford.amplifyguitar.model.UserLesson;
 import com.github.joshliford.amplifyguitar.repository.LessonRepository;
 import com.github.joshliford.amplifyguitar.repository.UserLessonRepository;
+import com.github.joshliford.amplifyguitar.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 Core methods:
 getLessons(User user) - return list of lessons with custom LessonResponseDTO
 completeLessons(User user, Integer lessonId) - creates a UserLesson record and awards XP
+getLessonById(Integer id) - get lesson by ID for jam room detail view
 buildLessonResponse(Lesson lesson, Set<Integer> completedLessonIds, User user) - helper method to build a single LessonResponseDTO from a lesson and user context
 */
 
@@ -29,11 +31,15 @@ public class LessonService {
     private final LessonRepository lessonRepository;
     private final UserLessonRepository userLessonRepository;
     private final ProgressService progressService;
+    private final UserRepository userRepository;
+    private final RewardService rewardService;
 
-    public LessonService(LessonRepository lessonRepository, UserLessonRepository userLessonRepository, ProgressService progressService) {
+    public LessonService(LessonRepository lessonRepository, UserLessonRepository userLessonRepository, ProgressService progressService, UserRepository userRepository, RewardService rewardService) {
         this.lessonRepository = lessonRepository;
         this.userLessonRepository = userLessonRepository;
         this.progressService = progressService;
+        this.userRepository = userRepository;
+        this.rewardService = rewardService;
     }
 
     public List<LessonResponseDTO> getLessons(User user) {
@@ -75,10 +81,21 @@ public class LessonService {
         lessonComplete.setXpEarned(lesson.getXpReward());
         lessonComplete.setLesson(lesson);
 
-        // award XP to user
+        // award XP to user & increment completedLessons by 1
+        Integer userCompletedLessons = user.getLessonsCompleted();
+        user.setLessonsCompleted(userCompletedLessons + 1);
+        userRepository.save(user);
         progressService.addXp(user.getId(), lesson.getXpReward());
 
+        // check if the user has earned any rewards based on lesson completion
+        rewardService.checkAndAwardRewards(user);
+
         return userLessonRepository.save(lessonComplete);
+    }
+
+    public Lesson getLessonById(Integer id) {
+        return lessonRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Lesson not found with id: " + id));
     }
 
     // helper method to build a single LessonResponseDTO from a lesson and user context
@@ -87,6 +104,7 @@ public class LessonService {
         boolean locked = lesson.getRequiredLevel() > user.getCurrentLevel();
 
         return new LessonResponseDTO(
+                lesson.getId(),
                 completed,
                 lesson.getDifficulty(),
                 lesson.getContent(),
