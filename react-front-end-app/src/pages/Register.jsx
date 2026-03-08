@@ -78,14 +78,14 @@ export default function Register() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center py-[10vh] bg-(--bg-base)">
-      <div className="relative z-10 w-full max-w-md rounded-3xl border border-white/10 px-11 py-10 bg-(--bg-surface)/10 shadow-2xl shadow-(--primary)/50 transition-all hover:-translate-y-1">
+      <div className="relative z-10 w-full max-w-md rounded-3xl border px-11 py-10 bg-(--bg-surface)/30 shadow-xl hover:shadow-2xl shadow-primary border-primary transition-all duration-300 hover:-translate-y-1">
         <h1 className="text-[32px] text-primary tracking-wide">
           Amplify
         </h1>
-        <h2 className="text-[28px] font-bold text-stone-200 tracking-tight mb-1">
+        <h2 className="text-[28px] font-bold text-(--text-high) tracking-tight mb-1">
           Create an account
         </h2>
-        <p className="text-sm text-gray-400 mb-8">
+        <p className="text-sm text-(--text-med) mb-8">
           Already have an account?{" "}
           <Link
             to="/login"
@@ -98,7 +98,7 @@ export default function Register() {
           <Field className="flex flex-col gap-4">
             <div className="flex flex-row gap-3">
             <div className="flex flex-col gap-1 flex-1">
-              <Label className="text-xs font-semibold uppercase tracking-wide text-white/50">
+              <Label className="text-xs font-semibold uppercase tracking-wide text-(--text-low)">
                 First name
               </Label>
               <Input
@@ -108,7 +108,7 @@ export default function Register() {
                 name="first-name"
                 type="text"
                 placeholder="John"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-gray-500 bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-(--text-high) placeholder:text-(--text-low) bg-(--bg-surface) border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
                 required
               />
               {errors.firstName && (
@@ -126,7 +126,7 @@ export default function Register() {
                 name="last-name"
                 type="text"
                 placeholder="Smith"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-gray-500 bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-(--text-low) bg-(--bg-surface) border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
                 required
               />
               {errors.lastName && (
@@ -145,7 +145,7 @@ export default function Register() {
                 name="display-name"
                 type="text"
                 placeholder="johnsmith123"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-gray-500 bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-(--text-low) bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
                 required
               />
               {errors.displayName && (
@@ -163,7 +163,7 @@ export default function Register() {
                 name="email"
                 type="email"
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-gray-500 bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-(--text-low) bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
                 required
               />
               {errors.email && (
@@ -181,7 +181,7 @@ export default function Register() {
                 name="password"
                 type="password"
                 placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-gray-500 bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-(--text-low) bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
                 required
               />
               {errors.password && (
@@ -199,7 +199,7 @@ export default function Register() {
                 name="confirmPassword"
                 type="password"
                 placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-gray-500 bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-(--text-low) bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
                 required
               />
               {errors.confirmPassword && (
@@ -209,7 +209,7 @@ export default function Register() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full shadow-lg shadow-(--primary) py-3 rounded-xl text-white font-semibold cursor-pointer transition-colors disabled:opacity-60 mt-1 bg-(--primary) hover:bg-(--primary)/90 hover:shadow-lg"
+              className="w-full shadow-(--primary) py-3 rounded-xl font-semibold cursor-pointer transition-colors disabled:opacity-60 mt-1 bg-primary hover:bg-(--primary)/80 hover:shadow-lg"
             >
               {isLoading ? "Loading..." : "Create Account"}
             </Button>

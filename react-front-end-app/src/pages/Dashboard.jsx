@@ -1,12 +1,9 @@
 import SectionCard from "../components/SectionCard";
 import {
-  BookOpen,
   Zap,
   Trophy,
   Link2,
-  Clock,
   Flame,
-  ZapIcon,
   Layers,
   Guitar,
   Rocket,
@@ -15,6 +12,12 @@ import {
   BoomBox,
   Timer,
   ChevronRight,
+  Star,
+  Shield,
+  Crown,
+  Sparkles,
+  Dumbbell,
+  ArrowUp,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getUser } from "@/services/userService";
@@ -24,6 +27,19 @@ import { getTotalScales } from "@/services/scaleService";
 import { xpForNextLevel, xpNeededToLevelUp } from "@/components/utils/xpUtils";
 import XPBar from "@/components/XPBar";
 import { Link } from "react-router";
+import { getAllRewards, getEarnedRewards } from "@/services/rewardService";
+
+const iconMap = {
+  Star,
+  Flame,
+  Trophy,
+  Zap,
+  Shield,
+  Crown,
+  Sparkles,
+  Dumbbell,
+  ArrowUp,
+};
 
 const StatRow = ({ icon, value, label, color }) => {
   return (
@@ -41,20 +57,32 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [chordCount, setChordCount] = useState(0);
   const [scaleCount, setScaleCount] = useState(0);
+  const [allRewards, setAllRewards] = useState([]);
+  const [earnedRewards, setEarnedRewards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        const [userData, chordsData, scalesData] = await Promise.all([
+        const [
+          userData,
+          chordsData,
+          scalesData,
+          allRewardsData,
+          earnedRewardsData,
+        ] = await Promise.all([
           getUser(),
           getTotalChords(),
           getTotalScales(),
+          getAllRewards(),
+          getEarnedRewards(),
         ]);
         setUser(userData.data);
         setChordCount(chordsData.data);
         setScaleCount(scalesData.data);
+        setAllRewards(allRewardsData.data);
+        setEarnedRewards(earnedRewardsData.data);
       } catch (error) {
         setError("Failed to load dashboard details.");
       } finally {
@@ -79,12 +107,12 @@ export default function Dashboard() {
 
   if (user) {
     return (
-      <main className="grid grid-cols-3 grid-rows-2 min-h-screen items-start auto-rows-auto gap-4 bg-(--bg-base) py-12 px-16">
+      <main className="grid grid-cols-3 min-h-screen items-start auto-rows-auto gap-4 bg-(--bg-base) py-12 px-16">
         {/* Left user card */}
         <SectionCard
           title={"Stats Overview"}
           icon={<Zap size={20} className="text-primary" />}
-          className="col-span-2 text-(--text-high)"
+          className="col-span-3 text-(--text-high)"
         >
           <div className="flex gap-6 h-full">
             {/* left side */}
@@ -106,7 +134,7 @@ export default function Dashboard() {
               />
 
               <StatRow
-                icon={<ZapIcon size={16} />}
+                icon={<Zap size={16} />}
                 value={`${user.currentXp} XP`}
                 label={"Current XP"}
                 color={"#BB86FC"}
@@ -179,25 +207,42 @@ export default function Dashboard() {
           </div>
         </SectionCard>
 
-        {/* Top right card */}
-        <SectionCard
-          title={"Continue Where You Left Off"}
-          icon={<BookOpen size={20} className="text-primary" />}
-          className="col-span-1 self-start text-(--text-high)"
-        >
-          <div className="flex justify-center">
-            <p>Placeholer Text</p>
-          </div>
-        </SectionCard>
-
         {/* Bottom left card */}
         <SectionCard
           title={"Rewards"}
           icon={<Trophy size={20} className="text-primary" />}
-          className="col-span-1 self-start text-(--text-high)"
+          className="col-span-2 self-start text-(--text-high)"
         >
-          <div>
-            <p>Placeholder Text</p>
+          <div className="flex flex-wrap gap-3 p-6 justify-center">
+            {allRewards.map((reward) => {
+              const isEarned = earnedRewards.some(
+                (element) => element.rewardId === reward.id,
+              );
+              const IconComponent = iconMap[reward.icon] || Star;
+
+              return (
+                <div
+                  key={reward.id}
+                  className="flex flex-col items-center gap-1 w-14"
+                >
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center border ${isEarned ? "bg-accent border-accent" : "bg-(--bg-elevated) border-border"}`}
+                  >
+                    <IconComponent
+                      size={16}
+                      className={
+                        isEarned ? "text-black" : "text-(--text-low)"
+                      }
+                    />
+                  </div>
+                  <span
+                    className={`text-[10px] text-center leading-tight ${isEarned ? "text-accent" : "text-(--text-low)"}`}
+                  >
+                    {reward.title}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </SectionCard>
 
@@ -237,17 +282,6 @@ export default function Dashboard() {
                 </span>
               </div>
             </Link>
-          </div>
-        </SectionCard>
-
-        {/* Bottom right card */}
-        <SectionCard
-          title={"Recent Activity"}
-          icon={<Clock size={20} className="text-primary" />}
-          className="col-span-1 self-start text-(--text-high)"
-        >
-          <div>
-            <p>Placeholder Text</p>
           </div>
         </SectionCard>
       </main>

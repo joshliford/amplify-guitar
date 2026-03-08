@@ -24,7 +24,7 @@ export default function Login() {
       login(response.data.token);
       navigate("/dashboard");
     } catch (error) {
-      setLoginError("Invalid credentials.")
+      setLoginError("Invalid credentials")
     } finally {
       setIsLoading(false);
     }
@@ -46,7 +46,7 @@ export default function Login() {
           <h2 className="text-4xl text-white leading-snug">
             Guitar practice,
             <br />
-            <em>Amplified.</em>
+            <em className="text-primary">Amplified</em>
           </h2>
           <p className="text-white/70 mt-3 text-lg">
             Gamified Guitar Learning Dashboard
@@ -67,7 +67,7 @@ export default function Login() {
           </h2>
           </div>
 
-          <h2 className="text-3xl mb-2">
+          <h2 className="text-3xl mb-2 text-(--text-high)">
             Welcome back!
           </h2>
           <p className="text-(--text-med) mb-8">
@@ -76,7 +76,7 @@ export default function Login() {
 
           <form onSubmit={handleSignIn} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-semibold">
+              <label className="text-sm font-semibold text-(--text-high)">
                 Email
               </label>
               <input
@@ -84,11 +84,11 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-(--bg-surface)"
+                className="border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-(--bg-surface) placeholder:text-(--text-med) text-white"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-semibold">
+              <label className="text-sm font-semibold text-(--text-high)">
                 Password
               </label>
               <input
@@ -96,12 +96,12 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-(--bg-surface)"
+                className="border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-(--bg-surface) placeholder:text-(--text-med) text-white"
               />
             </div>
 
             {loginError && (
-              <p className="text-red-500 text-sm">
+              <p className="text-red-400 text-sm text-center">
                 {loginError}
               </p>
             )}
@@ -109,7 +109,7 @@ export default function Login() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-primary hover:bg-(--primary)/90 text-white font-semibold py-2.5 rounded-lg transition-colors disabled:opacity-60 mt-2 cursor-pointer"
+              className="bg-primary hover:bg-(--primary)/80 text-black font-semibold py-2.5 rounded-lg transition-colors disabled:opacity-60 mt-2 cursor-pointer"
             >
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>

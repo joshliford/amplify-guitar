@@ -1,3 +1,5 @@
+// handles token operations for authentication
+
 export const getTokenFromStorage = () => {
     return sessionStorage.getItem('token');
 }

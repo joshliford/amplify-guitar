@@ -5,6 +5,7 @@ import { getAllLessons } from "@/services/lessonService";
 import { getAllScales } from "@/services/scaleService";
 import { Layers, GraduationCap, Lock, Guitar } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function JamRoom() {
   const [activeTab, setActiveTab] = useState("Lessons");
@@ -16,6 +17,8 @@ export default function JamRoom() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+
   const renderDetailContent = () => {
     if (!selectedItem) {
       return null;
@@ -24,8 +27,8 @@ export default function JamRoom() {
     if (activeTab === "Lessons") {
       if (selectedItem.locked) {
         return (
-          <div className="flex flex-row gap-4 text-red-500">
-            <Lock size={30} />
+          <div className="flex flex-row gap-2 items-center justify-center text-red-400">
+            <Lock size={20} />
             <p>
               Lesson locked until you reach level {selectedItem.requiredLevel}
             </p>
@@ -33,10 +36,13 @@ export default function JamRoom() {
         );
       } else {
         return (
-          <div className="flex flex-col">
-            <span>+{selectedItem.xpReward} XP</span>
-            <p>{selectedItem.content}</p>
-            {selectedItem.videoUrl && <iframe src={selectedItem.videoUrl} />}
+          <div className="flex justify-center mt-4">
+            <button 
+            className="text-xl text-primary hover:cursor-pointer hover:underline transition-all"
+            onClick={navigate(`/lessons/${selectedItem.id}`)}
+            >
+              Start Lesson
+            </button>
           </div>
         );
       }
@@ -110,18 +116,18 @@ export default function JamRoom() {
   const tabData = {
     Lessons: {
       headerDesc: "Guided lessons to build your skills",
-      color: "#415a77",
-      bgColor: "#2A2A2A",
+      color: "#BB86FC",
+      bgColor: "var(--bg-elevated)",
     },
     Chords: {
       headerDesc: "Master chord shapes and transitions",
-      color: "#03DAC6",
-      bgColor: "#2A2A2A",
+      color: "#E09F3E",
+      bgColor: "var(--bg-elevated)",
     },
     Scales: {
       headerDesc: "Unlock the fretboard with scales",
       color: "#e76f51",
-      bgColor: "#2A2A2A",
+      bgColor: "var(--bg-elevated)",
     },
   };
 
@@ -249,10 +255,12 @@ export default function JamRoom() {
           >
             <div className="flex flex-row justify-between">
               <div>
-                    <p className="uppercase text-xs tracking-wide text-(--text-low)">
+                <p className="uppercase text-xs tracking-wide text-(--text-low)">
                   Browse
                 </p>
-                <p className="mt-1 text-xs text-(--text-high)">{currentTab.headerDesc}</p>
+                <p className="mt-1 text-xs text-(--text-high)">
+                  {currentTab.headerDesc}
+                </p>
               </div>
               {activeTab === "Lessons" && (
                 <p className="text-accent text-sm font-bold">
@@ -269,7 +277,7 @@ export default function JamRoom() {
                     onClick={() => setDifficultyFilter(difficulty)}
                     className={`text-xs font-medium rounded-full py-1 px-3 border transition-all cursor-pointer ${
                       difficultyFilter === difficulty
-                        ? "bg-(--tab-color) text-white border-(--tab-color)"
+                        ? "bg-(--tab-color) text-black border-(--tab-color)"
                         : "bg-(--bg-surface) text-(--text-high) border-border hover:border-(--tab-color) hover:text-(--tab-color)"
                     }`}
                   >
@@ -296,7 +304,9 @@ export default function JamRoom() {
                     }`}
                   >
                     <div className="p-2 flex flex-row justify-between">
-                      <p className="font-semibold">{item.title}</p>
+                      <p className="font-semibold text-(--text-high)">
+                        {item.title}
+                      </p>
                       {item.xpReward && (
                         <span className="font-bold text-xs text-accent">
                           +{item?.xpReward} XP
@@ -326,25 +336,34 @@ export default function JamRoom() {
         <div className="flex flex-col gap-6 px-8 py-8 max-h-[calc(100vh-150px)] overflow-y-auto">
           <div className="flex flex-row justify-between text-sm text-(--text-med)">
             {activeTab === "Lessons" ? (
-              <div className="flex flex-row gap-2" style={{color: currentTab.color}}>
+              <div
+                className="flex flex-row gap-2"
+                style={{ color: currentTab.color }}
+              >
                 <GraduationCap size={20} />
-                <p className="text-sm">Lessons</p>
+                <p className="text-sm font-semibold tracking-wide">Lessons</p>
               </div>
             ) : activeTab === "Chords" ? (
-              <div className="flex flex-row gap-2" style={{color: currentTab.color}}>
+              <div
+                className="flex flex-row gap-2"
+                style={{ color: currentTab.color }}
+              >
                 <Guitar size={20} />
-                <p className="text-sm">Chords</p>
+                <p className="text-sm font-semibold tracking-wide">Chords</p>
               </div>
             ) : (
-              <div className="flex flex-row gap-2" style={{color: currentTab.color}}>
+              <div
+                className="flex flex-row gap-2"
+                style={{ color: currentTab.color }}
+              >
                 <Layers size={20} />
-                <p className="text-sm">Scales</p>
+                <p className="text-sm font-semibold tracking-wide">Scales</p>
               </div>
             )}
           </div>
           <div className="flex flex-col gap-3">
             <div className="flex flex-row justify-between items-center">
-              <p className="text-3xl font-semibold tracking-wide">
+              <p className="text-3xl font-semibold tracking-wide text-(--text-high)">
                 {selectedItem?.title}
               </p>
               {activeTab !== "Lessons" && (
@@ -357,13 +376,22 @@ export default function JamRoom() {
                 </p>
               )}
             </div>
-            <span
-              className={`text-xs font-medium rounded-full py-0.5 px-2 w-fit inline-block ${selectedItem?.difficulty === "BEGINNER" ? "bg-green-50 text-green-700" : selectedItem?.difficulty === "INTERMEDIATE" ? "bg-amber-50 text-amber-700" : "bg-red-50 text-red-700"}`}
-            >
-              {selectedItem?.difficulty.charAt(0) +
-                selectedItem?.difficulty.slice(1).toLowerCase()}
-            </span>
-            <p className="text-sm text-(--text-med)">{selectedItem.description}</p>
+            <div className="flex flex-row justify-between">
+              <span
+                className={`text-xs font-medium rounded-full py-0.5 px-2 w-fit inline-block ${selectedItem?.difficulty === "BEGINNER" ? "bg-(--bg-elevated) text-accent" : selectedItem?.difficulty === "INTERMEDIATE" ? "bg-amber-50 text-amber-700" : "bg-red-50 text-red-700"}`}
+              >
+                {selectedItem?.difficulty.charAt(0) +
+                  selectedItem?.difficulty.slice(1).toLowerCase()}
+              </span>
+              {selectedItem.xpReward && (
+                <span className="text-xs text-accent font-bold">
+                  +{selectedItem.xpReward} XP
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-(--text-med)">
+              {selectedItem.description}
+            </p>
           </div>
           {renderDetailContent()}
         </div>
