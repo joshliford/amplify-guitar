@@ -37,6 +37,19 @@ public class RewardService {
                 .toList();
     }
 
+    public List<RewardResponseDTO> getAllRewards() {
+        List<Reward> rewards = rewardRepository.findAll();
+        return rewards.stream()
+                .map(reward -> new RewardResponseDTO(
+                        reward.getDescription(),
+                        null, // make earnedAt null since we are just fetching all rewards for the frontend
+                        reward.getIcon(),
+                        reward.getId(),
+                        reward.getTitle()
+                ))
+                .toList();
+    }
+
     public List<RewardResponseDTO> checkAndAwardRewards(User user) {
         List<Reward> allRewards = rewardRepository.findAll();
         List<UserReward> userRewards = userRewardRepository.findByUserId(user.getId());

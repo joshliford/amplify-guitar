@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /*
-2 endpoints:
+3 endpoints:
 GET /api/rewards - fetch all rewards the user has earned
+GET /api/rewards/all - fetch all rewards
 POST /api/rewards/check - checks rewards the user has and awards new ones
 */
 
@@ -38,6 +39,12 @@ public class RewardController {
         String email = userDetails.getUsername();
         User currentUser = userService.findByEmail(email);
         List<RewardResponseDTO> response = rewardService.getEarnedRewards(currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<RewardResponseDTO>> getAllRewards() {
+        List<RewardResponseDTO> response = rewardService.getAllRewards();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
