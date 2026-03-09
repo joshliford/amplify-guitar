@@ -42,7 +42,7 @@ export default function JamRoom() {
                 className="text-xl cursor-pointer"
                 onClick={() => navigate(`/lessons/${selectedItem.id}`)}
               >
-                Start Lesson
+                {selectedItem.completed ? "Review Lesson" : "Start Lesson"}
               </button>
               <ArrowRight
                 size={20}
@@ -216,8 +216,8 @@ export default function JamRoom() {
 
   if (error) {
     return (
-      <div>
-        <p className="flex justify-center text-red-400 text-xl mt-20">
+      <div className="flex flex-col bg-(--bg-base) min-h-screen">
+        <p className="flex justify-center text-red-400 text-2xl mt-20">
           {error}
         </p>
       </div>

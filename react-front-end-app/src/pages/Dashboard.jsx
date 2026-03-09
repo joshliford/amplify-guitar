@@ -85,7 +85,7 @@ export default function Dashboard() {
         setAllRewards(allRewardsData.data);
         setEarnedRewards(earnedRewardsData.data);
       } catch (error) {
-        setError("Failed to load dashboard details.");
+        setError("Failed to load Dashboard details");
       } finally {
         setIsLoading(false);
       }
@@ -100,8 +100,10 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <div className="flex justify-center text-red-400 text-xl mt-20">
-        {error}
+      <div className="flex flex-col bg-(--bg-base) min-h-screen">
+        <p className="flex justify-center text-red-400 text-2xl mt-20">
+          {error}
+        </p>
       </div>
     );
   }
@@ -218,7 +220,7 @@ export default function Dashboard() {
           <div className="flex flex-wrap gap-3 p-6 justify-between">
             {allRewards.map((reward) => {
               const isEarned = earnedRewards.some(
-                (element) => element.rewardId === reward.id,
+                (element) => element.rewardId === reward.rewardId,
               );
               const IconComponent = iconMap[reward.icon] || Star;
 

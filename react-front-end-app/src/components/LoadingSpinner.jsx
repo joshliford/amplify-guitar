@@ -5,7 +5,7 @@ export default function LoadingSpinner({ page }) {
         <circle
           fill="none"
           strokeWidth="10"
-          className="stroke-primary opacity-20"
+          className="stroke-primary"
           cx="50"
           cy="50"
           r="40"

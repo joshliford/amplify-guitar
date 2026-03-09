@@ -1,10 +1,7 @@
 import Modal from "./Modal";
-import { rewards } from "./Data/rewards";
 import { Rocket, Trophy } from "lucide-react";
 
 export default function LevelUpModal({ isModalOpen, handleCloseModal, level }) {
-    
-  const reward = rewards.find((r) => r.level === level);
 
   return (
     <div>
@@ -44,7 +41,7 @@ export default function LevelUpModal({ isModalOpen, handleCloseModal, level }) {
               <Trophy size={20} className="text-yellow-700 mt-1" />
               <p>New Icon:</p>
               <span>
-                <reward.icon size={25} style={{ color: reward.iconColor }} />
+                
               </span>
               <span className="font-bold text-primary">
                 {`(${reward.iconDescription})`}

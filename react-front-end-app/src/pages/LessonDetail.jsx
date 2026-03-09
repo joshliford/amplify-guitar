@@ -21,8 +21,15 @@ export default function LessonDetail() {
       try {
         const lessonData = await getLessonById(id);
         setLessonDetails(lessonData.data);
+        setCompleted(lessonData.data.completed);
       } catch (error) {
-        (setError("Failed to load lesson details"));
+        if (error.response?.status === 409) {
+          // lesson already complete, update UI to reflect this
+          setCompleted(true);
+        } else {
+          setError("Failed to load lesson details");
+          console.error(error);
+        }
       } finally {
         setIsLoading(false);
       }
