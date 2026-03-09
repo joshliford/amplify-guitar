@@ -27,9 +27,10 @@ public class UserReward {
 
     }
 
-    public UserReward(User user, Reward reward) {
+    public UserReward(User user, Reward reward, LocalDateTime earnedAt) {
         this.user = user;
         this.reward = reward;
+        this.earnedAt = earnedAt;
     }
 
     public LocalDateTime getEarnedAt() {

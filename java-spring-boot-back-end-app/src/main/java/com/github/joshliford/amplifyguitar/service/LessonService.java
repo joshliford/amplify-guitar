@@ -1,6 +1,8 @@
 package com.github.joshliford.amplifyguitar.service;
 
+import com.github.joshliford.amplifyguitar.dto.response.CompleteLessonResponseDTO;
 import com.github.joshliford.amplifyguitar.dto.response.LessonResponseDTO;
+import com.github.joshliford.amplifyguitar.dto.response.RewardResponseDTO;
 import com.github.joshliford.amplifyguitar.exception.LessonAlreadyCompleteException;
 import com.github.joshliford.amplifyguitar.exception.LessonLockedException;
 import com.github.joshliford.amplifyguitar.exception.ResourceNotFoundException;
@@ -57,12 +59,13 @@ public class LessonService {
                 .collect(Collectors.toList());
     }
 
-    public UserLesson completeLesson(User user, Integer lessonId) {
+    public CompleteLessonResponseDTO completeLesson(User user, Integer lessonId) {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson not found with id: " + lessonId));
 
         boolean completed = userLessonRepository.existsByUserAndLesson(user, lesson);
         boolean locked = lesson.getRequiredLevel() > user.getCurrentLevel();
+        int previousLevel = user.getCurrentLevel();
 
         if (completed) {
             throw new LessonAlreadyCompleteException("You've already completed this lesson");
@@ -85,17 +88,35 @@ public class LessonService {
         Integer userCompletedLessons = user.getLessonsCompleted();
         user.setLessonsCompleted(userCompletedLessons + 1);
         userRepository.save(user);
-        progressService.addXp(user.getId(), lesson.getXpReward());
+        User updatedUser = progressService.addXp(user.getId(), lesson.getXpReward());
+
+        boolean leveledUp = updatedUser.getCurrentLevel() > previousLevel;
 
         // check if the user has earned any rewards based on lesson completion
-        rewardService.checkAndAwardRewards(user);
+        List<RewardResponseDTO> newRewards = rewardService.checkAndAwardRewards(updatedUser);
 
-        return userLessonRepository.save(lessonComplete);
+        userLessonRepository.save(lessonComplete);
+
+        // used for modal after lesson completion
+        return new CompleteLessonResponseDTO(
+                leveledUp,
+                updatedUser.getCurrentLevel(),
+                newRewards,
+                updatedUser.getTotalXp(),
+                updatedUser.getCurrentXp()
+        );
     }
 
-    public Lesson getLessonById(Integer id) {
-        return lessonRepository.findById(id)
+    public LessonResponseDTO getLessonById(Integer id, User user) {
+        Lesson lesson = lessonRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson not found with id: " + id));
+
+        List<UserLesson> userCompletedLessonList = userLessonRepository.findByUserOrderByCompletedAtDesc(user);
+        Set<Integer> completedLessonIds = userCompletedLessonList.stream()
+                .map(userLesson -> userLesson.getLesson().getId())
+                .collect(Collectors.toSet());
+
+        return buildLessonResponse(lesson, completedLessonIds, user);
     }
 
     // helper method to build a single LessonResponseDTO from a lesson and user context

@@ -1,9 +1,8 @@
 package com.github.joshliford.amplifyguitar.controller;
 
+import com.github.joshliford.amplifyguitar.dto.response.CompleteLessonResponseDTO;
 import com.github.joshliford.amplifyguitar.dto.response.LessonResponseDTO;
-import com.github.joshliford.amplifyguitar.model.Lesson;
 import com.github.joshliford.amplifyguitar.model.User;
-import com.github.joshliford.amplifyguitar.model.UserLesson;
 import com.github.joshliford.amplifyguitar.service.LessonService;
 import com.github.joshliford.amplifyguitar.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -42,16 +41,18 @@ public class LessonController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Lesson> getLessonById(@PathVariable Integer id) {
-        Lesson response = lessonService.getLessonById(id);
+    public ResponseEntity<LessonResponseDTO> getLessonById(@AuthenticationPrincipal UserDetails user, @PathVariable Integer id) {
+        String email = user.getUsername();
+        User currentUser = userService.findByEmail(email);
+        LessonResponseDTO response = lessonService.getLessonById(id, currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/{lessonId}/complete")
-    public ResponseEntity<UserLesson> completeLesson(@AuthenticationPrincipal UserDetails user, @PathVariable Integer lessonId) {
+    public ResponseEntity<CompleteLessonResponseDTO> completeLesson(@AuthenticationPrincipal UserDetails user, @PathVariable Integer lessonId) {
         String email = user.getUsername();
         User currentUser = userService.findByEmail(email);
-        UserLesson response = lessonService.completeLesson(currentUser, lessonId);
+        CompleteLessonResponseDTO response = lessonService.completeLesson(currentUser, lessonId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

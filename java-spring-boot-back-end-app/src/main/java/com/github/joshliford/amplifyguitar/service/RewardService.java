@@ -8,6 +8,7 @@ import com.github.joshliford.amplifyguitar.repository.RewardRepository;
 import com.github.joshliford.amplifyguitar.repository.UserRewardRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -75,7 +76,7 @@ public class RewardService {
             };
             // if condition is met save earned reward to the user
             if (earned) {
-                UserReward userReward = new UserReward(user, reward);
+                UserReward userReward = new UserReward(user, reward, LocalDateTime.now());
                 userRewardRepository.save(userReward);
 
                 RewardResponseDTO dto = new RewardResponseDTO(
