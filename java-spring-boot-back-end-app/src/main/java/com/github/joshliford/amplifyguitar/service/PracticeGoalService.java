@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /*
-1 method:
+Core method:
 getAllGoals()
 */
 

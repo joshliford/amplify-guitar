@@ -35,11 +35,9 @@ public class PracticeGoal {
 
     }
 
-    public PracticeGoal(LocalDateTime createdAt, Integer durationInMinutes, String title, LocalDateTime updatedAt, Integer xpReward) {
-        this.createdAt = createdAt;
+    public PracticeGoal(Integer durationInMinutes, String title, Integer xpReward) {
         this.durationInMinutes = durationInMinutes;
         this.title = title;
-        this.updatedAt = updatedAt;
         this.xpReward = xpReward;
     }
 

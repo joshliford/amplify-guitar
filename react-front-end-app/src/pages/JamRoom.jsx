@@ -1,187 +1,443 @@
-import { useState } from "react";
-import ChordCard from "../components/Chords/ChordCard";
-import ScaleCard from "../components/Scales/ScaleCard";
-import LessonCard from "../components/Lessons/LessonCard";
-import { chords } from "../components/Chords/chordData";
-import { scales } from "../components/Scales/scaleData";
-import { lessons } from "../components/Lessons/lessonData";
-import FilterButton from "../components/FilterButton";
-import Modal from "../components/Modal";
-import ChordModal from "../components/Chords/ChordModal";
-import ScaleModal from "../components/Scales/ScaleModal";
-import LessonModal from "../components/Lessons/LessonModal";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { SquareMenu } from "lucide-react";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getAllChords } from "@/services/chordService";
+import { getAllLessons } from "@/services/lessonService";
+import { getAllScales } from "@/services/scaleService";
+import { Layers, GraduationCap, Lock, Guitar, ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
-export default function JamRoom({ addXP, completedLessons, markLessonComplete }) {
-
-  // entire object (chord, scale, or lesson) currently being viewed
+export default function JamRoom() {
+  const [activeTab, setActiveTab] = useState("Lessons");
   const [selectedItem, setSelectedItem] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filter, setFilter] = useState("all");
-  const [isActive, setIsActive] = useState("all");
+  const [chords, setChords] = useState([]);
+  const [scales, setScales] = useState([]);
+  const [lessons, setLessons] = useState([]);
+  const [difficultyFilter, setDifficultyFilter] = useState("All");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // recieves an 'item' (i.e. chord/scale/lesson object) from Card
-  // stores the 'item' in selectedItem (tells the modal what to display)
-  // sets isModalOpen to be 'true' so the modal is opened/can be viewed/seen
-  const handleViewItem = (item) => {
-    setSelectedItem(item);
-    setIsModalOpen(true);
+  const navigate = useNavigate();
+
+  const renderDetailContent = () => {
+    if (!selectedItem) {
+      return null;
+    }
+
+    if (activeTab === "Lessons") {
+      if (selectedItem.locked) {
+        return (
+          <div className="flex flex-row gap-2 items-center justify-center text-red-400">
+            <Lock size={20} />
+            <p>
+              Lesson locked until you reach level {selectedItem.requiredLevel}
+            </p>
+          </div>
+        );
+      } else {
+        return (
+          <div className="flex mt-4">
+            <div className="flex flex-1 group gap-2 items-center text-primary justify-center">
+              <button
+                className="text-xl cursor-pointer"
+                onClick={() => navigate(`/lessons/${selectedItem.id}`)}
+              >
+                {selectedItem.completed ? "Review Lesson" : "Start Lesson"}
+              </button>
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform duration-300"
+              />
+            </div>
+          </div>
+        );
+      }
+    }
+
+    if (activeTab === "Chords") {
+      return (
+        <div className="flex flex-col gap-4">
+          {selectedItem.imageUrl && (
+            <img
+              src={selectedItem.imageUrl}
+              alt={selectedItem.title}
+              className="mx-auto max-w-[400px] p-2 bg-(--bg-elevated) rounded-xl border border-border shadow-lg shadow-gray-300 dark:shadow-black mb-4"
+            />
+          )}
+          <div className="flex flex-col gap-4 border-t border-accent">
+            <p className="mt-6 text-xs uppercase tracking-wide font-semibold text-(--text-high)">
+              Chord Details:
+            </p>
+            <p className="text-sm leading-relaxed text-(--text-med)">
+              {selectedItem.details}
+            </p>
+          </div>
+          <div className="flex flex-col gap-4 border-t border-accent">
+            <p className="mt-6 text-xs uppercase tracking-wide font-semibold text-(--text-high)">
+              Chord Tips:
+            </p>
+            <p className="text-sm leading-relaxed text-(--text-med)">
+              {selectedItem.tips}
+            </p>
+          </div>
+          <div className="flex flex-col border-t border-accent gap-4">
+            <p className="mt-6 text-xs uppercase tracking-wide font-semibold text-(--text-high)">
+              Finger Positions:
+            </p>
+            <p className="text-sm text-(--text-med)">
+              {selectedItem.fingerPositions}
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    if (activeTab === "Scales") {
+      return (
+        <div className="flex flex-col gap-4">
+          {selectedItem.imageUrl && (
+            <img
+              src={selectedItem.imageUrl}
+              alt={selectedItem.title}
+              className="mx-auto max-w-[400px] bg-(--bg-elevated) rounded-xl border border-border shadow-lg shadow-gray-300 dark:shadow-black mb-4"
+            />
+          )}
+          <div className="flex flex-col gap-4 border-t border-[#e76f51]">
+            <p className="mt-6 text-xs uppercase tracking-wide font-semibold text-(--text-high)">
+              Scale Details:
+            </p>
+            <p className="text-sm leading-relaxed text-(--text-med)">
+              {selectedItem.details}
+            </p>
+          </div>
+          <div className="flex flex-col gap-4 border-t border-[#e76f51]">
+            <p className="mt-6 text-xs uppercase tracking-wide font-semibold text-(--text-high)">
+              Scale Tips:
+            </p>
+            <p className="text-sm leading-relaxed text-(--text-med)">
+              {selectedItem.tips}
+            </p>
+          </div>
+          <div className="flex flex-col border-t border-[#e76f51] gap-4">
+            <p className="mt-6 text-xs uppercase tracking-wide font-semibold text-(--text-high)">
+              Position:
+            </p>
+            <p className="text-sm text-(--text-med)">{selectedItem.position}</p>
+          </div>
+        </div>
+      );
+    }
   };
 
-  const handleCloseModal = () => setIsModalOpen(false);
-
-  const filterOptions = (value) => {
-    // updates filter state to be whatever was clicked (i.e. chords, scales, etc.)
-    setFilter(value);
-    setIsActive(value);
+  const tabData = {
+    Lessons: {
+      headerDesc: "Guided lessons to build your skills",
+      color: "#BB86FC",
+      bgColor: "var(--bg-elevated)",
+    },
+    Chords: {
+      headerDesc: "Master chord shapes and transitions",
+      color: "#E09F3E",
+      bgColor: "var(--bg-elevated)",
+    },
+    Scales: {
+      headerDesc: "Unlock the fretboard with scales",
+      color: "#e76f51",
+      bgColor: "var(--bg-elevated)",
+    },
   };
+
+  const currentTab = tabData[activeTab];
+
+  // reset selectedItem to the first valid item when the active tab changes
+  useEffect(() => {
+    if (lessons.length === 0 && chords.length === 0 && scales.length === 0) {
+      return;
+    }
+
+    if (activeTab === "Lessons") {
+      let lesson = lessons.find((lesson) => !lesson.locked) || lessons[0];
+      setSelectedItem(lesson);
+    }
+
+    if (activeTab === "Chords") {
+      setSelectedItem(chords[0]);
+    }
+
+    if (activeTab === "Scales") {
+      setSelectedItem(scales[0]);
+    }
+  }, [activeTab, lessons, chords, scales]);
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        // fetch all 3 datasets in parellel
+        const [chordsData, scalesData, lessonsData] = await Promise.all([
+          getAllChords(),
+          getAllScales(),
+          getAllLessons(),
+        ]);
+        // extract data from axios response above
+        setChords(chordsData.data);
+        setScales(scalesData.data);
+        setLessons(lessonsData.data);
+        if (lessonsData.data.length > 0) {
+          setSelectedItem(lessonsData.data[0]);
+        }
+      } catch (error) {
+        setError("Failed to load JamRoom data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    // invoke on component mount
+    fetchAllData();
+  }, []);
+
+  const getFilteredItems = () => {
+    let items =
+      activeTab === "Lessons"
+        ? lessons
+        : activeTab === "Chords"
+          ? chords
+          : scales;
+
+    if (difficultyFilter !== "All") {
+      items = items.filter((item) => item.difficulty === difficultyFilter);
+    }
+
+    return items;
+  };
+
+  if (isLoading) {
+    return <LoadingSpinner page={"Jam Room"} />;
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col bg-(--bg-base) min-h-screen">
+        <p className="flex justify-center text-red-400 text-2xl mt-20">
+          {error}
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <main className="bg-[#FFFEF7] dark:bg-black font-['Nunito_Sans']">
-
-      {/* burger menu visible only below sm breakpoint for mobile view */}
-      <div className="sm:hidden mb-6">
-        <Menu as="div" className="flex justify-center mt-8">
-          <MenuButton className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1F5D3D] dark:bg-[#e5c391] dark:hover:bg-[#D4A574] dark:text-black text-white hover:cursor-pointer">
-            <SquareMenu size={18} />
-          </MenuButton>
-
-          <MenuItems className="absolute mt-10 w-40 left-1/2 -translate-x-1/2 rounded-lg bg-white dark:bg-slate-700 shadow-lg">
-            <MenuItem>
-              <button
-                onClick={() => filterOptions("all")}
-                className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800 hover:cursor-pointer"
-              >
-                All
-              </button>
-            </MenuItem>
-            <MenuItem>
-              <button
-                onClick={() => filterOptions("chords")}
-                className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800 hover:cursor-pointer"
-              >
-                Chords
-              </button>
-            </MenuItem>
-            <MenuItem>
-              <button
-                onClick={() => filterOptions("lessons")}
-                className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800 hover:cursor-pointer"
-              >
-                Lessons
-              </button>
-            </MenuItem>
-            <MenuItem>
-              <button
-                onClick={() => filterOptions("scales")}
-                className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800 hover:cursor-pointer"
-              >
-                Scales
-              </button>
-            </MenuItem>
-          </MenuItems>
-        </Menu>
+    <main className="grid grid-cols-[500px_1fr] px-8 py-10 gap-8 bg-(--bg-base)">
+      {/* Header */}
+      <div className="col-span-2 flex flex-row justify-center items-center">
+        <Tabs defaultValue="lessons">
+          <TabsList className="px-1.5 py-5.5 gap-2 text-(--text-high) bg-(--bg-base)">
+            <TabsTrigger
+              className="px-3 py-3 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700/60 duration-300 transition-colors"
+              value="lessons"
+              onClick={() => setActiveTab("Lessons")}
+              style={
+                activeTab === "Lessons"
+                  ? {
+                      backgroundColor: tabData.Lessons.color,
+                      borderColor: tabData.Lessons.bgColor,
+                      color: "black",
+                    }
+                  : {}
+              }
+            >
+              Lessons
+            </TabsTrigger>
+            <TabsTrigger
+              className="px-3 py-3 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700/60 duration-300 transition-colors"
+              value="chords"
+              onClick={() => setActiveTab("Chords")}
+              style={
+                activeTab === "Chords"
+                  ? {
+                      backgroundColor: tabData.Chords.color,
+                      borderColor: tabData.Chords.color,
+                      color: "black",
+                    }
+                  : {}
+              }
+            >
+              Chords
+            </TabsTrigger>
+            <TabsTrigger
+              className="px-3 py-3 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700/60 duration-300 transition-colors"
+              value="scales"
+              onClick={() => setActiveTab("Scales")}
+              style={
+                activeTab === "Scales"
+                  ? {
+                      backgroundColor: tabData.Scales.color,
+                      borderColor: tabData.Scales.color,
+                      color: "black",
+                    }
+                  : {}
+              }
+            >
+              Scales
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
-
-      <div className="max-sm:hidden sm:flex flex-row text-lg justify-center gap-3 mb-8 mt-8">
-        <FilterButton
-          label={"All"}
-          value={"all"}
-          filterOptions={filterOptions}
-          isActive={isActive}
-        />
-        <FilterButton
-          label={"Chords"}
-          value={"chords"}
-          filterOptions={filterOptions}
-          isActive={isActive}
-        />
-        <FilterButton
-          label={"Lessons"}
-          value={"lessons"}
-          filterOptions={filterOptions}
-          isActive={isActive}
-        />
-        <FilterButton
-          label={"Scales"}
-          value={"scales"}
-          filterOptions={filterOptions}
-          isActive={isActive}
-        />
-      </div>
-
-      {/* filter === 'all' indicates that it will be shown on screen by default unless a different choice is clicked */}
-      <div className="text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6">
-        {(filter === "all" || filter === "chords") &&
-          chords.map((chord) => {
-            // chord={chord} - passes the entire 'chord' object (i.e. id, title, etc) from the .map() callback into ChordCard as a prop named 'chord'
-            // 'chord' is then available via deconstruction in ChordCard
-            return (
-              <ChordCard
-                key={chord.id}
-                chord={chord}
-                handleViewItem={handleViewItem}
-              />
-            );
-          })}
-        {(filter === "all" || filter === "scales") &&
-          scales.map((scale) => {
-            return (
-              <ScaleCard
-                key={scale.id}
-                scale={scale}
-                handleViewItem={handleViewItem}
-              />
-            );
-          })}
-        {(filter === "all" || filter === "lessons") &&
-          lessons.map((lesson) => {
-            return (
-              <LessonCard
-                key={lesson.id}
-                lesson={lesson}
-                handleViewItem={handleViewItem}
-                completedLessons={completedLessons}
-              />
-            );
-          })}
-      </div>
-
-        {/* 
-        - used optional chaining (?.) to prevent browser crashes (i.e. if selectedItem is 'null' return undefined rather than crashing the app)
-        - helps render the conditional woodgrain header for each modal in Jamroom
-        */}
-      <Modal
-        isModalOpen={isModalOpen}
-        handleCloseModal={handleCloseModal}
-        category={selectedItem?.category}
-        title={selectedItem?.title}
+      {/* Left pannel */}
+      <div
+        className="flex flex-col rounded-xl border-2 bg-(--bg-surface) shadow-lg hover:shadow-xl overflow-hidden"
+        style={{
+          "--tab-color": currentTab.color,
+          "--tab-bg": currentTab.bgColor,
+          borderColor: currentTab.color,
+        }}
       >
-        {selectedItem && selectedItem.category === "chord" && (
-          <ChordModal
-            selectedItem={selectedItem}
-            handleCloseModal={handleCloseModal}
-          />
-        )}
-        {selectedItem && selectedItem.category === "scale" && (
-          <ScaleModal
-            selectedItem={selectedItem}
-            handleCloseModal={handleCloseModal}
-          />
-        )}
-
-        {/* lessons carry the bulk of XP gain/content so they need to take in additional props to properly update state and XP dynamically */}
-        {selectedItem && selectedItem.category === "lesson" && (
-          <LessonModal
-            selectedItem={selectedItem}
-            handleCloseModal={handleCloseModal}
-            addXP={addXP}
-            completedLessons={completedLessons}
-            markLessonComplete={markLessonComplete}
-          />
-        )}
-      </Modal>
+        <div className="flex flex-col gap-4 max-h-[calc(100vh-150px)] overflow-y-auto [scrollbar-gutter:stable]">
+          <div
+            className="rounded-t-xl px-4 py-4 flex flex-col gap-3"
+            style={{ backgroundColor: currentTab.bgColor }}
+          >
+            <div className="flex flex-row justify-between">
+              <div>
+                <p className="uppercase text-xs tracking-wide text-(--text-low)">
+                  Browse
+                </p>
+                <p className="mt-1 text-xs text-(--text-high)">
+                  {currentTab.headerDesc}
+                </p>
+              </div>
+              {activeTab === "Lessons" && (
+                <p className="text-accent text-sm font-bold">
+                  {lessons.filter((lesson) => lesson.completed).length}/
+                  {lessons.length} complete
+                </p>
+              )}
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {["All", "BEGINNER", "INTERMEDIATE", "ADVANCED"].map(
+                (difficulty) => (
+                  <button
+                    key={difficulty}
+                    onClick={() => setDifficultyFilter(difficulty)}
+                    className={`text-xs font-medium rounded-full py-1 px-3 border transition-all cursor-pointer ${
+                      difficultyFilter === difficulty
+                        ? "bg-(--tab-color) text-black border-(--tab-color)"
+                        : "bg-(--bg-surface) text-(--text-high) border-border hover:border-(--tab-color) hover:text-(--tab-color)"
+                    }`}
+                  >
+                    {difficulty === "All"
+                      ? "All"
+                      : difficulty.charAt(0) +
+                        difficulty.slice(1).toLowerCase()}
+                  </button>
+                ),
+              )}
+            </div>
+          </div>
+          <div className="px-6 py-6 flex flex-col gap-4">
+            <div className="flex flex-col gap-4">
+              {getFilteredItems().map((item) => {
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => setSelectedItem(item)}
+                    className={`rounded-lg border-2 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-xl hover:border-(--tab-color) ${
+                      selectedItem?.id === item.id
+                        ? "border-(--tab-color) border-l-4 -translate-y-1 shadow-lg"
+                        : "border-border"
+                    }`}
+                  >
+                    <div className="p-2 flex flex-row justify-between">
+                      <p className="font-semibold text-(--text-high)">
+                        {item.title}
+                      </p>
+                      {item.xpReward && (
+                        <span className="font-bold text-xs text-accent">
+                          +{item?.xpReward} XP
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <span
+                        className={`text-xs font-medium rounded-full py-0.5 px-2 ml-1 mb-2 w-fit inline-block bg-(--bg-elevated) text-primary`}
+                      >
+                        {item.difficulty.charAt(0) +
+                          item.difficulty.slice(1).toLowerCase()}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Right pannel */}
+      <div
+        className="flex flex-col rounded-xl border-2 bg-(--bg-surface) hover:shadow-xl overflow-hidden"
+        style={{ borderColor: currentTab.color }}
+      >
+        <div className="flex flex-col gap-6 px-8 py-8 max-h-[calc(100vh-150px)] overflow-y-auto">
+          <div className="flex flex-row justify-between text-sm text-(--text-med)">
+            {activeTab === "Lessons" ? (
+              <div
+                className="flex flex-row gap-2"
+                style={{ color: currentTab.color }}
+              >
+                <GraduationCap size={20} />
+                <p className="text-sm font-semibold tracking-wide">Lessons</p>
+              </div>
+            ) : activeTab === "Chords" ? (
+              <div
+                className="flex flex-row gap-2"
+                style={{ color: currentTab.color }}
+              >
+                <Guitar size={20} />
+                <p className="text-sm font-semibold tracking-wide">Chords</p>
+              </div>
+            ) : (
+              <div
+                className="flex flex-row gap-2"
+                style={{ color: currentTab.color }}
+              >
+                <Layers size={20} />
+                <p className="text-sm font-semibold tracking-wide">Scales</p>
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-row justify-between items-center">
+              <p className="text-3xl font-semibold tracking-wide text-(--text-high)">
+                {selectedItem?.title}
+              </p>
+              {activeTab !== "Lessons" && (
+                <p className="text-xs text-gray-500">
+                  Tip: Notes indicated with the
+                  <span className="text-[#03DAC6] ml-1 font-semibold">
+                    teal circle
+                  </span>{" "}
+                  are "root" notes.
+                </p>
+              )}
+            </div>
+            <div className="flex flex-row justify-between">
+              <span
+                className={`text-xs font-medium rounded-full py-0.5 px-2 w-fit inline-block bg-(--bg-elevated) text-primary`}
+              >
+                {selectedItem?.difficulty.charAt(0) +
+                  selectedItem?.difficulty.slice(1).toLowerCase()}
+              </span>
+              {selectedItem.xpReward && (
+                <span className="text-xs text-accent font-bold">
+                  +{selectedItem.xpReward} XP
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-(--text-med)">
+              {selectedItem.description}
+            </p>
+          </div>
+          {renderDetailContent()}
+        </div>
+      </div>
     </main>
   );
 }

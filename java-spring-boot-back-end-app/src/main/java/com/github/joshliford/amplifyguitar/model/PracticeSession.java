@@ -13,11 +13,13 @@ public class PracticeSession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    // Many practice sessions can belong to one user; foreign key stored in user_id column
     @ManyToOne
     @JoinColumn(name = "user_id")
     @NotNull
     private User user;
 
+    // Many practice sessions can target the same goal; foreign key stored in goal_id column
     @ManyToOne
     @JoinColumn(name = "goal_id")
     private PracticeGoal goal;

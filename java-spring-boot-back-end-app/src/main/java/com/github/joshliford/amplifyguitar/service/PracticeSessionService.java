@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /*
-3 methods:
+Core methods:
 startPracticeSession(User user, practiceGoal goal)
 endPracticeSession(Integer sessionId)
 getPracticeSessions(User user)
