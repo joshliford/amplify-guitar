@@ -28,6 +28,7 @@ import { xpForNextLevel, xpNeededToLevelUp } from "@/components/utils/xpUtils";
 import XPBar from "@/components/XPBar";
 import { Link } from "react-router";
 import { getAllRewards, getEarnedRewards } from "@/services/rewardService";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 
 const iconMap = {
   Star,
@@ -108,7 +109,7 @@ export default function Dashboard() {
   if (user) {
     return (
       <main className="grid grid-cols-3 min-h-screen items-start auto-rows-auto gap-4 bg-(--bg-base) py-12 px-16">
-        {/* Left user card */}
+        {/* Top user card */}
         <SectionCard
           title={"Stats Overview"}
           icon={<Zap size={20} className="text-primary" />}
@@ -213,7 +214,8 @@ export default function Dashboard() {
           icon={<Trophy size={20} className="text-primary" />}
           className="col-span-2 self-start text-(--text-high)"
         >
-          <div className="flex flex-wrap gap-3 p-6 justify-center">
+          <TooltipProvider>
+          <div className="flex flex-wrap gap-3 p-6 justify-between">
             {allRewards.map((reward) => {
               const isEarned = earnedRewards.some(
                 (element) => element.rewardId === reward.id,
@@ -228,12 +230,19 @@ export default function Dashboard() {
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center border ${isEarned ? "bg-accent border-accent" : "bg-(--bg-elevated) border-border"}`}
                   >
-                    <IconComponent
-                      size={16}
-                      className={
-                        isEarned ? "text-black" : "text-(--text-low)"
-                      }
-                    />
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <IconComponent
+                          size={16}
+                          className={
+                            isEarned ? "text-black" : "text-(--text-low)"
+                          }
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {reward.description}
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
                   <span
                     className={`text-[10px] text-center leading-tight ${isEarned ? "text-accent" : "text-(--text-low)"}`}
@@ -244,6 +253,7 @@ export default function Dashboard() {
               );
             })}
           </div>
+          </TooltipProvider>
         </SectionCard>
 
         {/* Bottom center card */}

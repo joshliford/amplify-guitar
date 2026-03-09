@@ -1,11 +1,11 @@
 export default function LoadingSpinner({ page }) {
   return (
-    <div className="flex items-center justify-center min-h-screen gap-3">
+    <div className="flex items-center justify-center min-h-screen gap-3 bg-(--bg-base)">
       <svg className="h-10 w-10 animate-spin" viewBox="0 0 100 100">
         <circle
           fill="none"
           strokeWidth="10"
-          className="stroke-current opacity-40"
+          className="stroke-primary opacity-20"
           cx="50"
           cy="50"
           r="40"

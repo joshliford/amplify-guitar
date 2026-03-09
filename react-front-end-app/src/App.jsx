@@ -16,6 +16,7 @@ import Login from "./pages/Login";
 import SideNavBar from "./components/SideNavBar";
 import Register from "./pages/Register";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import LessonDetail from "./pages/LessonDetail";
 
 function App() {
   const navigate = useNavigate();
@@ -51,6 +52,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/about" element={<About />} />
               <Route path="/jamroom" element={<JamRoom />} />
+              <Route path="/lessons/:id" element={<LessonDetail />} />
               <Route path="/shed" element={<Shed />} />
             </Route>
           </Routes>
