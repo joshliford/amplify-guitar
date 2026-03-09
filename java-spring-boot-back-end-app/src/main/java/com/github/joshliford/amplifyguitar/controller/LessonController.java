@@ -42,7 +42,7 @@ public class LessonController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Lesson> getLessonById(Integer id) {
+    public ResponseEntity<Lesson> getLessonById(@PathVariable Integer id) {
         Lesson response = lessonService.getLessonById(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
