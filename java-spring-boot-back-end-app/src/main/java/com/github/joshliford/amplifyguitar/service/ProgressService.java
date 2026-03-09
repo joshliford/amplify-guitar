@@ -10,9 +10,11 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 /*
-2 methods:
+Core methods:
 addXp(Integer id, Integer xpAmount)
 updateStreak(User user)
+calculateXpNeededForLevel(Integer level)
+getTitle(Integer level)
 */
 
 @Service
@@ -50,6 +52,7 @@ public class ProgressService {
             xpNeededForNextLevel = calculateXpNeededForLevel(currentLevel + 1);
         }
 
+        user.setCurrentTitle(getTitle(currentLevel));
         user.setCurrentXp(newCurrentXp);
         user.setCurrentLevel(currentLevel);
         user.setUpdatedAt(LocalDateTime.now());
@@ -102,6 +105,21 @@ public class ProgressService {
     private Integer calculateXpNeededForLevel(Integer level) {
         // use simple increment for xp (i.e. level 1 = 50XP, level 2 = 100XP, level 3 = 150XP, etc.)
         return 50 + (level * 50);
+    }
+
+    private String getTitle(Integer level) {
+        return switch (level) {
+            case 2 -> "Novice";
+            case 3 -> "Apprentice";
+            case 4 -> "Strummer";
+            case 5 -> "Rhythm Player";
+            case 6 -> "Lead Player";
+            case 7 -> "Intermediate";
+            case 8 -> "Advanced";
+            case 9 -> "Expert";
+            case 10 -> "Master";
+            default -> "Beginner";
+        };
     }
 
 }

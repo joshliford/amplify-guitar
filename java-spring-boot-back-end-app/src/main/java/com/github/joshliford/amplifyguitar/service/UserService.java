@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 /*
-7 core methods:
+Core methods:
 getUserById(Integer id)
 createUser(User user)
 deleteUser(Integer id)

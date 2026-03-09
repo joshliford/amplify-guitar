@@ -8,6 +8,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/*
+Core methods:
+getAllScales()
+getAllScalesByDifficulty(Difficulty difficulty)
+getScaleById(Integer id)
+getTotalScales()
+*/
+
 @Service
 public class ScaleService {
 

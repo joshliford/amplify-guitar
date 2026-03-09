@@ -14,6 +14,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/*
+Core methods:
+getEarnedRewards(User user)
+getAllRewards()
+checkAndAwardRewards(User user)
+*/
+
 @Service
 public class RewardService {
 

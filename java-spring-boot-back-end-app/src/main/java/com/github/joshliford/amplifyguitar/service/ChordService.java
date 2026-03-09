@@ -8,6 +8,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/*
+Core methods:
+getAllChords()
+getAllChordsByDifficulty(Difficulty difficulty)
+getChordById(Integer id)
+getTotalChords()
+*/
+
 @Service
 public class ChordService {
 
