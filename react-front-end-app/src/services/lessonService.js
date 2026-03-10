@@ -1,6 +1,6 @@
 import apiClient from "@/config/axiosConfig";
 
-// handles fetching lesson data from the API 
+// handles fetching/managing lesson data from the API 
 
 export function getAllLessons() {
     return apiClient.get('/lessons');

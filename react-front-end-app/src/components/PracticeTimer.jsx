@@ -1,8 +1,6 @@
 import { useState, useRef } from "react";
 
 export default function PracticeTimer({ runTime, setRunTime }) {
-    
-  const [isRunning, setIsRunning] = useState(false);
 
   const intervalRef = useRef(null);
 

@@ -1,82 +1,93 @@
-import { Select, Label, Field } from "@headlessui/react";
-import { useState } from "react";
-import SectionCard from "../components/SectionCard";
-import PracticeTimer from "../components/PracticeTimer";
-import { CassetteTape } from "lucide-react";
+import { getAllGoals } from "@/services/practiceGoalsService";
+import {
+  endSession,
+  getTotalPracticeTime,
+  startSession,
+} from "@/services/practiceSessionService";
+import { useEffect, useState, useRef } from "react";
 
-export default function Shed({ addXP }) {
-
-  const [sessionComplete, setSessionComplete] = useState(false);
+export default function Shed() {
+  const [goals, setGoals] = useState([]);
+  const [selectedGoalId, setSelectedGoalId] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
+  const [isRunning, setIsRunning] = useState(false);
   const [runTime, setRunTime] = useState(0);
+  const [notes, setNotes] = useState("");
+  const [sessionComplete, setSessionComplete] = useState(false);
+  const [totalPracticeTime, setTotalPracticeTime] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const handleGoalChange = (e) => {
-    const goal = practiceGoals.find((g) => g.value === e.target.value);
-    setSelectedGoal(goal);
+  useEffect(() => {
+    const fetchPracticeData = async () => {
+      try {
+        const [goalsData, practiceTimeData] = await Promise.all([
+          getAllGoals(),
+          getTotalPracticeTime(),
+        ]);
+        setGoals(goalsData.data);
+        setTotalPracticeTime(practiceTimeData.data);
+      } catch (error) {
+        setError("Failed to load the Shed details");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPracticeData();
+  }, []);
+
+  const intervalRef = useRef(null);
+
+  const handleTimer = async () => {
+    if (isRunning) {
+      clearInterval(intervalRef.current);
+      setIsRunning(false);
+    } else {
+      // only create new session on first start of timer
+      if (sessionId === null) {
+        const response = await startSession(selectedGoalId);
+        setSessionId(response.data.id);
+      }
+      // (- runTime) = allows resuming the timer from a paused state
+      const startTime = Date.now() - runTime;
+      // returns an Id that identifies the running interval
+      // stored in intervalRef.current later - won't be lost on re-render
+      intervalRef.current = setInterval(() => {
+        // gives total runtime since the start of the timer
+        setRunTime(Date.now() - startTime);
+        // executes the callback every 10 ms
+      }, 10);
+      setIsRunning(true);
+    }
   };
 
-  const handleCompleteSession = () => {
-    if (!isGoalMet) return;
-
-    addXP(selectedGoal.xpReward);
-    setSessionComplete(true);
+  const handleSaveSession = async () => {
+    try {
+      // convert to seconds to align with backend logic
+      const durationInSeconds = Math.floor(runTime / 1000);
+      await endSession(sessionId, notes);
+      setSessionComplete(true);
+      // add new session time
+      setTotalPracticeTime(prev => prev + durationInSeconds);
+    } catch (error) {
+      setError("Failed to save practice session");
+    }
   };
 
-  const isGoalMet = selectedGoal && runTime / 60000 >= selectedGoal.minutes;
-  const canClickButton = isGoalMet && !sessionComplete;
+  const handleReset = () => {
+    clearInterval(intervalRef.current);
+    setRunTime(0);
+    setIsRunning(false);
+  };
 
-  return (
-    <main className="mt-8 bg-(--bg-base) px-4">
-      <SectionCard
-        title={"The Shed | Practice Room"}
-        icon={<CassetteTape size={35} className="text-(--text-high) m-2"/>}
-      >
-        <div className="p-4 mb-6 bg-(--primary)/20 rounded-xl shadow-lg">
-          <p className="text-lg mb-8">
-            Begin your practice session and start shredding
-          </p>
-          <Field>
-            <Label className="font-semibold text-xl">
-              Set a Practice Goal
-            </Label>
-            <div className="">
-              <Select
-                name="practice-goal"
-                className="hover:cursor-pointer shadow-lg hover:shadow-xl mt-3 w-full bg-accent hover:bg-(--accent)/90 text-(--on-accent) font-semibold p-2 rounded-xl border-2 border-border"
-                onChange={handleGoalChange}
-                defaultValue=""
-              >
-                <option value={""}>Choose a Goal...</option>
-                {practiceGoals.map((goal, index) => {
-                  return (
-                    <option
-                      key={index}
-                      value={goal.value}
-                    >{`${goal.goal} | ${goal.xpReward} XP | ${goal.minutes} Min`}</option>
-                  );
-                })}
-              </Select>
-            </div>
-          </Field>
-        </div>
+  // slice(-2) adds a leading 0 for formatting (i.e. 00:00:00)
+  const formatTime = (time) => {
+    const minutes = ("0" + Math.floor(time / 60000)).slice(-2);
+    const seconds = ("0" + Math.floor((time % 60000) / 1000)).slice(-2);
+    const milliseconds = ("0" + Math.floor((time % 1000) / 10)).slice(-2);
 
-        <div className="flex flex-col justify-center items-center">
-          <PracticeTimer runTime={runTime} setRunTime={setRunTime} />
-          {selectedGoal && (
-            <button
-              onClick={handleCompleteSession}
-              disabled={!canClickButton}
-              className={`w-full max-w-2xl shadow-lg hover:shadow-xl px-6 py-2 rounded-xl font-semibold text-white transition
-                            ${
-                              canClickButton
-                                ? "bg-primary hover:bg-(--primary)/90 hover:cursor-pointer"
-                                : "bg-gray-300 cursor-not-allowed"
-                            }`}
-            >
-              {`Complete Practice +${selectedGoal.xpReward} XP`}
-            </button>
-          )}
-        </div>
-      </SectionCard>
-    </main>
-  );
+    return `${minutes}:${seconds}:${milliseconds}`;
+  };
+
+  return <main className="mt-8 bg-(--bg-base) px-4"></main>;
 }
