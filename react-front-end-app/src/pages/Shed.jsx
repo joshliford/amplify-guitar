@@ -1,13 +1,11 @@
 import { Select, Label, Field } from "@headlessui/react";
 import { useState } from "react";
 import SectionCard from "../components/SectionCard";
-import { practiceGoals } from "../components/Data/practiceData";
 import PracticeTimer from "../components/PracticeTimer";
 import { CassetteTape } from "lucide-react";
 
 export default function Shed({ addXP }) {
 
-  const [selectedGoal, setSelectedGoal] = useState(null);
   const [sessionComplete, setSessionComplete] = useState(false);
   const [runTime, setRunTime] = useState(0);
 

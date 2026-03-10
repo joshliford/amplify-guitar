@@ -28,7 +28,12 @@ import { xpForNextLevel, xpNeededToLevelUp } from "@/components/utils/xpUtils";
 import XPBar from "@/components/XPBar";
 import { Link } from "react-router";
 import { getAllRewards, getEarnedRewards } from "@/services/rewardService";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 
 const iconMap = {
   Star,
@@ -217,44 +222,42 @@ export default function Dashboard() {
           className="col-span-2 self-start text-(--text-high)"
         >
           <TooltipProvider>
-          <div className="flex flex-wrap gap-3 p-6 justify-between">
-            {allRewards.map((reward) => {
-              const isEarned = earnedRewards.some(
-                (element) => element.rewardId === reward.rewardId,
-              );
-              const IconComponent = iconMap[reward.icon] || Star;
+            <div className="flex flex-wrap gap-3 p-6 justify-between">
+              {allRewards.map((reward) => {
+                const isEarned = earnedRewards.some(
+                  (element) => element.rewardId === reward.rewardId,
+                );
+                const IconComponent = iconMap[reward.icon] || Star;
 
-              return (
-                <div
-                  key={reward.id}
-                  className="flex flex-col items-center gap-1 w-14"
-                >
+                return (
                   <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center border ${isEarned ? "bg-accent border-accent" : "bg-(--bg-elevated) border-border"}`}
+                    key={reward.id}
+                    className="flex flex-col items-center gap-1 w-14"
                   >
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <IconComponent
-                          size={16}
-                          className={
-                            isEarned ? "text-black" : "text-(--text-low)"
-                          }
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        {reward.description}
-                      </TooltipContent>
-                    </Tooltip>
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center border ${isEarned ? "bg-accent border-accent" : "bg-(--bg-elevated) border-border"}`}
+                    >
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <IconComponent
+                            size={16}
+                            className={
+                              isEarned ? "text-black" : "text-(--text-low)"
+                            }
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>{reward.description}</TooltipContent>
+                      </Tooltip>
+                    </div>
+                    <span
+                      className={`text-[10px] text-center leading-tight ${isEarned ? "text-accent" : "text-(--text-low)"}`}
+                    >
+                      {reward.title}
+                    </span>
                   </div>
-                  <span
-                    className={`text-[10px] text-center leading-tight ${isEarned ? "text-accent" : "text-(--text-low)"}`}
-                  >
-                    {reward.title}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
           </TooltipProvider>
         </SectionCard>
 
@@ -266,7 +269,7 @@ export default function Dashboard() {
         >
           <div className="flex gap-3 p-4">
             <Link to="/jamroom" className="flex-1">
-              <div className="flex flex-col gap-2 p-4 rounded-lg border border-border hover:border-accent bg-(--bg-elevated) hover:bg-(--bg-elevated) transition-all duration-200 cursor-pointer h-full">
+              <div className="flex flex-col gap-2 p-4 rounded-lg border border-border hover:border-accent bg-(--bg-elevated) hover:bg-(--bg-elevated) hover:-translate-y-1 transition-all duration-200 cursor-pointer h-full">
                 <div className="flex items-center justify-between">
                   <BoomBox size={16} className="text-primary" />
                   <span className="font-semibold text-sm text-(--text-high)">
@@ -281,7 +284,7 @@ export default function Dashboard() {
             </Link>
 
             <Link to="/shed" className="flex-1">
-              <div className="flex flex-col gap-2 p-4 rounded-lg border text-center border-border hover:border-accent bg-(--bg-elevated) transition-all duration-200 cursor-pointer h-full">
+              <div className="flex flex-col gap-2 p-4 rounded-lg border text-center border-border hover:border-accent bg-(--bg-elevated) hover:-translate-y-1 transition-all duration-200 cursor-pointer h-full">
                 <div className="flex items-center justify-between">
                   <Timer size={16} className="text-primary" />
                   <span className="font-semibold text-sm text-(--text-high)">

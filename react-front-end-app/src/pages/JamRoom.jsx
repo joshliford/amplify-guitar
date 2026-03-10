@@ -61,7 +61,7 @@ export default function JamRoom() {
             <img
               src={selectedItem.imageUrl}
               alt={selectedItem.title}
-              className="mx-auto max-w-[400px] p-2 bg-(--bg-elevated) rounded-xl border border-border shadow-lg shadow-gray-300 dark:shadow-black mb-4"
+              className="mx-auto max-w-[400px] p-2 bg-(--bg-elevated) dark:bg-gray-600/40 rounded-xl border border-border shadow-lg shadow-gray-300 dark:shadow-black mb-4"
             />
           )}
           <div className="flex flex-col gap-4 border-t border-accent">

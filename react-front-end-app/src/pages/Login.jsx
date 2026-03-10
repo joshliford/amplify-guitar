@@ -84,7 +84,7 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-(--bg-surface) placeholder:text-(--text-med) text-white"
+                className="border rounded-xl px-4 py-2.5 text-(--text-high) placeholder:text-(--text-med) border-white/10 focus:outline-none focus:border-primary focus:bg-white/10 focus:ring-primary/5 focus:ring-2 transition-all"
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -96,7 +96,7 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="border border-border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-(--bg-surface) placeholder:text-(--text-med) text-white"
+                className="border rounded-xl px-4 py-2.5 text-(--text-high) placeholder:text-(--text-med) border-white/10 focus:outline-none focus:border-primary focus:bg-white/10 focus:ring-primary/5 focus:ring-2 transition-all"
               />
             </div>
 

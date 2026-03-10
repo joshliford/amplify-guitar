@@ -2,10 +2,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 export default function About() {
   return (
-    <main className="bg-(--bg-base) text-lg">
+    <main className="bg-(--bg-base) text-lg text-(--text-med)">
       <section className="space-y-4 py-12 px-12">
         <div className="flex justify-center">
-            <h1 className="text-2xl text-center font-bold border-b-2 border-b-accent inline-block">
+            <h1 className="text-2xl text-(--text-high) text-center font-bold border-b-2 border-b-accent inline-block">
             About Amplify
           </h1>
         </div>
@@ -27,7 +27,7 @@ export default function About() {
       </section>
       <section className="space-y-4 py-12 px-12 mt-12">
         <div className="flex justify-center">
-            <h2 className="text-2xl text-center font-bold border-b-2 border-b-accent inline-block">
+            <h2 className="text-2xl text-(--text-high) text-center font-bold border-b-2 border-b-accent inline-block">
             Purpose
           </h2>
         </div>
@@ -52,7 +52,7 @@ export default function About() {
       <section className="py-12 px-12 mt-12 flex flex-col items-center mb-6">
         <div className="w-full max-w-8xl">
           <div className="flex justify-center mb-6">
-            <h3 className="text-2xl font-bold border-b-2 border-b-accent inline-block text-center">
+            <h3 className="text-2xl text-(--text-high) font-bold border-b-2 border-b-accent inline-block text-center">
               Core Pages
             </h3>
           </div>
@@ -60,13 +60,13 @@ export default function About() {
             <Table className="text-lg">
               <TableHeader className="bg-primary text-xl border-b-3 border-accent">
                 <TableRow className="font-bold text-xl">
-                  <TableHead className="pl-4 text-(--on-primary)">
+                  <TableHead className="pl-4 text-black">
                     Page
                   </TableHead>
-                  <TableHead className="text-(--on-primary)">
+                  <TableHead className="text-black">
                     Purpose
                   </TableHead>
-                  <TableHead className="text-(--on-primary)">
+                  <TableHead className="text-black">
                     Features
                   </TableHead>
                 </TableRow>
@@ -97,15 +97,15 @@ export default function About() {
                   <TableCell>
                     <ul className="list-disc pl-4 space-y-2">
                       <li>
-                        <strong>Lessons:</strong> topics covering chords,
+                        <strong className="text-primary">Lessons</strong>: topics covering chords,
                         scales, etc.
                       </li>
                       <li>
-                        <strong>Chord Library:</strong> common chords with
+                        <strong className="text-primary">Chord Library</strong>: common chords with
                         diagrams
                       </li>
                       <li>
-                        <strong>Scale Library:</strong> essential scales with
+                        <strong className="text-primary">Scale Library</strong>: essential scales with
                         tabs
                       </li>
                     </ul>
@@ -121,14 +121,14 @@ export default function About() {
                   <TableCell>
                     <ul className="list-disc pl-4 space-y-2">
                       <li>
-                        <strong>Practice Timer:</strong> track session length
+                        <strong className="text-primary">Practice Timer</strong>: track session length
                       </li>
                       <li>
-                        <strong>Practice Goals:</strong> choose a specific goal
+                        <strong className="text-primary">Practice Goals</strong>: choose a specific goal
                         to practice
                       </li>
                       <li>
-                        <strong>Session Completion XP:</strong> earn XP and
+                        <strong className="text-primary">Session Completion XP</strong>: earn XP and
                         rewards
                       </li>
                     </ul>
