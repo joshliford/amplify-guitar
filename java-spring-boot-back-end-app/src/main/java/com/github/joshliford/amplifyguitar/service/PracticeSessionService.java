@@ -1,5 +1,6 @@
 package com.github.joshliford.amplifyguitar.service;
 
+import com.github.joshliford.amplifyguitar.dto.response.PracticeSessionResponseDTO;
 import com.github.joshliford.amplifyguitar.exception.ResourceNotFoundException;
 import com.github.joshliford.amplifyguitar.exception.UnauthorizedAccessException;
 import com.github.joshliford.amplifyguitar.model.PracticeGoal;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
 Core methods:
@@ -33,7 +35,7 @@ public class PracticeSessionService {
         this.progressService = progressService;
     }
 
-    public PracticeSession startPracticeSession(User user, Integer goalId) {
+    public PracticeSessionResponseDTO startPracticeSession(User user, Integer goalId) {
         // create new instance of PracticeSession class to generate a new session
         PracticeSession newPracticeSession = new PracticeSession();
         newPracticeSession.setStartedAt(LocalDateTime.now());
@@ -42,17 +44,20 @@ public class PracticeSessionService {
         newPracticeSession.setUser(user);
 
         if (goalId == null) {
-            return practiceSessionRepository.save(newPracticeSession);
+            PracticeSession savedSession = practiceSessionRepository.save(newPracticeSession);
+            return buildSessionResponse(savedSession);
         }
 
         PracticeGoal goal = practiceGoalRepository.findById(goalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Practice goal not found with id: " + goalId));
 
         newPracticeSession.setGoal(goal);
-        return practiceSessionRepository.save(newPracticeSession);
+        practiceSessionRepository.save(newPracticeSession);
+
+        return buildSessionResponse(newPracticeSession);
     }
 
-    public PracticeSession endPracticeSession(User user, Integer sessionId) {
+    public PracticeSessionResponseDTO endPracticeSession(User user, Integer sessionId, String notes) {
         PracticeSession session = practiceSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Practice session not found with id: " + sessionId));
 
@@ -70,9 +75,11 @@ public class PracticeSessionService {
         if (sessionGoal == null) {
             session.setXpEarned(0);
             session.setCompleted(true);
+            session.setNotes(notes);
             // cast sessionDuration to int to match Entity data type
             session.setDurationInSeconds((int) practiceSessionDuration);
-            return practiceSessionRepository.save(session);
+            PracticeSession savedSession = practiceSessionRepository.save(session);
+            return buildSessionResponse(savedSession);
         }
 
         int practiceGoalDurationInSeconds = session.getGoal().getDurationInMinutes() * 60;
@@ -86,13 +93,41 @@ public class PracticeSessionService {
 
         session.setDurationInSeconds((int) practiceSessionDuration);
         session.setCompleted(true);
+        session.setNotes(notes);
 
-        return practiceSessionRepository.save(session);
+        practiceSessionRepository.save(session);
+
+        return buildSessionResponse(session);
     }
 
-    public List<PracticeSession> getPracticeSessions(User user) {
+    public List<PracticeSessionResponseDTO> getPracticeSessions(User user) {
         // use custom query from PracticeSessionRepository
-        return practiceSessionRepository.findByUserOrderByStartedAtDesc(user);
+        List<PracticeSession> sessions = practiceSessionRepository.findByUserOrderByStartedAtDesc(user);
+        return sessions.stream()
+                .map(practiceSession -> buildSessionResponse(practiceSession))
+                .collect(Collectors.toList());
     }
 
+    public Integer getTotalPracticeTime(User user) {
+        return getPracticeSessions(user).stream()
+                .filter(session -> session.isCompleted())
+                .mapToInt(session -> session.getDurationInSeconds() != null ? session.getDurationInSeconds() : 0)
+                .sum();
+    }
+
+    private PracticeSessionResponseDTO buildSessionResponse(PracticeSession session) {
+        String goalTitle = session.getGoal() != null ? session.getGoal().getTitle() : null;
+        Integer goalXpReward = session.getGoal() != null ? session.getGoal().getXpReward() : null;
+        return new PracticeSessionResponseDTO(
+                session.getDurationInSeconds(),
+                session.isCompleted(),
+                session.getEndedAt(),
+                goalTitle,
+                goalXpReward,
+                session.getId(),
+                session.getNotes(),
+                session.getStartedAt(),
+                session.getXpEarned()
+        );
+    }
 }
