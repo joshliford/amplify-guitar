@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 export default function About() {
   return (
-    <main className="bg-(--bg-base) text-lg text-(--text-med)">
+    <main className="bg-(--bg-base) min-h-screen flex flex-col text-lg text-(--text-med)">
       <section className="space-y-4 py-12 px-12">
         <div className="flex justify-center">
             <h1 className="text-2xl text-(--text-high) text-center font-bold border-b-2 border-b-accent inline-block">
@@ -60,13 +60,13 @@ export default function About() {
             <Table className="text-lg">
               <TableHeader className="bg-primary text-xl border-b-3 border-accent">
                 <TableRow className="font-bold text-xl">
-                  <TableHead className="pl-4 text-black">
+                  <TableHead className="pl-4 text-white dark:text-black">
                     Page
                   </TableHead>
-                  <TableHead className="text-black">
+                  <TableHead className="text-white dark:text-black">
                     Purpose
                   </TableHead>
-                  <TableHead className="text-black">
+                  <TableHead className="text-white dark:text-black">
                     Features
                   </TableHead>
                 </TableRow>
