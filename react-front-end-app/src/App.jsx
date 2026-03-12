@@ -19,6 +19,8 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import LessonDetail from "./pages/LessonDetail";
 import { deleteUser } from "./services/userService";
 import { useState } from "react";
+import SetList from "./pages/SetList";
+import SongDetail from "./pages/SongDetail";
 
 function App() {
   const [error, setError] = useState("");
@@ -68,6 +70,8 @@ function App() {
               <Route path="/jamroom" element={<JamRoom />} />
               <Route path="/lessons/:id" element={<LessonDetail />} />
               <Route path="/shed" element={<Shed />} />
+              <Route path="/songs" element={<SetList />} />
+              <Route path="/songs/:id" element={<SongDetail />} />
             </Route>
           </Routes>
         </div>

@@ -1,6 +1,7 @@
 import {
   BoomBox,
   CassetteTape,
+  Disc3,
   Home,
   Info,
   Settings,
@@ -72,6 +73,31 @@ export default function SideNavBar({ handleLogout, handleDeleteAccount }) {
               }
             >
               <Link to="/jamroom">Jam Room</Link>
+            </li>
+          </div>
+
+          <div
+            className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
+              location.pathname === "/songs"
+                ? "bg-(--primary)/20 transition-colors"
+                : "hover:bg-(--bg-elevated) transition-colors"
+            }`}
+          >
+            <Disc3
+              className={
+                location.pathname === "/songs"
+                  ? "text-primary"
+                  : "text-(--text-low) group-hover:text-primary transition-colors"
+              }
+            />
+            <li
+              className={
+                location.pathname === "/songs"
+                  ? "text-primary"
+                  : "text-(--text-low) group-hover:text-primary transition-colors"
+              }
+            >
+              <Link to="/songs">Setlist</Link>
             </li>
           </div>
 
