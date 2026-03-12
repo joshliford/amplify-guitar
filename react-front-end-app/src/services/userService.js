@@ -5,3 +5,7 @@ import apiClient from "@/config/axiosConfig";
 export const getUser = () => {
     return apiClient.get('/users/me');
 }
+
+export const deleteUser = () => {
+    return apiClient.delete('/users')
+}

@@ -31,7 +31,7 @@ export default function LessonCompleteModal({
 }) {
   return (
     <div>
-      <Modal isModalOpen={isModalOpen} handleCloseModal={handleCloseModal}>
+      <Modal isModalOpen={isModalOpen} handleCloseModal={handleCloseModal} className="shadow-xl shadow-primary border-primary">
         <div className="flex flex-col items-center space-y-6 p-12">
           <div className="flex items-center gap-3">
             <h2 className="font-bold text-4xl text-(--text-high)">
