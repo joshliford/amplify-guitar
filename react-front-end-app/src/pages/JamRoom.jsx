@@ -225,7 +225,7 @@ export default function JamRoom() {
   }
 
   return (
-    <main className="grid grid-cols-[500px_1fr] px-8 py-10 gap-8 bg-(--bg-base)">
+    <main className="grid grid-cols-[500px_1fr] min-h-screen px-8 py-10 gap-8 bg-(--bg-base)">
       {/* Header */}
       <div className="col-span-2 flex flex-row justify-center items-center">
         <Tabs defaultValue="lessons">
@@ -283,7 +283,7 @@ export default function JamRoom() {
       </div>
       {/* Left pannel */}
       <div
-        className="flex flex-col rounded-xl border-2 bg-(--bg-surface) shadow-lg hover:shadow-xl overflow-hidden"
+        className="flex flex-col rounded-xl border bg-(--bg-surface) shadow-lg hover:shadow-xl overflow-hidden"
         style={{
           "--tab-color": currentTab.color,
           "--tab-bg": currentTab.bgColor,
@@ -372,7 +372,7 @@ export default function JamRoom() {
       </div>
       {/* Right pannel */}
       <div
-        className="flex flex-col rounded-xl border-2 bg-(--bg-surface) hover:shadow-xl overflow-hidden"
+        className="flex flex-col rounded-xl border bg-(--bg-surface) hover:shadow-xl overflow-hidden"
         style={{ borderColor: currentTab.color }}
       >
         <div className="flex flex-col gap-6 px-8 py-8 max-h-[calc(100vh-150px)] overflow-y-auto">

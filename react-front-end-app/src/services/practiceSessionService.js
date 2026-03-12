@@ -7,9 +7,9 @@ export function startSession(goalId) {
     return apiClient.post('/practice-sessions', { goalId });
 }
 
-export function endSession(sessionId, notes) {
-    // pass notes in request body since backend is expecting JSON body
-    return apiClient.patch(`/practice-sessions/${sessionId}`, { notes })
+export function endSession(sessionId, notes, durationInSeconds) {
+    // pass notes and durationInSeconds in request body since backend is expecting JSON body
+    return apiClient.patch(`/practice-sessions/${sessionId}`, { notes, durationInSeconds })
 }
 
 export function getTotalPracticeTime() {

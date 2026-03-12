@@ -5,7 +5,7 @@ import {
   getTotalPracticeTime,
   startSession,
 } from "@/services/practiceSessionService";
-import { ChartSpline, FileMusic, Timer } from "lucide-react";
+import { ChartSpline, FileMusic, Save, Timer } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { Select, Label, Field, Textarea } from "@headlessui/react";
 
@@ -29,6 +29,7 @@ export default function Shed() {
           getTotalPracticeTime(),
         ]);
         setGoals(goalsData.data);
+        setSelectedGoalId(goalsData.data[0]);
         setTotalPracticeTime(practiceTimeData.data);
       } catch (error) {
         setError("Failed to load the Shed details");
@@ -48,7 +49,7 @@ export default function Shed() {
     } else {
       // only create new session on first start of timer
       if (sessionId === null) {
-        const response = await startSession(selectedGoalId);
+        const response = await startSession(selectedGoalId.id);
         setSessionId(response.data.id);
       }
       // (- runTime) = allows resuming the timer from a paused state
@@ -68,10 +69,11 @@ export default function Shed() {
     try {
       // convert to seconds to align with backend logic
       const durationInSeconds = Math.floor(runTime / 1000);
-      await endSession(sessionId, notes);
+      await endSession(sessionId, notes, durationInSeconds);
       setSessionComplete(true);
       // add new session time
-      setTotalPracticeTime((prev) => prev + durationInSeconds);
+      const updatedTime = await getTotalPracticeTime();
+      setTotalPracticeTime(updatedTime.data);
     } catch (error) {
       setError("Failed to save practice session");
     }
@@ -81,6 +83,8 @@ export default function Shed() {
     clearInterval(intervalRef.current);
     setRunTime(0);
     setIsRunning(false);
+    setSessionId(null);
+    setSessionComplete(false);
   };
 
   // slice(-2) adds a leading 0 for formatting (i.e. 00:00:00)
@@ -88,18 +92,25 @@ export default function Shed() {
     const minutes = ("0" + Math.floor(time / 60000)).slice(-2);
     const seconds = ("0" + Math.floor((time % 60000) / 1000)).slice(-2);
     const milliseconds = ("0" + Math.floor((time % 1000) / 10)).slice(-2);
-
     return `${minutes}:${seconds}:${milliseconds}`;
   };
+
+  const formatTotalTime = (totalSeconds) => {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    if (minutes > 0) return `${minutes}m ${seconds}s`;
+    return `${seconds}s`;
+  };
+
+  const canSaveSession = !isRunning && runTime > 0 && !sessionComplete;
 
   return (
     <main className="grid grid-cols-2 min-h-screen bg-(--bg-base) py-12 px-16 gap-10">
       {/* left side practice timer */}
       <div className="col-span-1 flex flex-col">
-        <SectionCard
-          title={"Practice Timer"}
-          icon={<Timer size={25} />}
-        >
+        <SectionCard title={"Practice Timer"} icon={<Timer size={25} />}>
           <div className="flex flex-col items-center mx-auto bg-(--bg-elevated) rounded-xl border shadow-lg hover:shadow-xl p-12 space-y-4 m-8 w-full max-w-2xl">
             <div>
               <p className="text-5xl font-mono text-(--text-high)">
@@ -132,51 +143,91 @@ export default function Shed() {
 
       {/* right side details */}
       <div className="col-span-1 flex flex-col">
-        <SectionCard
-          title={"Session Details"}
-          icon={<ChartSpline size={25} />}
-        >
+        <SectionCard title={"Session Details"} icon={<ChartSpline size={25} />}>
+          <p className="text-xs tracking-widest text-(--text-med)">
+            TOTAL PRACTICE TIME
+          </p>
+          <div className="flex items-center gap-3 px-4 py-3 mt-2 rounded-xl bg-(--bg-elevated) border">
+            <div>
+              <p className="text-(--text-high) font-semibold">
+                {/* backend expects format in seconds */}
+                {formatTotalTime(totalPracticeTime)}
+              </p>
+            </div>
+          </div>
 
-          <div className="flex flex-col py-12 px-8">
-            <Field>
-              <div className="flex flex-col gap-2">
-                <span className="text-xs tracking-widest text-(--text-med)">PRACTICE GOAL</span>
+          <div className="flex flex-col items-center w-full py-12">
+            <Field className="w-full">
+              <div className="flex flex-col gap-2 w-full">
+                <p className="text-xs tracking-widest text-(--text-med)">
+                  PRACTICE GOAL
+                </p>
                 <Select
                   name="practice-goal"
-                  className="hover:cursor-pointer hover:bg-[#313131] border hover:border-primary rounded-xl bg-(--bg-elevated) text-(--text-high) px-3 py-1 duration-300 transition-all"
+                  className="w-full hover:cursor-pointer dark:hover:bg-[#313131] hover:bg-(--bg-elevated) border hover:border-primary/50 rounded-xl bg-(--bg-elevated) text-(--text-high) px-3 py-1 duration-300 transition-all"
                   defaultValue="Free Play"
+                  value={selectedGoalId?.id}
+                  onChange={(e) =>
+                    setSelectedGoalId(
+                      goals.find((goal) => goal.id === Number(e.target.value)),
+                    )
+                  }
                 >
-                  <option value={""}>Free Play</option>
+                  {goals.map((goal, index) => (
+                    <option key={index} value={goal.id}>
+                      {goal.title}
+                    </option>
+                  ))}
                 </Select>
+                {selectedGoalId?.title !== "Free Play" && (
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-1">
+                    <span className="text-(--text-med) text-xs">
+                      Required duration:
+                    </span>
+                    <span className="text-accent text-xs font-semibold">{selectedGoalId?.durationInMinutes} minutes</span>
+                    </div>
+                    <div>
+                      <span className="text-(--text-med) text-xs">XP reward: </span>
+                      <span className="text-accent text-xs font-semibold">+{selectedGoalId?.xpReward} XP</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </Field>
           </div>
 
-          <div className="w-full mx-auto max-w-2xl items-center mt-6">
-              <Field>
-                  <Label className="text-xs tracking-widest text-(--text-med)">
-                    SESSION NOTES
-                  </Label>
-                <Textarea
-                  className="mt-3 block px-3 py-1.5 w-full rounded-lg text-md bg-(--bg-elevated) border text-(--text-high) data-focus:outline-1 data-focus:outline-primary duration-200 transition-all placeholder:text-sm"
-                  rows={8}
-                  placeholder="What are you working on? Chord changes, a new scale, practicing a song..."
-                />
-              </Field>
-            </div>
+          <div className="w-full items-center mt-6">
+            <Field>
+              <Label className="text-xs tracking-widest text-(--text-med)">
+                SESSION NOTES
+              </Label>
+              <Textarea
+                className="mt-3 block px-3 py-1.5 w-full rounded-lg text-md bg-(--bg-elevated) border text-(--text-high) data-focus:outline-1 data-focus:outline-primary/50 placeholder:text-sm"
+                rows={8}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="What are you working on? Chord changes, a new scale, practicing a song..."
+              />
+            </Field>
+          </div>
 
-            {!isRunning && runTime > 0 && !sessionComplete && (
-            <div className="flex justify-center mt-6 mb-2">
-              <button
-                className="px-6 py-3 rounded-xl font-semibold bg-primary hover:bg-primary/70 hover:cursor-pointer duration-300 transition-colors text-white dark:text-black"
-                onClick={() => handleSaveSession()}
-              >
-                Save Session
-              </button>
-            </div>
+          {error && (
+            <p className="text-red-400 text-sm text-center mt-4">{error}</p>
           )}
-
-
+          {sessionComplete && (
+            <p className="text-green-400 text-sm text-center mt-4">Session saved!</p>
+          )}
+          <div className="group flex justify-center mt-6 mb-2">
+            <button
+              disabled={!canSaveSession}
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold duration-300 transition-colors ${!canSaveSession ? "cursor-not-allowed bg-(--bg-elevated) text-(--text-low) opacity-50" : "cursor-pointer bg-primary hover:bg-primary/70"}`}
+              onClick={() => handleSaveSession()}
+            >
+              <Save size={18} />
+              {canSaveSession ? "Save Session" : "Start Session to Save"}
+            </button>
+          </div>
         </SectionCard>
       </div>
     </main>

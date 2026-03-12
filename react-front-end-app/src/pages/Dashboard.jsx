@@ -271,10 +271,12 @@ export default function Dashboard() {
             <Link to="/jamroom" className="flex-1">
               <div className="flex flex-col gap-2 p-4 rounded-lg border border-border hover:border-accent bg-(--bg-elevated) hover:bg-(--bg-elevated) hover:-translate-y-1 transition-all duration-200 cursor-pointer h-full">
                 <div className="flex items-center justify-between">
-                  <BoomBox size={16} className="text-primary" />
-                  <span className="font-semibold text-sm text-(--text-high)">
-                    Jam Room
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <BoomBox size={16} className="text-primary" />
+                    <span className="font-semibold text-sm text-(--text-high)">
+                      Jam Room
+                    </span>
+                  </div>
                   <ChevronRight size={12} className="text-(--text-low)" />
                 </div>
                 <span className="text-xs text-(--text-med)">
@@ -284,12 +286,14 @@ export default function Dashboard() {
             </Link>
 
             <Link to="/shed" className="flex-1">
-              <div className="flex flex-col gap-2 p-4 rounded-lg border text-center border-border hover:border-accent bg-(--bg-elevated) hover:-translate-y-1 transition-all duration-200 cursor-pointer h-full">
+              <div className="flex flex-col gap-2 p-4 rounded-lg border text-start border-border hover:border-accent bg-(--bg-elevated) hover:-translate-y-1 transition-all duration-200 cursor-pointer h-full">
                 <div className="flex items-center justify-between">
-                  <Timer size={16} className="text-primary" />
-                  <span className="font-semibold text-sm text-(--text-high)">
-                    The Shed
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <Timer size={16} className="text-primary" />
+                    <span className="font-semibold text-sm text-(--text-high)">
+                      The Shed
+                    </span>
+                  </div>
                   <ChevronRight size={12} className="text-(--text-low)" />
                 </div>
                 <span className="text-xs text-(--text-med)">
