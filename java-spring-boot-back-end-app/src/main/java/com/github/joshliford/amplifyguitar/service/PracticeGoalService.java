@@ -30,7 +30,7 @@ public class PracticeGoalService {
                         practiceGoal.getTitle(),
                         practiceGoal.getXpReward()
                 ))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }
