@@ -4,12 +4,15 @@ public class EndSessionRequestDTO {
 
     private String notes;
 
+    private Integer durationInSeconds;
+
     public EndSessionRequestDTO() {
 
     }
 
-    public EndSessionRequestDTO(String notes) {
+    public EndSessionRequestDTO(String notes, Integer durationInSeconds) {
         this.notes = notes;
+        this.durationInSeconds = durationInSeconds;
     }
 
     public String getNotes() {
@@ -18,5 +21,13 @@ public class EndSessionRequestDTO {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Integer getDurationInSeconds() {
+        return durationInSeconds;
+    }
+
+    public void setDurationInSeconds(Integer durationInSeconds) {
+        this.durationInSeconds = durationInSeconds;
     }
 }

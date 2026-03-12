@@ -30,7 +30,7 @@ public class ProgressService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
 
-        if (xpAmount <= 0) {
+        if (xpAmount < 0) {
             throw new IllegalArgumentException("XP amount must be positive");
         }
 

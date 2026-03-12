@@ -57,7 +57,7 @@ public class PracticeSessionService {
         return buildSessionResponse(newPracticeSession);
     }
 
-    public PracticeSessionResponseDTO endPracticeSession(User user, Integer sessionId, String notes) {
+    public PracticeSessionResponseDTO endPracticeSession(User user, Integer sessionId, String notes, Integer durationInSeconds) {
         PracticeSession session = practiceSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Practice session not found with id: " + sessionId));
 
@@ -69,7 +69,7 @@ public class PracticeSessionService {
         session.setEndedAt(LocalDateTime.now());
 
         PracticeGoal sessionGoal = session.getGoal();
-        long practiceSessionDuration = ChronoUnit.SECONDS.between(session.getStartedAt(), session.getEndedAt());
+        long practiceSessionDuration = durationInSeconds != null ? durationInSeconds : ChronoUnit.SECONDS.between(session.getStartedAt(), session.getEndedAt());
 
         // if user chooses a "freeform" practice (no goal), return early and do not award XP
         if (sessionGoal == null) {

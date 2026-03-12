@@ -67,7 +67,7 @@ public class PracticeSessionController {
     public ResponseEntity<PracticeSessionResponseDTO> endPracticeSession(@AuthenticationPrincipal UserDetails user, @PathVariable Integer sessionId, @RequestBody EndSessionRequestDTO endSessionRequestDTO) {
         String email = user.getUsername();
         User currentUser = userService.findByEmail(email);
-        PracticeSessionResponseDTO response = practiceSessionService.endPracticeSession(currentUser, sessionId, endSessionRequestDTO.getNotes());
+        PracticeSessionResponseDTO response = practiceSessionService.endPracticeSession(currentUser, sessionId, endSessionRequestDTO.getNotes(), endSessionRequestDTO.getDurationInSeconds());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
