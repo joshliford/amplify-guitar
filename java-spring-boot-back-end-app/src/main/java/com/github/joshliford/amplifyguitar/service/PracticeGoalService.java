@@ -5,7 +5,6 @@ import com.github.joshliford.amplifyguitar.repository.PracticeGoalRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /*
 Core method:

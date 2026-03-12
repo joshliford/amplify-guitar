@@ -5,6 +5,7 @@ import com.github.joshliford.amplifyguitar.dto.response.SongSummaryDTO;
 import com.github.joshliford.amplifyguitar.exception.ResourceNotFoundException;
 import com.github.joshliford.amplifyguitar.model.Song;
 import com.github.joshliford.amplifyguitar.repository.SongRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +20,8 @@ public class SongService {
     }
 
     public List<SongSummaryDTO> getAllSongs() {
-        List<Song> songs = songRepository.findAll();
+        // sort songs by how they're inserted via data.sql
+        List<Song> songs = songRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         return songs.stream()
                 .map(song -> new SongSummaryDTO(
                         song.getAlbumCoverUrl(),
