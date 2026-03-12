@@ -8,6 +8,7 @@ import {
 import { ChartSpline, FileMusic, Save, Timer } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { Select, Label, Field, Textarea } from "@headlessui/react";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function Shed() {
   const [goals, setGoals] = useState([]);
@@ -105,6 +106,10 @@ export default function Shed() {
   };
 
   const canSaveSession = !isRunning && runTime > 0 && !sessionComplete;
+
+  if (isLoading) {
+    return <LoadingSpinner page={"The Shed"}/>
+  }
 
   return (
     <main className="grid grid-cols-2 min-h-screen bg-(--bg-base) py-12 px-16 gap-10">
