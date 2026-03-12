@@ -63,8 +63,16 @@ public class User {
 
     // One-to-many relationship with UserReward; all rewards are deleted when user is deleted
     // mappedBy = UserReward has a field named user that owns the relationship
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    // cascade = any operation on the user cascades down to related records (i.e. deleting user deletes all rewards)
+    // orphanRemoval = covers removal from a collection, not the entire user (i.e. remove a reward from the list)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserReward> userRewards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PracticeSession> practiceSessions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserLesson> userLessons = new ArrayList<>();
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
@@ -232,5 +240,21 @@ public class User {
 
     public void setUserRewards(List<UserReward> userRewards) {
         this.userRewards = userRewards;
+    }
+
+    public List<PracticeSession> getPracticeSessions() {
+        return practiceSessions;
+    }
+
+    public void setPracticeSessions(List<PracticeSession> practiceSessions) {
+        this.practiceSessions = practiceSessions;
+    }
+
+    public List<UserLesson> getUserLessons() {
+        return userLessons;
+    }
+
+    public void setUserLessons(List<UserLesson> userLessons) {
+        this.userLessons = userLessons;
     }
 }

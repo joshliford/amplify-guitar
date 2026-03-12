@@ -17,8 +17,12 @@ import SideNavBar from "./components/SideNavBar";
 import Register from "./pages/Register";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import LessonDetail from "./pages/LessonDetail";
+import { deleteUser } from "./services/userService";
+import { useState } from "react";
 
 function App() {
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
   const location = useLocation();
   const isAuthPage = ["/login", "/register"].includes(location.pathname);
@@ -26,6 +30,15 @@ function App() {
   const handleLogout = () => {
     sessionStorage.clear();
     navigate("/login");
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUser();
+      handleLogout();
+    } catch (error) {
+      setError("Failed to delete user");
+    }
   };
 
   return (
@@ -39,6 +52,7 @@ function App() {
         {!isAuthPage && (
           <SideNavBar
             handleLogout={handleLogout}
+            handleDeleteAccount={handleDeleteAccount}
           />
         )}
         <div className={isAuthPage ? "w-full" : "flex-1"}>
