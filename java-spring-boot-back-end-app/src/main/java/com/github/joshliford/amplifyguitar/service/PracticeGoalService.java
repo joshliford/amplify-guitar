@@ -1,10 +1,11 @@
 package com.github.joshliford.amplifyguitar.service;
 
-import com.github.joshliford.amplifyguitar.model.PracticeGoal;
+import com.github.joshliford.amplifyguitar.dto.response.PracticeGoalResponseDTO;
 import com.github.joshliford.amplifyguitar.repository.PracticeGoalRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
 Core method:
@@ -20,8 +21,16 @@ public class PracticeGoalService {
         this.practiceGoalRepository = practiceGoalRepository;
     }
 
-    public List<PracticeGoal> getAllGoals() {
-        return practiceGoalRepository.findAll();
+    public List<PracticeGoalResponseDTO> getAllGoals() {
+        return practiceGoalRepository.findAll()
+                .stream()
+                .map(practiceGoal -> new PracticeGoalResponseDTO(
+                        practiceGoal.getDurationInMinutes(),
+                        practiceGoal.getId(),
+                        practiceGoal.getTitle(),
+                        practiceGoal.getXpReward()
+                ))
+                .collect(Collectors.toList());
     }
 
 }

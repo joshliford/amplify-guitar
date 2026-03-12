@@ -1,6 +1,6 @@
 package com.github.joshliford.amplifyguitar.controller;
 
-import com.github.joshliford.amplifyguitar.model.PracticeGoal;
+import com.github.joshliford.amplifyguitar.dto.response.PracticeGoalResponseDTO;
 import com.github.joshliford.amplifyguitar.service.PracticeGoalService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +27,8 @@ public class PracticeGoalController {
 
     @GetMapping("")
     // ResponseEntity wraps the list to have control over HTTP status
-    public ResponseEntity<List<PracticeGoal>> getAllGoals() {
-        List<PracticeGoal> response = practiceGoalService.getAllGoals();
+    public ResponseEntity<List<PracticeGoalResponseDTO>> getAllGoals() {
+        List<PracticeGoalResponseDTO> response = practiceGoalService.getAllGoals();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

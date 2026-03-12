@@ -4,12 +4,15 @@ import { useNavigate, useParams } from "react-router";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { ArrowLeft } from "lucide-react";
 import ScrollProgress from "@/components/ScrollProgress";
+import LessonCompleteModal from "@/components/LessonCompleteModal";
 
 export default function LessonDetail() {
   const [lessonDetails, setLessonDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [completed, setCompleted] = useState(false);
+  const [completionData, setCompletionData] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -43,8 +46,10 @@ export default function LessonDetail() {
 
   const handleCompleteLesson = async () => {
     try {
-      await completeLesson(id);
+      const response = await completeLesson(id);
+      setCompletionData(response.data);
       setCompleted(true);
+      setIsModalOpen(true);
     } catch (error) {
       setError("Failed to complete lesson");
     }
@@ -139,6 +144,16 @@ export default function LessonDetail() {
           </button>
         </div>
       </div>
+      {completionData && (
+        <LessonCompleteModal
+          isModalOpen={isModalOpen}
+          handleCloseModal={() => {
+            setIsModalOpen(false);
+            navigate("/jamroom");
+          }}
+          completionData={completionData}
+        />
+      )}
     </main>
   );
 }

@@ -103,7 +103,7 @@ public class LessonService {
                 updatedUser.getCurrentLevel(),
                 newRewards,
                 updatedUser.getTotalXp(),
-                updatedUser.getCurrentXp()
+                lesson.getXpReward()
         );
     }
 

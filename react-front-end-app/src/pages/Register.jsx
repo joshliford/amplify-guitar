@@ -108,7 +108,7 @@ export default function Register() {
                 name="first-name"
                 type="text"
                 placeholder="John"
-                className="w-full px-4 py-3 rounded-xl text-sm text-(--text-high) placeholder:text-(--text-low) bg-(--bg-surface) border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-(--text-high) placeholder:text-(--text-low) bg-(--bg-surface) border border-white/10 focus:outline-none focus:border-primary focus:bg-white/10 focus:ring-2 focus:ring-primary/5 transition-all"
                 required
               />
               {errors.firstName && (
@@ -126,7 +126,7 @@ export default function Register() {
                 name="last-name"
                 type="text"
                 placeholder="Smith"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-(--text-low) bg-(--bg-surface) border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-(--text-high) placeholder:text-(--text-low) bg-(--bg-surface) border border-white/10 focus:outline-none focus:border-primary focus:bg-white/10 focus:ring-2 focus:ring-primary/5 transition-all"
                 required
               />
               {errors.lastName && (
@@ -145,7 +145,7 @@ export default function Register() {
                 name="display-name"
                 type="text"
                 placeholder="johnsmith123"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-(--text-low) bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-(--text-high) placeholder:text-(--text-low) bg-(--bg-surface) border border-white/10 focus:outline-none focus:border-primary focus:bg-white/10 focus:ring-2 focus:ring-primary/5 transition-all"
                 required
               />
               {errors.displayName && (
@@ -163,7 +163,7 @@ export default function Register() {
                 name="email"
                 type="email"
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-(--text-low) bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-(--text-high) placeholder:text-(--text-low) bg-(--bg-surface) border border-white/10 focus:outline-none focus:border-primary focus:bg-white/10 focus:ring-2 focus:ring-primary/5 transition-all"
                 required
               />
               {errors.email && (
@@ -181,7 +181,7 @@ export default function Register() {
                 name="password"
                 type="password"
                 placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-(--text-low) bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-(--text-high) placeholder:text-(--text-low) bg-(--bg-surface) border border-white/10 focus:outline-none focus:border-primary focus:bg-white/10 focus:ring-primary/5 focus:ring-2 transition-all"
                 required
               />
               {errors.password && (
@@ -199,7 +199,7 @@ export default function Register() {
                 name="confirmPassword"
                 type="password"
                 placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-xl text-sm text-white/90 placeholder:text-(--text-low) bg-gray-700 border border-white/10 focus:outline-none focus:border-blue-400/50 focus:bg-white/10 focus:ring-2 focus:ring-blue-400/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl text-sm text-(--text-high) placeholder:text-(--text-low) bg-(--bg-surface) border border-white/10 focus:outline-none focus:border-primary focus:bg-white/10 focus:ring-2 focus:ring-primary/5 transition-all"
                 required
               />
               {errors.confirmPassword && (
@@ -209,7 +209,7 @@ export default function Register() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full shadow-(--primary) py-3 rounded-xl font-semibold cursor-pointer transition-colors disabled:opacity-60 mt-1 bg-primary hover:bg-(--primary)/80 hover:shadow-lg"
+              className="w-full shadow-(--primary) py-3 rounded-xl font-semibold cursor-pointer transition-all disabled:opacity-60 mt-1 bg-primary hover:bg-(--primary)/80 hover:shadow-lg"
             >
               {isLoading ? "Loading..." : "Create Account"}
             </Button>

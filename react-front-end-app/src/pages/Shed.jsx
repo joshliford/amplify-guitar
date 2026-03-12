@@ -1,84 +1,240 @@
-import { Select, Label, Field } from "@headlessui/react";
-import { useState } from "react";
-import SectionCard from "../components/SectionCard";
-import { practiceGoals } from "../components/Data/practiceData";
-import PracticeTimer from "../components/PracticeTimer";
-import { CassetteTape } from "lucide-react";
+import SectionCard from "@/components/SectionCard";
+import { getAllGoals } from "@/services/practiceGoalsService";
+import {
+  endSession,
+  getTotalPracticeTime,
+  startSession,
+} from "@/services/practiceSessionService";
+import { ChartSpline, FileMusic, Save, Timer } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { Select, Label, Field, Textarea } from "@headlessui/react";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
-export default function Shed({ addXP }) {
-
-  const [selectedGoal, setSelectedGoal] = useState(null);
-  const [sessionComplete, setSessionComplete] = useState(false);
+export default function Shed() {
+  const [goals, setGoals] = useState([]);
+  const [selectedGoalId, setSelectedGoalId] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
+  const [isRunning, setIsRunning] = useState(false);
   const [runTime, setRunTime] = useState(0);
+  const [notes, setNotes] = useState("");
+  const [sessionComplete, setSessionComplete] = useState(false);
+  const [totalPracticeTime, setTotalPracticeTime] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const handleGoalChange = (e) => {
-    const goal = practiceGoals.find((g) => g.value === e.target.value);
-    setSelectedGoal(goal);
+  useEffect(() => {
+    const fetchPracticeData = async () => {
+      try {
+        const [goalsData, practiceTimeData] = await Promise.all([
+          getAllGoals(),
+          getTotalPracticeTime(),
+        ]);
+        setGoals(goalsData.data);
+        setSelectedGoalId(goalsData.data[0]);
+        setTotalPracticeTime(practiceTimeData.data);
+      } catch (error) {
+        setError("Failed to load the Shed details");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPracticeData();
+  }, []);
+
+  const intervalRef = useRef(null);
+
+  const handleTimer = async () => {
+    if (isRunning) {
+      clearInterval(intervalRef.current);
+      setIsRunning(false);
+    } else {
+      // only create new session on first start of timer
+      if (sessionId === null) {
+        const response = await startSession(selectedGoalId.id);
+        setSessionId(response.data.id);
+      }
+      // (- runTime) = allows resuming the timer from a paused state
+      const startTime = Date.now() - runTime;
+      // returns an Id that identifies the running interval
+      // stored in intervalRef.current later - won't be lost on re-render
+      intervalRef.current = setInterval(() => {
+        // gives total runtime since the start of the timer
+        setRunTime(Date.now() - startTime);
+        // executes the callback every 10 ms
+      }, 10);
+      setIsRunning(true);
+    }
   };
 
-  const handleCompleteSession = () => {
-    if (!isGoalMet) return;
-
-    addXP(selectedGoal.xpReward);
-    setSessionComplete(true);
+  const handleSaveSession = async () => {
+    try {
+      // convert to seconds to align with backend logic
+      const durationInSeconds = Math.floor(runTime / 1000);
+      await endSession(sessionId, notes, durationInSeconds);
+      setSessionComplete(true);
+      // add new session time
+      const updatedTime = await getTotalPracticeTime();
+      setTotalPracticeTime(updatedTime.data);
+    } catch (error) {
+      setError("Failed to save practice session");
+    }
   };
 
-  const isGoalMet = selectedGoal && runTime / 60000 >= selectedGoal.minutes;
-  const canClickButton = isGoalMet && !sessionComplete;
+  const handleReset = () => {
+    clearInterval(intervalRef.current);
+    setRunTime(0);
+    setIsRunning(false);
+    setSessionId(null);
+    setSessionComplete(false);
+  };
+
+  // slice(-2) adds a leading 0 for formatting (i.e. 00:00:00)
+  const formatTime = (time) => {
+    const minutes = ("0" + Math.floor(time / 60000)).slice(-2);
+    const seconds = ("0" + Math.floor((time % 60000) / 1000)).slice(-2);
+    const milliseconds = ("0" + Math.floor((time % 1000) / 10)).slice(-2);
+    return `${minutes}:${seconds}:${milliseconds}`;
+  };
+
+  const formatTotalTime = (totalSeconds) => {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    if (minutes > 0) return `${minutes}m ${seconds}s`;
+    return `${seconds}s`;
+  };
+
+  const canSaveSession = !isRunning && runTime > 0 && !sessionComplete;
+
+  if (isLoading) {
+    return <LoadingSpinner page={"The Shed"}/>
+  }
 
   return (
-    <main className="mt-8 bg-(--bg-base) px-4">
-      <SectionCard
-        title={"The Shed | Practice Room"}
-        icon={<CassetteTape size={35} className="text-(--text-high) m-2"/>}
-      >
-        <div className="p-4 mb-6 bg-(--primary)/20 rounded-xl shadow-lg">
-          <p className="text-lg mb-8">
-            Begin your practice session and start shredding
-          </p>
-          <Field>
-            <Label className="font-semibold text-xl">
-              Set a Practice Goal
-            </Label>
-            <div className="">
-              <Select
-                name="practice-goal"
-                className="hover:cursor-pointer shadow-lg hover:shadow-xl mt-3 w-full bg-accent hover:bg-(--accent)/90 text-(--on-accent) font-semibold p-2 rounded-xl border-2 border-border"
-                onChange={handleGoalChange}
-                defaultValue=""
-              >
-                <option value={""}>Choose a Goal...</option>
-                {practiceGoals.map((goal, index) => {
-                  return (
-                    <option
-                      key={index}
-                      value={goal.value}
-                    >{`${goal.goal} | ${goal.xpReward} XP | ${goal.minutes} Min`}</option>
-                  );
-                })}
-              </Select>
+    <main className="grid grid-cols-2 min-h-screen bg-(--bg-base) py-12 px-16 gap-10">
+      {/* left side practice timer */}
+      <div className="col-span-1 flex flex-col">
+        <SectionCard title={"Practice Timer"} icon={<Timer size={25} />}>
+          <div className="flex flex-col items-center mx-auto bg-(--bg-elevated) rounded-xl border shadow-lg hover:shadow-xl p-12 space-y-4 m-8 w-full max-w-2xl">
+            <div>
+              <p className="text-5xl font-mono text-(--text-high)">
+                {formatTime(runTime)}
+              </p>
             </div>
-          </Field>
-        </div>
+            <div className="flex gap-6">
+              {/* pause/start button renders depending on isRunning state */}
+              <button
+                onClick={handleTimer}
+                className={`px-6 py-2 rounded-xl font-semibold transition
+                    ${
+                      isRunning
+                        ? "bg-red-800 hover:bg-red-900 text-white hover:cursor-pointer"
+                        : "bg-primary hover:bg-primary/70 text-white dark:text-black hover:cursor-pointer"
+                    }`}
+              >
+                {isRunning ? "Pause" : "Start"}
+              </button>
+              <button
+                onClick={handleReset}
+                className="px-6 py-2 rounded-xl font-semibold transition bg-primary hover:bg-primary/70 text-white dark:text-black hover:cursor-pointer"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+        </SectionCard>
+      </div>
 
-        <div className="flex flex-col justify-center items-center">
-          <PracticeTimer runTime={runTime} setRunTime={setRunTime} />
-          {selectedGoal && (
-            <button
-              onClick={handleCompleteSession}
-              disabled={!canClickButton}
-              className={`w-full max-w-2xl shadow-lg hover:shadow-xl px-6 py-2 rounded-xl font-semibold text-white transition
-                            ${
-                              canClickButton
-                                ? "bg-primary hover:bg-(--primary)/90 hover:cursor-pointer"
-                                : "bg-gray-300 cursor-not-allowed"
-                            }`}
-            >
-              {`Complete Practice +${selectedGoal.xpReward} XP`}
-            </button>
+      {/* right side details */}
+      <div className="col-span-1 flex flex-col">
+        <SectionCard title={"Session Details"} icon={<ChartSpline size={25} />}>
+          <p className="text-xs tracking-widest text-(--text-med)">
+            TOTAL PRACTICE TIME
+          </p>
+          <div className="flex items-center gap-3 px-4 py-3 mt-2 rounded-xl bg-(--bg-elevated) border">
+            <div>
+              <p className="text-(--text-high) font-semibold">
+                {/* backend expects format in seconds */}
+                {formatTotalTime(totalPracticeTime)}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center w-full py-12">
+            <Field className="w-full">
+              <div className="flex flex-col gap-2 w-full">
+                <p className="text-xs tracking-widest text-(--text-med)">
+                  PRACTICE GOAL
+                </p>
+                <Select
+                  name="practice-goal"
+                  className="w-full hover:cursor-pointer dark:hover:bg-[#313131] hover:bg-(--bg-elevated) border hover:border-primary/50 rounded-xl bg-(--bg-elevated) text-(--text-high) px-3 py-1 duration-300 transition-all"
+                  defaultValue="Free Play"
+                  value={selectedGoalId?.id}
+                  onChange={(e) =>
+                    setSelectedGoalId(
+                      goals.find((goal) => goal.id === Number(e.target.value)),
+                    )
+                  }
+                >
+                  {goals.map((goal, index) => (
+                    <option key={index} value={goal.id}>
+                      {goal.title}
+                    </option>
+                  ))}
+                </Select>
+                {selectedGoalId?.title !== "Free Play" && (
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-1">
+                    <span className="text-(--text-med) text-xs">
+                      Required duration:
+                    </span>
+                    <span className="text-accent text-xs font-semibold">{selectedGoalId?.durationInMinutes} minutes</span>
+                    </div>
+                    <div>
+                      <span className="text-(--text-med) text-xs">XP reward: </span>
+                      <span className="text-accent text-xs font-semibold">+{selectedGoalId?.xpReward} XP</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </Field>
+          </div>
+
+          <div className="w-full items-center mt-6">
+            <Field>
+              <Label className="text-xs tracking-widest text-(--text-med)">
+                SESSION NOTES
+              </Label>
+              <Textarea
+                className="mt-3 block px-3 py-1.5 w-full rounded-lg text-md bg-(--bg-elevated) border text-(--text-high) data-focus:outline-1 data-focus:outline-primary/50 placeholder:text-sm"
+                rows={8}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="What are you working on? Chord changes, a new scale, practicing a song..."
+              />
+            </Field>
+          </div>
+
+          {error && (
+            <p className="text-red-400 text-sm text-center mt-4">{error}</p>
           )}
-        </div>
-      </SectionCard>
+          {sessionComplete && (
+            <p className="text-green-400 text-sm text-center mt-4">Session saved!</p>
+          )}
+          <div className="group flex justify-center mt-6 mb-2">
+            <button
+              disabled={!canSaveSession}
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold duration-300 transition-colors ${!canSaveSession ? "cursor-not-allowed bg-(--bg-elevated) text-(--text-low) opacity-50" : "cursor-pointer bg-primary hover:bg-primary/70"}`}
+              onClick={() => handleSaveSession()}
+            >
+              <Save size={18} />
+              {canSaveSession ? "Save Session" : "Start Session to Save"}
+            </button>
+          </div>
+        </SectionCard>
+      </div>
     </main>
   );
 }
