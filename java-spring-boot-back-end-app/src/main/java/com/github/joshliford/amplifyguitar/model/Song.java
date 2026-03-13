@@ -20,6 +20,7 @@ public class Song {
 
     private String albumCoverUrl;
 
+    @Column(columnDefinition = "TEXT")
     private String details;
 
     private String videoUrl;
