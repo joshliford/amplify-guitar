@@ -61,7 +61,7 @@ public class RewardService {
     public List<RewardResponseDTO> checkAndAwardRewards(User user) {
         List<Reward> allRewards = rewardRepository.findAll();
         List<UserReward> userRewards = userRewardRepository.findByUserId(user.getId());
-        // transform user earned rewards into a set of reward IDs
+        // transform user earned rewards into a set of reward IDs; prevents duplicate reward inserts
         Set<Integer> earnedRewardIds = userRewards.stream()
                 .map(userReward -> userReward.getReward().getId())
                 .collect(Collectors.toSet());
@@ -69,6 +69,7 @@ public class RewardService {
         for (Reward reward : allRewards) {
             // skips rewards the user already earned
             if (earnedRewardIds.contains(reward.getId())) continue;
+            // reward rules are set here (source of truth for unlock conditions)
             // checks if the user's stats meet requirements (reward condition)
             boolean earned = switch (reward.getRewardCondition()) {
                 case LESSON_1 -> user.getLessonsCompleted() >= 1;

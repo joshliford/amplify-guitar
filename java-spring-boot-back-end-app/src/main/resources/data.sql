@@ -659,10 +659,10 @@ NOW(), NOW()),
   },
   {
     "heading": "Helpful Video for Barre Chords",
-    "videoUrl": "https://www.youtube.com/embed/d4PkHDFMCCo"
+    "videoUrl": "https://www.youtube.com/embed/ZYbxYoG6Mo0"
   }
 ]',
-'https://www.youtube.com/embed/d4PkHDFMCCo',
+'https://www.youtube.com/embed/ZYbxYoG6Mo0',
 NOW(), NOW()),
 
 ('Basic Music Theory for Guitarists',
@@ -711,10 +711,10 @@ NOW(), NOW()),
   },
   {
     "heading": "Helpful Video for Fingerpicking",
-    "videoUrl": "https://www.youtube.com/embed/j4dMnAPZu60"
+    "videoUrl": "https://www.youtube.com/embed/2WB8otOcz78"
   }
 ]',
-'https://www.youtube.com/embed/j4dMnAPZu60',
+'https://www.youtube.com/embed/2WB8otOcz78',
 NOW(), NOW());
 
 -- SONGS
@@ -722,7 +722,7 @@ NOW(), NOW());
 INSERT IGNORE INTO songs (title, artist, song_key, release_date, album_cover_url, details, video_url, tab_url, chords_used, scales_used) VALUES
 ('Landslide', 'Fleetwood Mac', 'Eb', '1975', 'https://coverartarchive.org/release-group/416bb5e5-c7d1-3977-8fd7-7c9daf6c2be6/front', 'Written by Stevie Nicks at a crossroads in her life while deciding whether to continue with Fleetwood Mac or pursue a solo career, Landslide is one of the most emotionally honest songs in the catalog. Lindsey Buckingham''s fingerpicking pattern is deceptively simple yet deeply expressive. Capo 3 is used to achieve the Eb sound while playing open chord shapes, making it accessible for intermediate players. Nicks has said she wrote the song while staying at a house in Colorado, staring at the Rocky Mountains and contemplating the uncertainty of her future. The Smashing Pumpkins recorded a celebrated acoustic version in 1994 that brought the song to a new generation, and the Dixie Chicks'' 2002 cover reached number one on the country charts.', 'https://www.youtube.com/embed/mXonGAEPQp8?si=F3ZkAAWUh45NwrMt', 'https://www.songsterr.com/a/wsa/fleetwood-mac-landslide-tab-s7537', 'C, G, Am, D', 'C Major (Capo 3)'),
 
-('Nothing Else Matters', 'Metallica', 'Em', '1991', 'https://coverartarchive.org/release-group/3d00fb45-f8ab-3436-a8e1-b4bfc4d66913/front', 'James Hetfield wrote Nothing Else Matters as a love song while on tour, originally never intending to share it with the band. The open string fingerpicking intro is iconic and deceptively approachable, while the full arrangement with orchestra on the Black Album version showcases Metallica''s range beyond their thrash roots. Hetfield reportedly wrote the song while on the phone with his girlfriend, cradling the receiver with one shoulder while absentmindedly picking the open strings of his guitar with his free hand — the opening riff was born from that moment. Producer Bob Rock pushed the band to develop the orchestral arrangement, which Metallica were initially resistant to. It became one of the best-selling singles of their career and remains the entry point for millions of guitarists discovering fingerpicking for the first time.', 'https://www.youtube.com/embed/tAGnKpE4NCI?si=AbR3y93lrEFIbX9k', 'https://www.songsterr.com/a/wsa/metallica-nothing-else-matters-tab-s439171', 'Em, D, C, G, B7, Am', 'E Natural Minor'),
+('Nothing Else Matters', 'Metallica', 'Em', '1991', 'https://coverartarchive.org/release-group/e8f70201-8899-3f0c-9e07-5d6495bc8046/front', 'James Hetfield wrote Nothing Else Matters as a love song while on tour, originally never intending to share it with the band. The open string fingerpicking intro is iconic and deceptively approachable, while the full arrangement with orchestra on the Black Album version showcases Metallica''s range beyond their thrash roots. Hetfield reportedly wrote the song while on the phone with his girlfriend, cradling the receiver with one shoulder while absentmindedly picking the open strings of his guitar with his free hand — the opening riff was born from that moment. Producer Bob Rock pushed the band to develop the orchestral arrangement, which Metallica were initially resistant to. It became one of the best-selling singles of their career and remains the entry point for millions of guitarists discovering fingerpicking for the first time.', 'https://www.youtube.com/embed/tAGnKpE4NCI?si=AbR3y93lrEFIbX9k', 'https://www.songsterr.com/a/wsa/metallica-nothing-else-matters-tab-s439171', 'Em, D, C, G, B7, Am', 'E Natural Minor'),
 
 ('Built By Nations', 'Greta Van Fleet', 'E', '2021', 'https://coverartarchive.org/release-group/7b2b6b9b-5469-4953-8206-4f2af64db840/front', 'From the album The Battle at Garden''s Gate, Built By Nations is one of Greta Van Fleet''s most ambitious guitar compositions. Jake Kiszka''s riff work draws from classic hard rock while pushing into progressive territory, with dynamic shifts and technical passages that demand serious fretboard command. A challenging but rewarding song for players ready to push their skills. The Battle at Garden''s Gate was recorded with producer Greg Kurstin, who had previously worked with Foo Fighters and Paul McCartney, and the album represented a conscious effort by the band to push beyond the Led Zeppelin comparisons that had followed them since their debut. Built By Nations in particular showcases Kiszka''s growth as a lead guitarist, with phrasing and tone choices that reflect a maturing voice finding its own identity within the classic rock tradition.', 'https://www.youtube.com/embed/EsI1ujh65u0?si=tq8QOZ5OhOxLV2aZ', 'https://www.songsterr.com/a/wsa/greta-van-fleet-built-by-nations-tab-s680391', 'E, A, D, B, C#m', 'E Minor Pentatonic / E Major'),
 

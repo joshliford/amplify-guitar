@@ -2,6 +2,7 @@ package com.github.joshliford.amplifyguitar.dto.response;
 
 public class AuthResponseDTO {
 
+    // token should be sent as Authorization: Bearer <token>
     private String token;
     private String email;
 

@@ -59,6 +59,7 @@ public class AuthService {
 
         User savedUser = userService.createUser(newUser);
 
+        // token subject is the users email
         String token = jwtUtil.generateToken(savedUser.getEmail());
 
         return new AuthResponseDTO(savedUser.getEmail(), token);
