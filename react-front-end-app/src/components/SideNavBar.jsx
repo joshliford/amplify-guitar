@@ -26,137 +26,147 @@ export default function SideNavBar({ handleLogout, handleDeleteAccount }) {
     <div className="flex flex-col fixed top-0 left-0 min-h-screen w-[175px] bg-(--bg-surface) border-r-2 border-border overflow-x-hidden">
       <nav>
         <ul className="flex flex-col gap-4 text-md p-3 mt-4">
-          <div
-            className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
-              location.pathname === "/dashboard"
-                ? "bg-(--primary)/20 transition-colors"
-                : "hover:bg-(--bg-elevated) transition-colors"
-            }`}
-          >
-            <Home
-              className={
+          <Link to={"/dashboard"}>
+            <div
+              className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
                 location.pathname === "/dashboard"
-                  ? "text-primary"
-                  : "text-(--text-low) group-hover:text-primary transition-colors"
-              }
-            />
-            <li
-              className={
-                location.pathname === "/dashboard"
-                  ? "text-primary"
-                  : "text-(--text-low) group-hover:text-primary transition-colors"
-              }
+                  ? "bg-(--primary)/20 transition-colors"
+                  : "hover:bg-(--bg-elevated) transition-colors"
+              }`}
             >
-              <Link to="/dashboard">Dashboard</Link>
-            </li>
-          </div>
+              <Home
+                className={
+                  location.pathname === "/dashboard"
+                    ? "text-primary"
+                    : "text-(--text-low) group-hover:text-primary transition-colors"
+                }
+              />
+              <li
+                className={
+                  location.pathname === "/dashboard"
+                    ? "text-primary"
+                    : "text-(--text-low) group-hover:text-primary transition-colors"
+                }
+              >
+                Dashboard
+              </li>
+            </div>
+          </Link>
 
-          <div
-            className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
-              location.pathname === "/jamroom"
-                ? "bg-(--primary)/20 transition-colors"
-                : "hover:bg-(--bg-elevated) transition-colors"
-            }`}
-          >
-            <BoomBox
-              className={
+          <Link to="/jamroom">
+            <div
+              className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
                 location.pathname === "/jamroom"
-                  ? "text-primary"
-                  : "text-(--text-low) group-hover:text-primary transition-colors"
-              }
-            />
-            <li
-              className={
-                location.pathname === "/jamroom"
-                  ? "text-primary"
-                  : "text-(--text-low) group-hover:text-primary transition-colors"
-              }
+                  ? "bg-(--primary)/20 transition-colors"
+                  : "hover:bg-(--bg-elevated) transition-colors"
+              }`}
             >
-              <Link to="/jamroom">Jam Room</Link>
-            </li>
-          </div>
+              <BoomBox
+                className={
+                  location.pathname === "/jamroom"
+                    ? "text-primary"
+                    : "text-(--text-low) group-hover:text-primary transition-colors"
+                }
+              />
+              <li
+                className={
+                  location.pathname === "/jamroom"
+                    ? "text-primary"
+                    : "text-(--text-low) group-hover:text-primary transition-colors"
+                }
+              >
+                Jam Room
+              </li>
+            </div>
+          </Link>
 
-          <div
-            className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
-              location.pathname === "/songs"
-                ? "bg-(--primary)/20 transition-colors"
-                : "hover:bg-(--bg-elevated) transition-colors"
-            }`}
-          >
-            <Disc3
-              className={
+          <Link to="/songs">
+            <div
+              className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
                 location.pathname === "/songs"
-                  ? "text-primary"
-                  : "text-(--text-low) group-hover:text-primary transition-colors"
-              }
-            />
-            <li
-              className={
-                location.pathname === "/songs"
-                  ? "text-primary"
-                  : "text-(--text-low) group-hover:text-primary transition-colors"
-              }
+                  ? "bg-(--primary)/20 transition-colors"
+                  : "hover:bg-(--bg-elevated) transition-colors"
+              }`}
             >
-              <Link to="/songs">Setlist</Link>
-            </li>
-          </div>
+              <Disc3
+                className={
+                  location.pathname === "/songs"
+                    ? "text-primary"
+                    : "text-(--text-low) group-hover:text-primary transition-colors"
+                }
+              />
+              <li
+                className={
+                  location.pathname === "/songs"
+                    ? "text-primary"
+                    : "text-(--text-low) group-hover:text-primary transition-colors"
+                }
+              >
+                Setlist
+              </li>
+            </div>
+          </Link>
 
-          <div
-            className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
-              location.pathname === "/shed"
-                ? "bg-(--primary)/20 transition-colors"
-                : "hover:bg-(--bg-elevated) transition-colors"
-            }`}
-          >
-            <CassetteTape
-              className={
+          <Link to="/shed">
+            <div
+              className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
                 location.pathname === "/shed"
-                  ? "text-primary"
-                  : "text-(--text-low) group-hover:text-primary transition-colors"
-              }
-            />
-            <li
-              className={
-                location.pathname === "/shed"
-                  ? "text-primary"
-                  : "text-(--text-low) group-hover:text-primary transition-colors"
-              }
+                  ? "bg-(--primary)/20 transition-colors"
+                  : "hover:bg-(--bg-elevated) transition-colors"
+              }`}
             >
-              <Link to="/shed">The Shed</Link>
-            </li>
-          </div>
+              <CassetteTape
+                className={
+                  location.pathname === "/shed"
+                    ? "text-primary"
+                    : "text-(--text-low) group-hover:text-primary transition-colors"
+                }
+              />
+              <li
+                className={
+                  location.pathname === "/shed"
+                    ? "text-primary"
+                    : "text-(--text-low) group-hover:text-primary transition-colors"
+                }
+              >
+                The Shed
+              </li>
+            </div>
+          </Link>
 
-          <div
-            className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
-              location.pathname === "/about"
-                ? "bg-(--primary)/20 transition-colors"
-                : "hover:bg-(--bg-elevated) transition-colors"
-            }`}
-          >
-            <Info
-              className={
+          <Link to="/about">
+            <div
+              className={`group flex gap-2 items-center rounded-lg px-2 py-2 ${
                 location.pathname === "/about"
-                  ? "text-primary"
-                  : "text-(--text-low) group-hover:text-primary transition-colors"
-              }
-            />
-            <li
-              className={
-                location.pathname === "/about"
-                  ? "text-primary"
-                  : "text-(--text-low) group-hover:text-primary transition-colors"
-              }
+                  ? "bg-(--primary)/20 transition-colors"
+                  : "hover:bg-(--bg-elevated) transition-colors"
+              }`}
             >
-              <Link to="/about">About</Link>
-            </li>
-          </div>
+              <Info
+                className={
+                  location.pathname === "/about"
+                    ? "text-primary"
+                    : "text-(--text-low) group-hover:text-primary transition-colors"
+                }
+              />
+              <li
+                className={
+                  location.pathname === "/about"
+                    ? "text-primary"
+                    : "text-(--text-low) group-hover:text-primary transition-colors"
+                }
+              >
+                About
+              </li>
+            </div>
+          </Link>
 
-          <div className="group flex absolute bottom-4 gap-2 items-center rounded-lg px-2 py-2 hover:bg-(--bg-elevated) text-(--text-med) transition-colors">
-            <Settings className="group-hover:text-primary" />
+          <li className="absolute bottom-4 w-[calc(100%-1.5rem)]">
             <Menu>
-              <MenuButton className="inline-flex items-center gap-2 group-hover:text-primary hover:cursor-pointer text-md rounded-lg px-2 py-1">
-                Profile
-                <ChevronDown className="size-4" />
+              <MenuButton className="group flex w-full gap-2 items-center rounded-lg px-2 py-2 hover:bg-(--bg-elevated) text-(--text-med) transition-colors hover:cursor-pointer">
+                <Settings className="group-hover:text-primary" />
+                <span className="group-hover:text-primary">Profile</span>
+                <ChevronDown className="size-4 ml-auto group-hover:text-primary" />
               </MenuButton>
               <MenuItems
                 anchor={{ to: "top", gap: "10px" }}
@@ -180,7 +190,7 @@ export default function SideNavBar({ handleLogout, handleDeleteAccount }) {
                 </MenuItem>
               </MenuItems>
             </Menu>
-          </div>
+          </li>
         </ul>
       </nav>
       <Modal
