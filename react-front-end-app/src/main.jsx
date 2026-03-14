@@ -8,7 +8,9 @@ import { ThemeProvider } from "./context/ThemeContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    {/* manage light/dark themes across entire app */}
     <ThemeProvider>
+      {/* provide JWT and user status to all children */}
       <AuthContextProvider>
         <BrowserRouter>
           <App />

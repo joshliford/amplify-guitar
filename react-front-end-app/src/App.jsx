@@ -27,6 +27,8 @@ function App() {
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  // determines layout style for auth pages (full width vs header/side nav bar)
   const isAuthPage = ["/login", "/register"].includes(location.pathname);
 
   const handleLogout = () => {
@@ -49,21 +51,28 @@ function App() {
         isAuthPage ? "w-full min-h-screen" : "flex flex-col min-h-screen"
       }
     >
+      {/* conditinally render global navigation elements based on current route */}
       {!isAuthPage && <Header />}
-      <main className={isAuthPage ? "w-full" : "flex flex-1 ml-[175px]"}>
+      <main
+        className={
+          isAuthPage
+            ? "w-full"
+            : "flex flex-1 ml-[175px] w-[calc(100%-175px)] min-w-0"
+        }
+      >
         {!isAuthPage && (
           <SideNavBar
             handleLogout={handleLogout}
             handleDeleteAccount={handleDeleteAccount}
           />
         )}
-        <div className={isAuthPage ? "w-full" : "flex-1"}>
+        <div className={isAuthPage ? "w-full" : "flex-1 min-w-0"}>
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            {/* Protected Routes */}
+            {/* Protected Routes - wrapped in ProtectedRoutes to check JWT status*/}
             <Route element={<ProtectedRoutes />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/about" element={<About />} />

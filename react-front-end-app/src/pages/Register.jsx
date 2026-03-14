@@ -12,6 +12,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  // store field specific validation errors for enhanced UI/UX
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
@@ -22,6 +23,7 @@ export default function Register() {
 });
 
   const navigate = useNavigate();
+  // destructure login function to immediatley sign user in upon successful registration
   const { login } = useAuth();
 
   const validateRegistrationForm = () => {
@@ -52,6 +54,7 @@ export default function Register() {
 
     // if there are form errors, set the errors and return early
     const validateErrors = validateRegistrationForm();
+    // if validation object contains any keys, errors were found
     if (Object.keys(validateErrors).length > 0) {
       setErrors(validateErrors);
       return;
@@ -60,12 +63,12 @@ export default function Register() {
     setIsLoading(true);
     try {
       const response = await requestRegistration({ email, password, firstName, lastName, displayName });
-      // use login function via AuthContext
+      // log user in using JWT from successful registration
       login(response.data.token);
       navigate("/dashboard");
     } catch (error) {
       if (error.response?.status === 409) {
-        // takes a copy of all errors and overrides email error
+        // takes a copy of all errors and overrides email error as a conflict
         setErrors(prev => ({ ...prev, email: "Email already in use." }));
       } else {
         setErrors(prev => ({ ...prev, email: "Registration failed. Please try again." }));

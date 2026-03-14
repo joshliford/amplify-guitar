@@ -1,19 +1,24 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default function About() {
   return (
-    <main className="bg-(--bg-base) min-h-screen flex flex-col text-lg text-(--text-med)">
-      <section className="space-y-4 py-12 px-12">
+    <main className="bg-(--bg-base) min-h-screen flex flex-col text-lg text-(--text-med) w-full min-w-0 overflow-x-hidden">
+      <section className="space-y-4 py-12 px-4 md:px-12">
         <div className="flex justify-center">
-            <h1 className="text-2xl text-(--text-high) text-center font-bold border-b-2 border-b-accent inline-block">
+          <h1 className="text-2xl text-(--text-high) text-center font-bold border-b-2 border-b-accent inline-block">
             About Amplify
           </h1>
         </div>
         <p>
-          <strong className="text-primary text-xl">
-            Amplify
-          </strong>{" "}
-          is a gamified guitar-learning dashboard designed to make consistent
+          <strong className="text-primary text-xl">Amplify</strong> is a
+          gamified guitar-learning dashboard designed to make consistent
           practice simple, structured, and rewarding. The overall goal is to
           combine progress tracking and a clean practice workflow so guitar
           players at any skill level can build long-term habits and improve
@@ -25,20 +30,18 @@ export default function About() {
           motivating, and easy to return to.
         </p>
       </section>
-      <section className="space-y-4 py-12 px-12 mt-12">
+      <section className="space-y-4 py-12 px-4 md:px-12 mt-12">
         <div className="flex justify-center">
-            <h2 className="text-2xl text-(--text-high) text-center font-bold border-b-2 border-b-accent inline-block">
+          <h2 className="text-2xl text-(--text-high) text-center font-bold border-b-2 border-b-accent inline-block">
             Purpose
           </h2>
         </div>
         <p className="mb-4 text-lg">
-          <strong className="text-primary text-xl">
-            Amplify
-          </strong>{" "}
-          was built to solve a problem I often faced: staying consistent. After
-          playing both electric and acoustic guitar for 10+ years—often on and
-          off as life got busier—the motivation behind Amplify was to create a
-          tool that brings structure, clarity, and fun back into practicing.
+          <strong className="text-primary text-xl">Amplify</strong> was built to
+          solve a problem I often faced: staying consistent. After playing both
+          electric and acoustic guitar for 10+ years—often on and off as life
+          got busier—the motivation behind Amplify was to create a tool that
+          brings structure, clarity, and fun back into practicing.
         </p>
         <p>
           Building Amplify was a way to re-spark that passion while creating
@@ -49,15 +52,15 @@ export default function About() {
         </p>
       </section>
 
-      <section className="py-12 px-12 mt-12 flex flex-col items-center mb-6">
-        <div className="w-full max-w-8xl">
+      <section className="py-12 px-4 md:px-12 mt-12 flex flex-col items-center mb-6 w-full min-w-0">
+        <div className="w-full min-w-0">
           <div className="flex justify-center mb-6">
             <h3 className="text-2xl text-(--text-high) font-bold border-b-2 border-b-accent inline-block text-center">
               Core Pages
             </h3>
           </div>
-          <div className="w-full max-w-8xl shadow-2xl rounded-xl overflow-hidden border-2 border-accent bg-(--bg-surface)">
-            <Table className="text-lg">
+          <div className="w-full min-w-0 shadow-2xl rounded-xl overflow-x-auto border-2 border-accent bg-(--bg-surface)">
+            <Table className="text-lg min-w-[840px]">
               <TableHeader className="bg-primary text-xl border-b-3 border-accent">
                 <TableRow className="font-bold text-xl">
                   <TableHead className="pl-4 text-white dark:text-black">
@@ -97,16 +100,41 @@ export default function About() {
                   <TableCell>
                     <ul className="list-disc pl-4 space-y-2">
                       <li>
-                        <strong className="text-primary">Lessons</strong>: topics covering chords,
-                        scales, etc.
+                        <strong className="text-primary">Lessons</strong>:
+                        topics covering chords, scales, etc.
                       </li>
                       <li>
-                        <strong className="text-primary">Chord Library</strong>: common chords with
-                        diagrams
+                        <strong className="text-primary">Chord Library</strong>:
+                        common chords with diagrams
                       </li>
                       <li>
-                        <strong className="text-primary">Scale Library</strong>: essential scales with
-                        tabs
+                        <strong className="text-primary">Scale Library</strong>:
+                        essential scales with tabs
+                      </li>
+                    </ul>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="text-primary font-semibold text-lg  pl-4">
+                    The Setlist
+                  </TableCell>
+                  <TableCell>
+                    A curated collection of songs to learn, from campfire
+                    beginner to advanced rock
+                  </TableCell>
+                  <TableCell>
+                    <ul className="list-disc pl-4 space-y-2">
+                      <li>
+                        <strong className="text-primary">Song Library</strong>:
+                        browse popular songs
+                      </li>
+                      <li>
+                        <strong className="text-primary">Song Detail</strong>:
+                        view song backstory, chords, and scales
+                      </li>
+                      <li>
+                        <strong className="text-primary">Learn the song</strong>
+                        : embedded video and direct tab link
                       </li>
                     </ul>
                   </TableCell>
@@ -121,15 +149,18 @@ export default function About() {
                   <TableCell>
                     <ul className="list-disc pl-4 space-y-2">
                       <li>
-                        <strong className="text-primary">Practice Timer</strong>: track session length
+                        <strong className="text-primary">Practice Timer</strong>
+                        : track session length
                       </li>
                       <li>
-                        <strong className="text-primary">Practice Goals</strong>: choose a specific goal
-                        to practice
+                        <strong className="text-primary">Practice Goals</strong>
+                        : choose a specific goal to practice
                       </li>
                       <li>
-                        <strong className="text-primary">Session Completion XP</strong>: earn XP and
-                        rewards
+                        <strong className="text-primary">
+                          Session Completion XP
+                        </strong>
+                        : earn XP and rewards
                       </li>
                     </ul>
                   </TableCell>

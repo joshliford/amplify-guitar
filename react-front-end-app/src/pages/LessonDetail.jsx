@@ -37,6 +37,7 @@ export default function LessonDetail() {
         setIsLoading(false);
       }
     };
+    // invoke component on mount and re-run hook on each lessonId change
     fetchLessonData();
   }, [id]);
 
@@ -47,6 +48,7 @@ export default function LessonDetail() {
   const handleCompleteLesson = async () => {
     try {
       const response = await completeLesson(id);
+      // store reward data (XP, reward, level up info, etc.) to display in modal
       setCompletionData(response.data);
       setCompleted(true);
       setIsModalOpen(true);
@@ -134,7 +136,7 @@ export default function LessonDetail() {
         </div>
         <div className="flex justify-center">
           <button
-            className={`text-lg rounded-full hover:rounded-full hover:bg-(--bg-elevated)/90 hover:text-primary hover:cursor-pointer text-(--text-high) px-2 py-0.5 w-fit transition-colors duration-300 ${completed ? "opacity-50 cursor-not-allowed" : "hover:cursor-pointer"}`}
+            className="text-lg rounded-full hover:bg-(--bg-elevated)/90 hover:text-primary text-(--text-high) px-2 py-0.5 w-fit transition-colors duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-(--text-high)"
             onClick={() => {
               handleCompleteLesson();
             }}

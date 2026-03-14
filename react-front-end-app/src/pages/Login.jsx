@@ -18,9 +18,9 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      // send login request to backend and wait for response
+      // send login request to backend to verify credentials and retrieve JWT token
       const response = await requestLogin({ email, password });
-      // use login function via useAuth (in AuthContext) to store token in session storage
+      // update AuthContext state and persist token in session storage
       login(response.data.token);
       navigate("/dashboard");
     } catch (error) {
@@ -32,7 +32,7 @@ export default function Login() {
 
   return (
     <div className="grid w-full lg:grid-cols-[55fr_45fr] min-h-screen">
-      {/* Left branding panel */}
+      {/* left branding panel */}
       <div
         className="max-lg:hidden flex flex-col justify-between bg-gray-300 bg-cover bg-center p-16 min-h-screen"
         style={{ backgroundImage: `url(${backgroundImage})` }}
@@ -54,10 +54,10 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Right form panel */}
+      {/* right form panel */}
       <div className="flex flex-col justify-center items-center bg-(--bg-surface) px-8 py-16">
         <div className="w-full max-w-sm">
-          {/* Mobile */}
+          {/* mobile breakpoint */}
           <div className="mb-4 lg:hidden">
           <h1 className="text-5xl mb-2">
             Amplify

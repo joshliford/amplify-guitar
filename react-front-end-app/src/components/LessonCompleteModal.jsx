@@ -12,6 +12,7 @@ import {
   ArrowUp,
 } from "lucide-react";
 
+// mapping of reward icon names to Lucid icons
 const iconMap = {
   Star,
   Flame,
@@ -31,7 +32,11 @@ export default function LessonCompleteModal({
 }) {
   return (
     <div>
-      <Modal isModalOpen={isModalOpen} handleCloseModal={handleCloseModal} className="shadow-xl shadow-primary border-primary">
+      <Modal
+        isModalOpen={isModalOpen}
+        handleCloseModal={handleCloseModal}
+        className="shadow-xl shadow-primary border-primary"
+      >
         <div className="flex flex-col items-center space-y-6 p-12">
           <div className="flex items-center gap-3">
             <h2 className="font-bold text-4xl text-(--text-high)">
@@ -61,6 +66,7 @@ export default function LessonCompleteModal({
               <h3 className="text-lg text-center font-semibold text-(--text-high) mb-2">
                 Rewards Unlocked
               </h3>
+              {/* for each reward, lookup icon from iconMap using reward's icon name */}
               {completionData.newRewards.map((reward) => {
                 const IconComponent = iconMap[reward.icon] || Star;
                 return (

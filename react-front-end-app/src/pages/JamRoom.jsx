@@ -60,7 +60,7 @@ export default function JamRoom() {
           {selectedItem.imageUrl && (
             <img
               src={selectedItem.imageUrl}
-              alt={selectedItem.title}
+              alt={`${selectedItem.title} chord diagram`}
               className="mx-auto max-w-[400px] p-2 bg-(--bg-elevated) dark:bg-gray-600/40 rounded-xl border border-border shadow-lg shadow-gray-300 dark:shadow-black mb-4"
             />
           )}
@@ -98,7 +98,7 @@ export default function JamRoom() {
           {selectedItem.imageUrl && (
             <img
               src={selectedItem.imageUrl}
-              alt={selectedItem.title}
+              alt={`${selectedItem.title} scale diagram`}
               className="mx-auto max-w-[400px] bg-(--bg-elevated) rounded-xl border border-border shadow-lg shadow-gray-300 dark:shadow-black mb-4"
             />
           )}
@@ -129,6 +129,7 @@ export default function JamRoom() {
     }
   };
 
+  // object to store specific data based on the tab that is clicked
   const tabData = {
     Lessons: {
       headerDesc: "Guided lessons to build your skills",
@@ -167,6 +168,7 @@ export default function JamRoom() {
     if (activeTab === "Scales") {
       setSelectedItem(scales[0]);
     }
+    // dependency array re-runs each time active tab changes
   }, [activeTab, lessons, chords, scales]);
 
   useEffect(() => {
@@ -225,7 +227,7 @@ export default function JamRoom() {
   }
 
   return (
-    <main className="grid grid-cols-[500px_1fr] min-h-screen px-8 py-10 gap-8 bg-(--bg-base)">
+    <main className="grid grid-cols-[500px_1fr] min-h-screen items-start content-start px-8 py-10 gap-8 bg-(--bg-base)">
       {/* Header */}
       <div className="col-span-2 flex flex-row justify-center items-center">
         <Tabs defaultValue="lessons">
@@ -234,11 +236,12 @@ export default function JamRoom() {
               className="px-3 py-3 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700/60 duration-300 transition-colors"
               value="lessons"
               onClick={() => setActiveTab("Lessons")}
+              // apply dynamic styling if tab is active
               style={
                 activeTab === "Lessons"
                   ? {
-                      backgroundColor: tabData.Lessons.color,
-                      borderColor: tabData.Lessons.bgColor,
+                      backgroundColor: currentTab.color,
+                      borderColor: currentTab.bgColor,
                       color: "black",
                     }
                   : {}
@@ -253,8 +256,8 @@ export default function JamRoom() {
               style={
                 activeTab === "Chords"
                   ? {
-                      backgroundColor: tabData.Chords.color,
-                      borderColor: tabData.Chords.color,
+                      backgroundColor: currentTab.color,
+                      borderColor: currentTab.color,
                       color: "black",
                     }
                   : {}
@@ -269,8 +272,8 @@ export default function JamRoom() {
               style={
                 activeTab === "Scales"
                   ? {
-                      backgroundColor: tabData.Scales.color,
-                      borderColor: tabData.Scales.color,
+                      backgroundColor: currentTab.color,
+                      borderColor: currentTab.color,
                       color: "black",
                     }
                   : {}
@@ -284,6 +287,7 @@ export default function JamRoom() {
       {/* Left pannel */}
       <div
         className="flex flex-col rounded-xl border bg-(--bg-surface) shadow-lg hover:shadow-xl overflow-hidden"
+        // apply dynamic styling to match the active tab
         style={{
           "--tab-color": currentTab.color,
           "--tab-bg": currentTab.bgColor,
@@ -312,17 +316,20 @@ export default function JamRoom() {
               )}
             </div>
             <div className="flex flex-wrap items-center gap-2">
+              {/* map through difficulty levels to create filter buttons */}
               {["All", "BEGINNER", "INTERMEDIATE", "ADVANCED"].map(
                 (difficulty) => (
                   <button
                     key={difficulty}
                     onClick={() => setDifficultyFilter(difficulty)}
                     className={`text-xs font-medium rounded-full py-1 px-3 border transition-all cursor-pointer ${
+                      // toggle active styles based on current filter state
                       difficultyFilter === difficulty
                         ? "bg-(--tab-color) text-black border-(--tab-color)"
                         : "bg-(--bg-surface) text-(--text-high) border-border hover:border-(--tab-color) hover:text-(--tab-color)"
                     }`}
                   >
+                    {/* format text to Title Case */}
                     {difficulty === "All"
                       ? "All"
                       : difficulty.charAt(0) +
@@ -334,15 +341,19 @@ export default function JamRoom() {
           </div>
           <div className="px-6 py-6 flex flex-col gap-4">
             <div className="flex flex-col gap-4">
+              {/* map through filtered list of lessons, chords, and scales */}
               {getFilteredItems().map((item) => {
                 return (
                   <div
                     key={item.id}
                     onClick={() => setSelectedItem(item)}
                     className={`rounded-lg border-2 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-xl hover:border-(--tab-color) ${
+                      // apply selected styles if item is being viewed
                       selectedItem?.id === item.id
                         ? "border-(--tab-color) border-l-4 -translate-y-1 shadow-lg"
-                        : "border-border"
+                        : item.completed
+                          ? "border-green-400/50 bg-green-400/5"
+                          : "border-border"
                     }`}
                   >
                     <div className="p-2 flex flex-row justify-between">
@@ -355,13 +366,18 @@ export default function JamRoom() {
                         </span>
                       )}
                     </div>
-                    <div>
+                    <div className="flex flex-row justify-between">
                       <span
                         className={`text-xs font-medium rounded-full py-0.5 px-2 ml-1 mb-2 w-fit inline-block bg-(--bg-elevated) text-primary`}
                       >
                         {item.difficulty.charAt(0) +
                           item.difficulty.slice(1).toLowerCase()}
                       </span>
+                      {item?.requiredLevel && (
+                        <p className="mr-2 text-sm text-(--text-med)">
+                          Required Level: {item?.requiredLevel}
+                        </p>
+                      )}
                     </div>
                   </div>
                 );
@@ -426,7 +442,7 @@ export default function JamRoom() {
                   selectedItem?.difficulty.slice(1).toLowerCase()}
               </span>
               {selectedItem.xpReward && (
-                <span className="text-xs text-accent font-bold">
+                <span className="text-sm text-accent font-bold">
                   +{selectedItem.xpReward} XP
                 </span>
               )}
@@ -435,6 +451,7 @@ export default function JamRoom() {
               {selectedItem.description}
             </p>
           </div>
+          {/* conditionally render content based on active tab */}
           {renderDetailContent()}
         </div>
       </div>
