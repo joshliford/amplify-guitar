@@ -5,7 +5,7 @@ import {
   getTotalPracticeTime,
   startSession,
 } from "@/services/practiceSessionService";
-import { ChartSpline, FileMusic, Save, Timer } from "lucide-react";
+import { ChartSpline, Save, Timer } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { Select, Label, Field, Textarea } from "@headlessui/react";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -25,6 +25,7 @@ export default function Shed() {
   useEffect(() => {
     const fetchPracticeData = async () => {
       try {
+        // parallel fetching using Promise.all for faster load times
         const [goalsData, practiceTimeData] = await Promise.all([
           getAllGoals(),
           getTotalPracticeTime(),
@@ -48,20 +49,18 @@ export default function Shed() {
       clearInterval(intervalRef.current);
       setIsRunning(false);
     } else {
-      // only create new session on first start of timer
+      // initialize session on backend only when starting timer for the first time
       if (sessionId === null) {
         const response = await startSession(selectedGoalId.id);
         setSessionId(response.data.id);
       }
-      // (- runTime) = allows resuming the timer from a paused state
+      // subract runTime from current time to allow resuming the timer
       const startTime = Date.now() - runTime;
-      // returns an Id that identifies the running interval
-      // stored in intervalRef.current later - won't be lost on re-render
+      // store interval ID in a Ref to persist across re-renders
       intervalRef.current = setInterval(() => {
         // gives total runtime since the start of the timer
         setRunTime(Date.now() - startTime);
-        // executes the callback every 10 ms
-      }, 10);
+      }, 10); // executes the callback every 10 ms for ms UI display
       setIsRunning(true);
     }
   };
@@ -70,9 +69,10 @@ export default function Shed() {
     try {
       // convert to seconds to align with backend logic
       const durationInSeconds = Math.floor(runTime / 1000);
+      // complete (partially update (PATCH)) the existing session by updating records with notes and duration
       await endSession(sessionId, notes, durationInSeconds);
       setSessionComplete(true);
-      // add new session time
+      // refresh total practice time to reflect newly completed session
       const updatedTime = await getTotalPracticeTime();
       setTotalPracticeTime(updatedTime.data);
     } catch (error) {
@@ -96,10 +96,12 @@ export default function Shed() {
     return `${minutes}:${seconds}:${milliseconds}`;
   };
 
+  // format seconds from the backend into readable string for better UI/UX
   const formatTotalTime = (totalSeconds) => {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
+    // conditionally hide hours or minutes if they are 0 for better UI/UX
     if (hours > 0) return `${hours}h ${minutes}m`;
     if (minutes > 0) return `${minutes}m ${seconds}s`;
     return `${seconds}s`;
@@ -172,6 +174,7 @@ export default function Shed() {
                   className="w-full hover:cursor-pointer dark:hover:bg-[#313131] hover:bg-(--bg-elevated) border hover:border-primary/50 rounded-xl bg-(--bg-elevated) text-(--text-high) px-3 py-1 duration-300 transition-all"
                   defaultValue="Free Play"
                   value={selectedGoalId?.id}
+                  // find and store full goal object & cast value to Number for comparison since e.target.value is always a string
                   onChange={(e) =>
                     setSelectedGoalId(
                       goals.find((goal) => goal.id === Number(e.target.value)),

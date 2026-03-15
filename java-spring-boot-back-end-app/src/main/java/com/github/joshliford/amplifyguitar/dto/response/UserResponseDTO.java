@@ -14,8 +14,10 @@ public class UserResponseDTO {
 
     private String currentTitle;
 
+    // progress within the users current level
     private Integer currentXp;
 
+    // total lifetime xp
     private Integer totalXp;
 
     private Integer lessonsCompleted;

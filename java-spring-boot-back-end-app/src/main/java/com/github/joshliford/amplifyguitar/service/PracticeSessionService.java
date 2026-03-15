@@ -43,6 +43,7 @@ public class PracticeSessionService {
         newPracticeSession.setCompleted(false);
         newPracticeSession.setUser(user);
 
+        // freeform session (no specific goal)
         if (goalId == null) {
             PracticeSession savedSession = practiceSessionRepository.save(newPracticeSession);
             return buildSessionResponse(savedSession);
@@ -84,6 +85,7 @@ public class PracticeSessionService {
 
         int practiceGoalDurationInSeconds = session.getGoal().getDurationInMinutes() * 60;
 
+        // earning XP is all or nothing based on goal duration requirements
         if (practiceSessionDuration < practiceGoalDurationInSeconds) {
             session.setXpEarned(0);
         } else if (practiceSessionDuration >= practiceGoalDurationInSeconds) {

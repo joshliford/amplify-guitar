@@ -4,8 +4,10 @@ import java.util.List;
 
 public class CompleteLessonResponseDTO {
 
+    // xp earned for the specific lesson
     private Integer xpEarned;
 
+    // updated lifetime total xp
     private Integer newTotalXp;
 
     private Integer newLevel;

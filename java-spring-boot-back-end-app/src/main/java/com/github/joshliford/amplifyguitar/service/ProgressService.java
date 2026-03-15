@@ -46,6 +46,7 @@ public class ProgressService {
         // check for user level up
         Integer xpNeededForNextLevel = calculateXpNeededForLevel(currentLevel + 1);
 
+        // handles multi-level jumps from a large XP reward
         while (newCurrentXp >= xpNeededForNextLevel ) {
             currentLevel++;
             newCurrentXp -= xpNeededForNextLevel;
@@ -103,7 +104,7 @@ public class ProgressService {
     }
 
     private Integer calculateXpNeededForLevel(Integer level) {
-        // use simple increment for xp (i.e. level 1 = 50XP, level 2 = 100XP, level 3 = 150XP, etc.)
+        // use simple increment for xp required for next level (i.e. level 1 = 50XP, level 2 = 100XP, level 3 = 150XP, etc.)
         return 50 + (level * 50);
     }
 
