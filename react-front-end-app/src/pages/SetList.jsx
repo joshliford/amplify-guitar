@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SongCard from "@/components/SongCard";
 import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 
 // stagger timing across all child card wrappers
 const containerVariants = {
@@ -71,7 +72,9 @@ export default function SetList() {
       >
         {songs.map((song) => (
           <motion.div key={song.id} variants={itemVariants}>
-            <SongCard song={song} key={song.id} />
+            <Link to={`/songs/${song.id}`}>
+              <SongCard song={song} key={song.id} />
+            </Link>
           </motion.div>
         ))}
       </motion.div>
